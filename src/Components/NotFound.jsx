@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 
 const NotFound = () => {
   return (
-    <div className='flex flex-col items-center justify-center h-screen bg-orange-100 text-gray-800'>
+    <div className='flex flex-col items-center justify-center h-screen bg-orange-100 text-gray-800 mt-5'>
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

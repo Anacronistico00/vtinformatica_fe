@@ -12,13 +12,11 @@ import {
   NavDropdown,
 } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import HamburgerDropdown from './HamburgerDropdown';
+import HamburgerDropdown from '../HamburgerDropdown';
+import NavBarDropdown from './NavbarDropdown';
+import SearchBar from './SearchBarComponent';
 
 const NavBarComponent = () => {
-  const [search, setSearch] = useState('');
-  // const cartItems = useSelector((state) => state.cart.items);
-
   return (
     <div className='shadow-lg pb-3'>
       <Navbar expand='lg' className='d-flex flex-column sticky-top pb-0'>
@@ -36,20 +34,7 @@ const NavBarComponent = () => {
           </div>
 
           {/* Search Bar */}
-          <Form
-            className='d-flex w-100 order-3 order-lg-2'
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <FormControl
-              type='search'
-              placeholder='Cerca un prodotto...'
-              className='me-2'
-              aria-label='Search'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <Button variant='outline-primary'>Cerca</Button>
-          </Form>
+          <SearchBar />
 
           {/* Icone Account e Carrello */}
           <Nav className='d-flex flex-row align-items-center gap-4 ms-2 order-2 order-lg-3'>
@@ -74,7 +59,7 @@ const NavBarComponent = () => {
                 <p className='m-0 ms-2'>Carrello</p>
               </div>
 
-              {/* Badge per numero articoli (decommenta e collega a stato) */}
+              {/* Badge per numero articoli */}
               {/* {cartItems.length > 0 && (
               <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
                 {cartItems.length}
@@ -85,20 +70,8 @@ const NavBarComponent = () => {
         </Container>
       </Navbar>
       <Container className=' d-none d-lg-flex justify-content-evenly align-items-center m-auto'>
-        <div>
-          <DropdownButton
-            align='end'
-            title='PRODOTTI'
-            id='dropdown-menu-align-end'
-            className='noCaret'
-          >
-            <Dropdown.Item eventKey='1'>Action</Dropdown.Item>
-            <Dropdown.Item eventKey='2'>Another action</Dropdown.Item>
-            <Dropdown.Item eventKey='3'>Something else here</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item eventKey='4'>Separated link</Dropdown.Item>
-          </DropdownButton>
-        </div>
+        <NavBarDropdown />
+
         <Link to={'/offerte'} className='link'>
           OFFERTE
         </Link>
