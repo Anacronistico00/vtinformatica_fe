@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authentication from '../Reducers/Auth';
 import categoryReducer from '../Reducers/CategoryReducer';
 import manufacturerReducer from '../Reducers/ManufacturerReducer';
+import productsReducer from '../Reducers/ProductsReducer';
 
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // salva nel localStorage
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   auth: authentication,
   categories: categoryReducer,
   manufacturers: manufacturerReducer,
+  products: productsReducer,
 });
 
 const persistConfig = {

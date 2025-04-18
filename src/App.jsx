@@ -11,6 +11,10 @@ import NavBarComponent from './Components/NavBar/NavBarComponent.jsx';
 import { AccountInfoComponent } from './Components/AccountInfoComponent.jsx';
 import FooterComponent from './Components/FooterComponent.jsx';
 import SearchResultComponent from './Components/SearchResultComponent.jsx';
+import CategoryComponent from './Components/Products/CategoryComponent.jsx';
+import SubCategoryComponent from './Components/Products/SubCategoryComponent.jsx';
+import ManufacturerComponent from './Components/Products/ManufacturerComponent.jsx';
+import ProductInfo from './Components/Products/ProductInfo.jsx';
 
 const App = () => {
   return (
@@ -27,8 +31,6 @@ const MainApp = () => {
       <div className='main-content'>
         <Routes>
           <Route path='/' element={<HomeComponent />} />
-          <Route path='/search/:query' element={<SearchResultComponent />} />
-          <Route path='/account' element={<LoginComponent />} />
           <Route path='/accountInfo' element={<AccountInfoComponent />} />
           <Route
             path='/register'
@@ -39,6 +41,21 @@ const MainApp = () => {
               />
             }
           />
+          <Route path='/search/:query' element={<SearchResultComponent />} />
+          <Route path='/account' element={<LoginComponent />} />
+          <Route
+            path='/products/category/:id'
+            element={<CategoryComponent />}
+          />
+          <Route
+            path='/products/subcategory/:id'
+            element={<SubCategoryComponent />}
+          />
+          <Route
+            path='/products/manufacturer/:id'
+            element={<ManufacturerComponent />}
+          />
+          <Route path='/product/:id' element={<ProductInfo />} />
           <Route path='/not-authorized' element={<NotAuthorized />} />
           <Route path='*' element={<NotFound />} />
         </Routes>

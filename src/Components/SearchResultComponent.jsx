@@ -172,6 +172,7 @@ const SearchResultComponent = () => {
             <div key={product.id} className='col'>
               <Link
                 to={`/product/${product.id}`}
+                state={{ product }}
                 className='text-decoration-none text-dark'
               >
                 <div className='card h-100 shadow-sm'>

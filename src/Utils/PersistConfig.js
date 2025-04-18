@@ -1,4 +1,3 @@
-// src/redux/persistConfig.js
 import { createTransform } from 'redux-persist';
 
 const EXPIRATION_TIME = 60 * 60 * 1000;
