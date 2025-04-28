@@ -1,4 +1,4 @@
-import { getRoleFromToken } from '../../Utils/jwtUtils';
+import { getBirthDateFromToken, getRoleFromToken } from '../../Utils/jwtUtils';
 import ApiURL from '../../Utils/ApiURL';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -26,11 +26,15 @@ export const login = (email, password) => {
       const data = await response.json();
       const isAuthenticated = true;
       const role = getRoleFromToken(data.token);
+      const birthDate = getBirthDateFromToken(data.token);
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', role);
+      localStorage.setItem('birthDate', birthDate);
 
-      dispatch(loginSuccess(email, data.token, isAuthenticated, role));
+      const user = { email, role, birthDate };
+
+      dispatch(loginSuccess(user, data.token, isAuthenticated));
 
       return true;
     } catch (error) {
@@ -44,6 +48,7 @@ export const logout = () => {
   return (dispatch) => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('birthDate');
     dispatch({ type: LOGOUT });
   };
 };

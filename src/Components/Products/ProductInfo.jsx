@@ -1,9 +1,33 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { fetchProductsBySubCategory } from '../../Redux/Actions/ProductsAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../Redux/Actions/CartActions';
 
 const ProductInfo = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { product } = location.state || {};
+  const products = useSelector((state) => state.products.products);
+  const loading = useSelector((state) => state.products.loading);
+
+  const [quantity, setQuantity] = useState(1);
+  const handleIncrement = () => {
+    if (quantity < product.quantity) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(product.id, quantity));
+  };
+
   const [mainImage, setMainImage] = useState(
     product.productImages[0]?.imageUrl
   );
@@ -11,6 +35,19 @@ const ProductInfo = () => {
     product.productImages[0]?.imageUrl
   );
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (product?.subCategory?.id) {
+      dispatch(fetchProductsBySubCategory(product.subCategory.id));
+    }
+  }, [dispatch, product?.subCategory?.id]);
+
+  useEffect(() => {
+    setMainImage(product?.productImages[0]?.imageUrl);
+    setModalImage(product?.productImages[0]?.imageUrl);
+  }, [product]);
+
+  const relatedProducts = products.filter((p) => p.id !== product.id);
 
   if (!product) return <p>Prodotto non disponibile.</p>;
 
@@ -71,24 +108,51 @@ const ProductInfo = () => {
           <h4 className='text-primary fw-bold mb-3'>
             {product.price.toFixed(2)} €
           </h4>
+          <div className='d-flex justify-content-between align-items-center'>
+            <p>
+              <strong>Disponibilità:</strong>{' '}
+              {product.quantity > 0 ? (
+                <span className='text-success'>{product.quantity} pezzi</span>
+              ) : (
+                <span className='text-danger'>Non disponibile</span>
+              )}
+            </p>
+            <div>
+              {/* Controllo della quantità */}
+              <div className='d-flex align-items-center mt-3'>
+                <button
+                  className='btn btn-outline-primary'
+                  onClick={handleDecrement}
+                  disabled={quantity <= 1}
+                >
+                  -
+                </button>
+                <input
+                  type='number'
+                  className='form-control mx-2'
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  min='1'
+                  max={product.quantity}
+                  style={{ width: '60px' }}
+                />
+                <button
+                  className='btn btn-outline-primary'
+                  onClick={handleIncrement}
+                  disabled={quantity >= product.quantity}
+                >
+                  +
+                </button>
+              </div>
 
-          <p>
-            <strong>Disponibilità:</strong>{' '}
-            {product.quantity > 0 ? (
-              <span className='text-success'>{product.quantity} pezzi</span>
-            ) : (
-              <span className='text-danger'>Non disponibile</span>
-            )}
-          </p>
-
-          <p className='mt-4'>
-            <i className='bi bi-diagram-3 me-2'></i>
-            Categoria: <strong>{product.category.name}</strong>
-          </p>
-          <p>
-            <i className='bi bi-tag me-2'></i>
-            Sottocategoria: <strong>{product.subCategory.name}</strong>
-          </p>
+              {/* Bottone per aggiungere al carrello */}
+              <div className='mt-4'>
+                <button className='btn btn-primary' onClick={handleAddToCart}>
+                  Aggiungi al carrello
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -102,7 +166,87 @@ const ProductInfo = () => {
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* Prodotti correlati */}
+      <div className='row mt-5'>
+        <div className='col-12'>
+          <h4 className='mb-4'>Prodotti correlati</h4>
+
+          {loading ? (
+            <div
+              className='d-flex justify-content-center align-items-center'
+              style={{ height: '150px' }}
+            >
+              <div className='spinner-border text-primary' role='status'>
+                <span className='visually-hidden'>Caricamento...</span>
+              </div>
+            </div>
+          ) : relatedProducts.length > 0 ? (
+            <div
+              id='relatedProductsCarousel'
+              className='carousel slide'
+              data-bs-ride='carousel'
+            >
+              <div className='carousel-inner'>
+                {relatedProducts.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                  >
+                    <Link to={`/product/${item.id}`} state={{ product: item }}>
+                      <div className='card mx-auto' style={{ width: '18rem' }}>
+                        <img
+                          src={
+                            item.productImages[0]?.imageUrl ||
+                            '/images/placeholder.jpg'
+                          }
+                          className='card-img-top'
+                          alt={item.name}
+                          style={{ height: '200px', objectFit: 'contain' }}
+                        />
+                        <div className='card-body'>
+                          <h5 className='card-title'>{item.name}</h5>
+                          <p className='card-text text-primary fw-bold'>
+                            {item.price.toFixed(2)} €
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                className='carousel-control-prev'
+                type='button'
+                data-bs-target='#relatedProductsCarousel'
+                data-bs-slide='prev'
+              >
+                <span
+                  className='carousel-control-prev-icon'
+                  aria-hidden='true'
+                ></span>
+                <span className='visually-hidden'>Precedente</span>
+              </button>
+              <button
+                className='carousel-control-next'
+                type='button'
+                data-bs-target='#relatedProductsCarousel'
+                data-bs-slide='next'
+              >
+                <span
+                  className='carousel-control-next-icon'
+                  aria-hidden='true'
+                ></span>
+                <span className='visually-hidden'>Successivo</span>
+              </button>
+            </div>
+          ) : (
+            <p>Nessun prodotto correlato trovato.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Modal */}
       {showModal && (
         <div
           className='modal d-flex justify-content-center align-items-center'
@@ -128,7 +272,6 @@ const ProductInfo = () => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Immagine principale */}
             <img
               src={modalImage}
               alt='Modal'
@@ -139,8 +282,6 @@ const ProductInfo = () => {
                 objectFit: 'contain',
               }}
             />
-
-            {/* Miniature */}
             <div className='d-flex flex-wrap justify-content-center'>
               {product.productImages.map((img, index) => (
                 <img

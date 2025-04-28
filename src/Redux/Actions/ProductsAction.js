@@ -68,7 +68,7 @@ export const fetchProductsByManufacturer =
       dispatch({ type: FETCH_PRODUCTS_BY_MANUFACTURER_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
-        type: FETCH_PRODUCTS_BY_MANUFACTURER_FAILURE,
+        type: FETCH_PRODUCTS_BY_MANUFACTURER_ERROR,
         payload: error.message,
       });
     }

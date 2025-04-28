@@ -15,12 +15,16 @@ import {
   REGISTER,
 } from 'redux-persist';
 import expireTransform from '../../Utils/PersistConfig';
+import { cartReducer } from '../Reducers/CartReducer';
+import ordersReducer from '../Reducers/OrderReducer';
 
 const rootReducer = combineReducers({
   auth: authentication,
   categories: categoryReducer,
   manufacturers: manufacturerReducer,
   products: productsReducer,
+  cart: cartReducer,
+  orders: ordersReducer,
 });
 
 const persistConfig = {

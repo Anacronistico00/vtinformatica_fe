@@ -23,9 +23,12 @@ body {
   flex: 1;
 }
 
-.link {
+.link,
+#categoriesDropdown,
+.categoryName,
+.categoryDiv a {
   text-decoration: none;
-  color: #1e6091;
+  color: #1e6091 !important;
 }
 
 .mainColor {
@@ -37,7 +40,7 @@ body {
 }
 
 #navLogo {
-  width: 100px;
+  width: 150px;
 }
 
 .noCaret::after {
@@ -129,14 +132,14 @@ body {
 }
 
 .hamburger-dropdown a {
-  color: #333;
+  color: #1e6091;
   padding: 0.5rem 0;
   font-weight: 500;
   text-decoration: none;
 }
 
 .hamburger-dropdown a:hover {
-  color: #0d6efd;
+  color: #2e8ed8;
 }
 
 /*Dropdown prodotti*/
@@ -190,6 +193,7 @@ body {
   background-color: #e9ecef;
 }
 
+/* Carousel */
 .carousel-inner {
   position: relative !important;
 }
@@ -215,6 +219,10 @@ body {
     border-radius: 50%;
     background-color: transparent !important;
     border: 2px solid #1e6091 !important;
+  }
+
+  #navLogo {
+    width: 80px;
   }
 }
 

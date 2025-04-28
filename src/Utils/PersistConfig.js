@@ -16,6 +16,7 @@ const expireTransform = createTransform(
       now - outboundState._persistedAt > EXPIRATION_TIME
     ) {
       console.log('Persist scaduto, reset store');
+      localStorage.clear();
       return undefined;
     }
     return outboundState;

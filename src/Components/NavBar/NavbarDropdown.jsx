@@ -13,17 +13,17 @@ const NavbarDropdown = () => {
     <Dropdown className='position-relative'>
       <Dropdown.Toggle
         variant='light'
-        id='categories-dropdown'
-        className='fw-semibold bg-transparent border-0 text-dark'
+        id='categoriesDropdown'
+        className='fw-semibold bg-transparent border-0 text-dark p-0'
       >
-        Categorie
+        CATEGORIE
       </Dropdown.Toggle>
 
       <Dropdown.Menu className='p-0 shadow' style={{ width: '250px' }}>
         {categories.map((category) => (
           <div
             key={category.id}
-            className='position-relative'
+            className='categoryDiv position-relative'
             onMouseEnter={() => setHoveredCategoryId(category.id)}
             onMouseLeave={() => setHoveredCategoryId(null)}
           >
@@ -36,10 +36,10 @@ const NavbarDropdown = () => {
                 className='d-flex justify-content-between align-items-center px-3 py-2'
                 style={{ cursor: 'pointer' }}
               >
-                {category.name}
+                <p className='categoryName m-0 p-1'>{category.name}</p>
 
                 {category.subCategories?.length > 0 && (
-                  <span className='ms-2'>&rsaquo;</span> // freccina >
+                  <span className='ms-2'>&rsaquo;</span>
                 )}
               </Dropdown.Item>
             </Link>

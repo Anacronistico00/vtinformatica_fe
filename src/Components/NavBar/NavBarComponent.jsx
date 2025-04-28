@@ -12,7 +12,7 @@ import {
   NavDropdown,
 } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
-import HamburgerDropdown from '../HamburgerDropdown';
+import HamburgerDropdown from '../NavBar/HamburgerDropdown';
 import NavBarDropdown from './NavbarDropdown';
 import SearchBar from './SearchBarComponent';
 
@@ -61,20 +61,19 @@ const NavBarComponent = () => {
 
               {/* Badge per numero articoli */}
               {/* {cartItems.length > 0 && (
-              <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
-                {cartItems.length}
-              </span>
-            )} */}
+                <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
+                  {cartItems.length}
+                </span>
+              )} */}
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <Container className=' d-none d-lg-flex justify-content-evenly align-items-center m-auto'>
-        <NavBarDropdown />
-
-        <Link to={'/offerte'} className='link'>
-          OFFERTE
+        <Link to={'/'} className='link'>
+          HOME
         </Link>
+        <NavBarDropdown />
         <Link to={'/contatti'} className='link'>
           CONTATTI
         </Link>

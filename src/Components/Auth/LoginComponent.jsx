@@ -19,7 +19,7 @@ const LoginComponent = () => {
     const isLoggedIn = await dispatch(login(email, password));
 
     if (isLoggedIn) {
-      navigate('/');
+      navigate('/accountInfo');
     } else {
       alert('Login fallito');
     }
@@ -63,13 +63,17 @@ const LoginComponent = () => {
           />
         </Form.Group>
 
-        <Button
-          id='addbtn'
-          type='submit'
-          className='bg-transparent btn-outline-success  '
-        >
-          Accedi
-        </Button>
+        <div className='d-flex justify-content-between align-items-end'>
+          <Button
+            id='addbtn'
+            type='submit'
+            className='bg-transparent btn-outline-success  '
+          >
+            Accedi
+          </Button>
+
+          <Link to={'/register'}>Non sei registrato?</Link>
+        </div>
       </Form>
     </Container>
   );

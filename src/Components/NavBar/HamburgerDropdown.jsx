@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
+import NavbarDropdown from './NavbarDropdown';
 
 const HamburgerDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,10 +34,12 @@ const HamburgerDropdown = () => {
 
       <div className={`hamburger-dropdown ${isOpen ? 'show' : ''}`}>
         <Nav className='flex-column'>
-          <Nav.Link href='/prodotti'>Prodotti</Nav.Link>
-          <Nav.Link href='/offerte'>Offerte</Nav.Link>
-          <Nav.Link href='/contatti'>Contatti</Nav.Link>
-          <Nav.Link href='/chi-siamo'>Chi Siamo</Nav.Link>
+          <Nav.Link href='/'>HOME</Nav.Link>
+          <NavbarDropdown />
+          <Nav.Link className='mt-2' href='/contatti'>
+            CONTATTI
+          </Nav.Link>
+          <Nav.Link href='/chi-siamo'>CHI SIAMO</Nav.Link>
         </Nav>
       </div>
     </div>
