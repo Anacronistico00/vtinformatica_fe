@@ -1,5 +1,7 @@
 import { getBirthDateFromToken, getRoleFromToken } from '../../Utils/jwtUtils';
 import ApiURL from '../../Utils/ApiURL';
+import { DiSpark } from 'react-icons/di';
+import { resetCart } from './CartActions';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT = 'LOGOUT';
@@ -50,5 +52,6 @@ export const logout = () => {
     localStorage.removeItem('role');
     localStorage.removeItem('birthDate');
     dispatch({ type: LOGOUT });
+    dispatch(resetCart());
   };
 };

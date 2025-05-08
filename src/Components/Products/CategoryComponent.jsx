@@ -3,20 +3,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchProductsByCategory } from '../../Redux/Actions/ProductsAction';
 import ProductComponent from './ProductComponent';
+import { fetchCategoryById } from '../../Redux/Actions/CategoriesActions';
 
 const CategoryComponent = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
+  const category = useSelector((state) => state.categories.category);
 
   useEffect(() => {
     dispatch(fetchProductsByCategory(id));
+    dispatch(fetchCategoryById(id));
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [id, dispatch]);
 
   return (
     <div className='container my-4'>
-      <h2 className='mb-4'>Prodotti della categoria</h2>
+      {products && (
+        <h2 className='mb-4'>Prodotti per la categoria: {category?.name}</h2>
+      )}
       {loading ? (
         <p>Caricamento...</p>
       ) : error ? (

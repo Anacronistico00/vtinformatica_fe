@@ -66,7 +66,6 @@ export const fetchOrders = (email) => {
         throw new Error('Errore durante il recupero degli ordini');
 
       const data = await response.json();
-      console.log(data);
       dispatch({
         type: GET_ORDERS_SUCCESS,
         payload: data,

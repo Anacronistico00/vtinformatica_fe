@@ -21,8 +21,9 @@ const OrdersComponent = () => {
             <p>Non hai ancora effettuato ordini.</p>
           ) : (
             <ListGroup variant='flush'>
-              {orders.map((order) => (
+              {orders.map((order, index) => (
                 <Link
+                  key={index}
                   to={`/orderInfo/${order.id}`}
                   className='text-decoration-none'
                 >

@@ -11,6 +11,7 @@ import {
   UPDATE_ITEM_QUANTITY_REQUEST,
   UPDATE_ITEM_QUANTITY_SUCCESS,
   UPDATE_ITEM_QUANTITY_ERROR,
+  RESET_CART,
 } from '../Actions/CartActions';
 
 const initialState = {
@@ -106,6 +107,10 @@ export const cartReducer = (state = initialState, action) => {
     case UPDATE_ITEM_QUANTITY_ERROR:
       return { ...state, loading: false, error: action.payload };
 
+    case RESET_CART:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }

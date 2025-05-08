@@ -103,7 +103,7 @@ const CartComponent = () => {
                         : 'default-image.jpg'
                     }
                     alt={item.product ? item.product.name : 'Prodotto'}
-                    className='img-fluid rounded-3'
+                    className='img-fluid rounded-3 me-3'
                     style={{
                       width: '50px',
                       height: '50px',
@@ -137,7 +137,7 @@ const CartComponent = () => {
                     style={{ width: '60px' }}
                   />
                   <button
-                    className='btn btn-outline-warning btn-sm ml-2'
+                    className='btn btn-outline-warning btn-sm ml-2 me-1'
                     onClick={() =>
                       handleQuantityChange(
                         item.id,
@@ -148,15 +148,14 @@ const CartComponent = () => {
                   >
                     Rimuovi quantità
                   </button>
+                  <button
+                    className='btn btn-outline-danger btn-sm'
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <i className='bi bi-trash'></i>
+                    Rimuovi
+                  </button>
                 </div>
-
-                <button
-                  className='btn btn-outline-danger btn-sm'
-                  onClick={() => handleRemoveItem(item.id)}
-                >
-                  <i className='bi bi-trash'></i>
-                  Rimuovi
-                </button>
               </li>
             ))}
           </ul>

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Redux/Actions/authActions';
 import { useSelector } from 'react-redux';
+import { getCart } from '../../Redux/Actions/CartActions';
 
 const LoginComponent = () => {
   const [email, setEmail] = useState('');
@@ -19,6 +20,7 @@ const LoginComponent = () => {
     const isLoggedIn = await dispatch(login(email, password));
 
     if (isLoggedIn) {
+      dispatch(getCart());
       navigate('/accountInfo');
     } else {
       alert('Login fallito');

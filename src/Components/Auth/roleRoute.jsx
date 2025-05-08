@@ -1,19 +1,18 @@
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-const RoleRoute = ({ component, requiredRole }) => {
-  const auth = useSelector((state) => state.auth);
-  const { isAuthenticated, role } = auth;
+const RoleRoute = ({ children, requiredRole }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    return <Navigate to='/login' />;
+    return <Navigate to='/login' replace />;
   }
 
-  if (role !== requiredRole) {
-    return <Navigate to='/not-authorized' />;
+  if (user.role !== requiredRole) {
+    return <Navigate to='/not-authorized' replace />;
   }
 
-  return component;
+  return children;
 };
 
 export default RoleRoute;

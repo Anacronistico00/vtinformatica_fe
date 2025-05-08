@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaUserCog } from 'react-icons/fa';
 import {
   Button,
   Container,
@@ -15,8 +15,21 @@ import {
 import HamburgerDropdown from '../NavBar/HamburgerDropdown';
 import NavBarDropdown from './NavbarDropdown';
 import SearchBar from './SearchBarComponent';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart } from '../../Redux/Actions/CartActions';
 
 const NavBarComponent = () => {
+  const dispatch = useDispatch();
+
+  const { items } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, [dispatch]);
+
+  const user = useSelector((state) => state.auth.user);
+
   return (
     <div className='shadow-lg pb-3'>
       <Navbar expand='lg' className='d-flex flex-column sticky-top pb-0'>
@@ -60,12 +73,24 @@ const NavBarComponent = () => {
               </div>
 
               {/* Badge per numero articoli */}
-              {/* {cartItems.length > 0 && (
+              {items.length > 0 && (
                 <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
-                  {cartItems.length}
+                  {items.length}
                 </span>
-              )} */}
+              )}
             </Nav.Link>
+            {user?.role === 'Admin' && (
+              <Nav.Link
+                as={Link}
+                to='/admin'
+                className='text-white fs-5 d-flex d-md-block align-items-center link'
+              >
+                <div className='d-flex flex-column align-items-center justify-content-center'>
+                  <FaUserCog />
+                  <p className='m-0 ms-2'>Admin</p>
+                </div>
+              </Nav.Link>
+            )}
           </Nav>
         </Container>
       </Navbar>

@@ -26,6 +26,9 @@ const AccountInfoComponent = () => {
       dispatch(fetchOrders(user.email));
     }
   }, [user, dispatch]);
+  useEffect(() => {
+    if (error) console.error('Errore nel caricamento ordini:', error);
+  }, [error]);
 
   if (!user) {
     return (
@@ -69,8 +72,6 @@ const AccountInfoComponent = () => {
                 <div className='d-flex justify-content-center'>
                   <Spinner animation='border' variant='primary' />
                 </div>
-              ) : error ? (
-                <p className='text-danger'>{error}</p>
               ) : !orders || orders.length === 0 ? (
                 <p>Non hai ancora effettuato ordini.</p>
               ) : (

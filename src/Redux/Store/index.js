@@ -17,10 +17,12 @@ import {
 import expireTransform from '../../Utils/PersistConfig';
 import { cartReducer } from '../Reducers/CartReducer';
 import ordersReducer from '../Reducers/OrderReducer';
+import subCategoryReducer from '../Reducers/SubCategoryReducer';
 
 const rootReducer = combineReducers({
   auth: authentication,
   categories: categoryReducer,
+  subcategories: subCategoryReducer,
   manufacturers: manufacturerReducer,
   products: productsReducer,
   cart: cartReducer,
