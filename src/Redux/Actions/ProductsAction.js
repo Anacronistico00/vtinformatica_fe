@@ -122,6 +122,7 @@ export const addProduct = (productData) => async (dispatch) => {
       type: ADD_PRODUCT_SUCCESS,
       payload: data,
     });
+    dispatch(fetchProducts());
   } catch (error) {
     dispatch({
       type: ADD_PRODUCT_ERROR,
@@ -157,6 +158,7 @@ export const updateProduct = (productId, updatedData) => async (dispatch) => {
       type: UPDATE_PRODUCT_SUCCESS,
       payload: updatedData,
     });
+    dispatch(fetchProducts());
   } catch (error) {
     dispatch({
       type: UPDATE_PRODUCT_ERROR,
@@ -190,6 +192,7 @@ export const deleteProduct = (productId) => async (dispatch) => {
       type: DELETE_PRODUCT_SUCCESS,
       payload: productId,
     });
+    dispatch(fetchProducts());
   } catch (error) {
     dispatch({
       type: DELETE_PRODUCT_ERROR,

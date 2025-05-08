@@ -6,12 +6,19 @@ import {
   fetchProducts,
   updateProduct,
 } from '../../Redux/Actions/ProductsAction';
+import { fetchSubCategories } from '../../Redux/Actions/SubCategoriesActions';
 import { Modal, Button, Form, Row, Col, Card, Spinner } from 'react-bootstrap';
 
 const ManageProductsComponent = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.categories);
+  const subcategories = useSelector(
+    (state) => state.subcategories.subcategories
+  );
+  const manufacturers = useSelector(
+    (state) => state.manufacturers.manufacturers
+  );
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -32,12 +39,13 @@ const ManageProductsComponent = () => {
   });
 
   useEffect(() => {
+    dispatch(fetchSubCategories());
     dispatch(fetchProducts());
   }, [dispatch]);
 
   const groupedProducts = categories.reduce((acc, category) => {
     acc[category.id] = products.filter((product) => {
-      return product.category.id === category.id;
+      return product.category && product.category.id === category.id;
     });
     return acc;
   }, {});
@@ -98,7 +106,6 @@ const ManageProductsComponent = () => {
       dispatch(addProduct(productData));
     }
     closeModal();
-    dispatch(fetchProducts());
   };
 
   const handleImageChange = (index, value) => {
@@ -129,6 +136,12 @@ const ManageProductsComponent = () => {
   return (
     <div className='container mt-4'>
       <h2 className='text-center mb-4'>Gestione Prodotti per Categoria</h2>
+
+      <div className='d-flex justify-content-end mb-3'>
+        <Button variant='primary' onClick={() => openModal()}>
+          Aggiungi Nuovo Prodotto
+        </Button>
+      </div>
 
       {categories.map((category) => (
         <div key={category.id} className='mb-5'>
@@ -178,7 +191,15 @@ const ManageProductsComponent = () => {
                         <Button
                           variant='outline-danger'
                           size='sm'
-                          onClick={() => dispatch(deleteProduct(product.id))}
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                `Sei sicuro di voler eliminare il prodotto "${product.name}"?`
+                              )
+                            ) {
+                              dispatch(deleteProduct(product.id));
+                            }
+                          }}
                         >
                           Elimina
                         </Button>
@@ -202,56 +223,80 @@ const ManageProductsComponent = () => {
         <Modal.Body>
           <Form onSubmit={handleFormSubmit}>
             <Form.Group className='mb-2'>
+              <Form.Label>Nome Prodotto</Form.Label>
               <Form.Control
                 type='text'
-                placeholder='Nome'
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
               />
             </Form.Group>
+
             <Form.Group className='mb-2'>
+              <Form.Label>Produttore</Form.Label>
+              <Form.Control
+                as='select'
+                value={formData.manufacturerId}
+                onChange={(e) =>
+                  setFormData({ ...formData, manufacturerId: e.target.value })
+                }
+              >
+                <option value={0}>Seleziona un produttore</option>
+                {manufacturers.map((man) => (
+                  <option key={man.id} value={man.manufacturerId}>
+                    {man.manufacturerName}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group className='mb-2'>
+              <Form.Label>Descrizione Breve</Form.Label>
               <Form.Control
                 as='textarea'
-                placeholder='Descrizione'
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
               />
             </Form.Group>
+
             <Form.Group className='mb-2'>
+              <Form.Label>Prezzo (€)</Form.Label>
               <Form.Control
                 type='number'
-                placeholder='Prezzo'
                 value={formData.price}
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
                 }
               />
             </Form.Group>
+
             <Form.Group className='mb-2'>
+              <Form.Label>Quantità Disponibile</Form.Label>
               <Form.Control
                 type='number'
-                placeholder='Quantità'
                 value={formData.quantity}
                 onChange={(e) =>
                   setFormData({ ...formData, quantity: e.target.value })
                 }
               />
             </Form.Group>
+
             <Form.Group className='mb-2'>
+              <Form.Label>Descrizione Completa</Form.Label>
               <Form.Control
                 as='textarea'
-                placeholder='Descrizione Completa'
                 value={formData.fullDescription}
                 onChange={(e) =>
                   setFormData({ ...formData, fullDescription: e.target.value })
                 }
               />
             </Form.Group>
+
             <Form.Group className='mb-2'>
+              <Form.Label>Sottocategoria</Form.Label>
               <Form.Control
                 as='select'
                 value={formData.subCategoryId}
@@ -260,17 +305,17 @@ const ManageProductsComponent = () => {
                 }
               >
                 <option value={0}>Seleziona una sottocategoria</option>
-                {categories
-                  .find((cat) => cat.id === formData.subCategoryId)
-                  ?.subCategories?.map((sub) => (
-                    <option key={sub.id} value={sub.id}>
-                      {sub.name}
-                    </option>
-                  ))}
+                {subcategories.map((sub) => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
               </Form.Control>
             </Form.Group>
 
             {/* Sezione per l'inserimento delle immagini */}
+
+            <h6>Immagini del prodotto</h6>
             {formData.productImages.map((image, index) => (
               <Form.Group
                 key={index}
