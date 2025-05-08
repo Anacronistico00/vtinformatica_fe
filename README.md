@@ -19,21 +19,37 @@
    ```bash
    git clone https://github.com/Anacronistico00/vtinformatica_fe.git
    ```
+   
 2. Naviga nella directory del progetto
    ```bash
    cd vtinformatica_fe
    ```
+   
 3. Installa le dipendenze
    ```bash
    npm i
    ```
-4. Avviare l'applicazione
+4. Clonare anche la repository del BackEnd
+   ```bash
+   git clone https://github.com/Anacronistico00/VTInformatica.git
+   ```
+   
+5. Troverete all'interno un file 'DatabaseScript'. Copiare il contenuto e incollarlo su SQL Server Management Studio, eseguire la query e minimizzare la pagina, non ci servirà più.
+   
+6. Aprire il file .sln della repo BE
+   
+7. **Modifica e sostuisci la stringa di connessione nell' appsettings.json**
+   "ConnectionStrings": {
+  "DefaultConnection": "Server=TUO_SERVER;Database=NomeDatabase;Trusted_Connection=True;MultipleActiveResultSets=true"
+}
+   
+8. Avviare l'applicazione(Lato frontEnd)
    ```bash
    npm run dev
    ~~SHIFT+CLICK sull'URL che appare nella finestra di comando~~
    ```
-   L'app sarà disponibile all'indirizzo http://localhost:5173.
-
+   L'app sarà disponibile in una porta del localHost
+   
 ## Struttura del progetto
 ```plaintext
 vtinformatica_fe/
@@ -50,4 +66,9 @@ vtinformatica_fe/
 ├── package.json
 └── README.md
 ```
-- [Link alla repo del BackEnd](https://github.com/Anacronistico00/VTInformatica)
+
+
+## 📬 Contatti
+
+- 📧 Email: viktoryturiaci2323@gmail.com
+- 💼 LinkedIn: [Vittorio Turiaci](https://www.linkedin.com/in/vittorio-turiaci-2646a9333/)
