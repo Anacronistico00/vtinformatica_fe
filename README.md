@@ -2,8 +2,8 @@
 
 **VT Informatica FE** è il front-end ufficiale del progetto VT Informatica, una piattaforma di e-shop moderna e reattiva progettata per offrire un'esperienza utente fluida e intuitiva.
 
-## Qui il link per il backend
-- [Link alla repo del BackEnd](https://github.com/Anacronistico00/VTInformatica)
+## Qui il link per il back-end
+- [Link alla repo del back-end](https://github.com/Anacronistico00/VTInformatica)
 ## 🚀 Tecnologie Utilizzate
 
 - **React 19**: Per la creazione di interfacce utente moderne e performanti.
