@@ -56,7 +56,7 @@
 ```plaintext
 vtinformatica_fe/
 ├── public/
-│   └── images
+│   └── images/
 ├── src/
 │   ├── components/
 │   ├── redux/
