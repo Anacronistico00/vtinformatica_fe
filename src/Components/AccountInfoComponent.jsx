@@ -33,7 +33,7 @@ const AccountInfoComponent = () => {
   if (!user) {
     return (
       <div className='container mt-5'>
-        <h2>
+        <h2 className='text-center'>
           <Link to='/account'>Accedi</Link> per visualizzare il tuo profilo!
         </h2>
       </div>

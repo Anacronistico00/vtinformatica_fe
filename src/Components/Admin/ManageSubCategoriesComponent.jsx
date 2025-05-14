@@ -104,13 +104,13 @@ const ManageSubCategoriesComponent = () => {
               </option>
             ))}
           </select>
-          <button type='submit' className='btn btn-success'>
+          <button type='submit' className='btn btn-success mt-2'>
             {formData.id ? 'Aggiorna' : 'Aggiungi'}
           </button>
           {formData.id && (
             <button
               type='button'
-              className='btn btn-secondary ms-2'
+              className='btn btn-secondary ms-2 mt-2'
               onClick={() => setFormData({ id: null, name: '' })}
             >
               Annulla
