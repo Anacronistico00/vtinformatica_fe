@@ -107,3 +107,20 @@ Branch `feat/m4b-api-contract`, test-first (dettaglio in `docs/PIANO-M4.md`).
 
 - Test: 23 → 52. Lint: 0 errori, 0 warning.
 - Checkout riuscito: toast "Ordine creato con successo!" (prima nessun riscontro).
+
+## Stato avanzamento M4c – account (aggiornato 2026-11-24)
+
+Branch `feat/m4c-account`, test-first.
+
+| Voce                         | Stato  | Come                                                                                                                              |
+| ---------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Errori di login              | Chiuso | Messaggio nella pagina per `code` (prima `alert('Login fallito')` per qualsiasi errore)                                           |
+| `account_deactivated`        | Chiuso | Login → `/reactivate` (email precompilata, password richiesta di nuovo) → `POST /Account/reactivate` → `/welcome` "Bentornato!"   |
+| `account_suspended`          | Chiuso | Messaggio di negazione nel login e nella riattivazione; la nota di sospensione non arriva mai al cliente                           |
+| Disattivazione self          | Chiuso | "Disattiva il mio account" in Account: modale con motivo facoltativo (max 500), `DELETE /Account/{id}` (id dal token), logout     |
+| Backoffice utenti            | Chiuso | `/admin/users` (solo Admin): stato, data e nota; "Sospendi" con nota obbligatoria, "Revoca sospensione"; errori per `code`        |
+
+- Test: 52 → 70.
+- La password non passa mai tra le pagine né in `history.state`: la
+  riattivazione la richiede di nuovo.
+- Nessuna azione offerta su Admin e su se stessi (il BE le rifiuta comunque).
