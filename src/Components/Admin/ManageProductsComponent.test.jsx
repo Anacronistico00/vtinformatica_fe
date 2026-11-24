@@ -7,6 +7,9 @@ import { loggedIn, renderWithProviders } from '../../test/render';
 import ManageProductsComponent from './ManageProductsComponent';
 
 vi.mock('react-toastify', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+import { toast } from 'react-toastify';
+
+const problem409 = (code) => ({ status: 409, title: 'Conflitto', code, traceId: 't' });
 
 // Comportamento attuale della gestione prodotti, prima del refactor.
 
@@ -82,6 +85,73 @@ describe('ManageProductsComponent (characterization)', () => {
     await user.click(screen.getByRole('button', { name: 'Aggiorna' }));
 
     await vi.waitFor(() => expect(body).toMatchObject({ name: 'Mouse wireless', subCategoryId: 11 }));
+  });
+
+  it('sends the stock seen when the form was opened as expectedQuantity', async () => {
+    let body;
+    server.use(
+      http.put(`${API}/Product/2`, async ({ request }) => {
+        body = await request.json();
+        return new HttpResponse(null, { status: 204 });
+      })
+    );
+    const user = userEvent.setup();
+    renderWithProviders(<ManageProductsComponent />, { preloadedState });
+
+    await screen.findByText('Mouse ottico');
+    await user.click(within(sectionOf('Periferiche')).getByRole('button', { name: 'Modifica' }));
+    const quantity = screen.getByLabelText('Quantità Disponibile');
+    await user.clear(quantity);
+    await user.type(quantity, '7');
+    await user.click(screen.getByRole('button', { name: 'Aggiorna' }));
+
+    await vi.waitFor(() => expect(body).toMatchObject({ quantity: 7, expectedQuantity: 4 }));
+  });
+
+  it('on a stale stock (409 stock_conflict) says so and reloads the list', async () => {
+    let listCalls = 0;
+    server.use(
+      http.get(`${API}/Product`, () => {
+        listCalls += 1;
+        return HttpResponse.json(catalogue, { headers: { 'X-Total-Count': '2' } });
+      }),
+      http.put(`${API}/Product/2`, () => HttpResponse.json({ ...problem409('stock_conflict') }, { status: 409 }))
+    );
+    const user = userEvent.setup();
+    renderWithProviders(<ManageProductsComponent />, { preloadedState });
+
+    await screen.findByText('Mouse ottico');
+    await user.click(within(sectionOf('Periferiche')).getByRole('button', { name: 'Modifica' }));
+    await user.click(screen.getByRole('button', { name: 'Aggiorna' }));
+
+    await vi.waitFor(() => expect(toast.error).toHaveBeenCalledWith(expect.stringMatching(/modificato nel frattempo/i)));
+    await vi.waitFor(() => expect(listCalls).toBe(2));
+  });
+
+  it('pages the list from the server (X-Total-Count)', async () => {
+    const pages = [];
+    server.use(
+      http.get(`${API}/Product`, ({ request }) => {
+        const params = new URL(request.url).searchParams;
+        pages.push(`${params.get('page')}/${params.get('pageSize')}`);
+        return HttpResponse.json(catalogue, { headers: { 'X-Total-Count': '41' } });
+      })
+    );
+    const user = userEvent.setup();
+    renderWithProviders(<ManageProductsComponent />, { preloadedState });
+
+    await screen.findByText('Intel i9');
+    expect(screen.getByText('Pagina 1 di 3')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '2' }));
+
+    await vi.waitFor(() => expect(pages).toEqual(['1/20', '2/20']));
+  });
+
+  it('loads categories and manufacturers by itself', async () => {
+    renderWithProviders(<ManageProductsComponent />, { preloadedState: loggedIn({ role: 'Admin' }) });
+
+    expect(await screen.findByRole('heading', { name: 'Componenti PC' })).toBeInTheDocument();
+    expect(await screen.findByText('Intel i9')).toBeInTheDocument();
   });
 
   it('deletes a product after confirmation', async () => {
