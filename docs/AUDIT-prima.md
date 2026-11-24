@@ -74,6 +74,11 @@ Il testo sopra è la baseline e non va modificato. Piano in `docs/PIANO-M4.md`.
 - Il token resta in localStorage (via redux-persist): un XSS potrebbe leggerlo.
   La soluzione vera (cookie httpOnly + refresh token) richiede il BE.
 
+- **`npm audit`** (branch `chore/npm-audit`): 16 alla baseline (19 con le
+  dipendenze di test) → **0**. `npm audit fix` senza `--force` (tra gli altri
+  `react-router-dom` 7.18, `vite` 6.4) e Vitest 3 → 5 (gli ultimi 3 avvisi erano
+  tutti nella toolchain di test).
+
 ### Fuori scope emersi (non toccati)
 
 1. `FETCH_PRODUCTS_BY_MANUFACTURER_*` usano le stesse stringhe dei tipi
