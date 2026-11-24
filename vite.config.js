@@ -8,5 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.js'],
     restoreMocks: true,
+    // Gli E2E (Playwright) girano a parte con npm run e2e.
+    include: ['src/**/*.test.{js,jsx}'],
   },
 })

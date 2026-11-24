@@ -17,6 +17,11 @@ dist-ssr
 .env.*
 !.env.example
 
+# E2E (Playwright)
+playwright-report/
+test-results/
+e2e/.state.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
