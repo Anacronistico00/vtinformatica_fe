@@ -121,7 +121,7 @@ describe('orders', () => {
     const { store } = await loggedInStore();
     let ordered = false;
     server.use(
-      http.post('*/Order/from-cart/*', () => {
+      http.post('*/Order/me/from-cart', () => {
         ordered = true;
         return HttpResponse.json(
           { id: 1, orderNumber: 'AB12CD34', customerEmail: EMAIL, items: [], isDeleted: false },
@@ -131,7 +131,7 @@ describe('orders', () => {
       http.get('*/Cart/*', () => HttpResponse.json(emptyCart))
     );
 
-    await store.dispatch(CreateOrder(EMAIL));
+    await store.dispatch(CreateOrder());
 
     expect(ordered).toBe(true);
     expect(store.getState().orders).toMatchObject({ loading: false, error: null });

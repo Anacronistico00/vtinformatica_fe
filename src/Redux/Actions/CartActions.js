@@ -1,7 +1,11 @@
-import { getEmailFromToken } from '../../Utils/jwtUtils';
+import { toast } from 'react-toastify';
 import { api } from '../../Utils/apiClient';
+import { messageFor } from '../../Utils/errorMessages';
 
-const currentEmail = (getState) => getEmailFromToken(getState().auth.token);
+// Il carrello è sempre quello dell'utente del token (/Cart/me): l'email non viaggia nell'URL.
+const requireLogin = (getState, message) => {
+  if (!getState().auth.token) throw new Error(message);
+};
 
 export const ADD_TO_CART_REQUEST = 'ADD_TO_CART_REQUEST';
 export const ADD_TO_CART_SUCCESS = 'ADD_TO_CART_SUCCESS';
@@ -12,14 +16,9 @@ export const addToCart = (productId, quantity) => {
     dispatch({ type: ADD_TO_CART_REQUEST });
 
     try {
-      const userEmail = currentEmail(getState);
-      if (!userEmail) throw new Error('Utente non autenticato');
+      requireLogin(getState, 'Accedi per aggiungere prodotti al carrello.');
 
-      const { data } = await api
-        .post(`/Cart/${userEmail}/add`, { productId, quantity })
-        .catch(() => {
-          throw new Error("Errore durante l'aggiunta al carrello");
-        });
+      const { data } = await api.post('/Cart/me/add', { productId, quantity });
 
       dispatch({
         type: ADD_TO_CART_SUCCESS,
@@ -27,9 +26,11 @@ export const addToCart = (productId, quantity) => {
       });
       dispatch(getCart());
     } catch (error) {
+      const message = messageFor(error, error.message || "Errore durante l'aggiunta al carrello");
+      toast.error(message);
       dispatch({
         type: ADD_TO_CART_ERROR,
-        payload: error.message,
+        payload: message,
       });
     }
   };
@@ -44,12 +45,9 @@ export const getCart = () => {
     dispatch({ type: GET_CART_REQUEST });
 
     try {
-      const userEmail = currentEmail(getState);
-      if (!userEmail) throw new Error('Utente non autenticato');
+      requireLogin(getState, 'Utente non autenticato');
 
-      const { data } = await api.get(`/Cart/${userEmail}`).catch(() => {
-        throw new Error('Errore durante il recupero del carrello');
-      });
+      const { data } = await api.get('/Cart/me');
 
       dispatch({
         type: GET_CART_SUCCESS,
@@ -58,7 +56,7 @@ export const getCart = () => {
     } catch (error) {
       dispatch({
         type: GET_CART_ERROR,
-        payload: error.message,
+        payload: messageFor(error, error.message || 'Errore durante il recupero del carrello'),
       });
     }
   };
@@ -73,18 +71,16 @@ export const removeItemFromCart = (itemId) => {
     dispatch({ type: REMOVE_FROM_CART_REQUEST });
 
     try {
-      if (!currentEmail(getState)) throw new Error('Utente non autenticato');
+      requireLogin(getState, 'Utente non autenticato');
 
-      await api.delete(`/Cart/${itemId}/delete`).catch(() => {
-        throw new Error("Errore durante la rimozione dell'articolo dal carrello");
-      });
+      await api.delete(`/Cart/${itemId}/delete`);
 
       dispatch({ type: REMOVE_FROM_CART_SUCCESS, payload: { id: itemId } });
       dispatch(getCart());
     } catch (error) {
       dispatch({
         type: REMOVE_FROM_CART_ERROR,
-        payload: error.message,
+        payload: messageFor(error, error.message || "Errore durante la rimozione dell'articolo dal carrello"),
       });
     }
   };
@@ -99,15 +95,11 @@ export const updateItemQuantity = (cartItemId, quantityToRemove) => {
     dispatch({ type: UPDATE_ITEM_QUANTITY_REQUEST });
 
     try {
-      if (!currentEmail(getState)) throw new Error('Utente non autenticato');
+      requireLogin(getState, 'Utente non autenticato');
 
-      const { data } = await api
-        .patch(
-          `/Cart/${cartItemId}/delete/byquantity?quantityToRemove=${Math.abs(quantityToRemove)}`
-        )
-        .catch(() => {
-          throw new Error("Errore durante l'aggiornamento della quantità");
-        });
+      const { data } = await api.patch(
+        `/Cart/${cartItemId}/delete/byquantity?quantityToRemove=${Math.abs(quantityToRemove)}`
+      );
 
       dispatch({ type: UPDATE_ITEM_QUANTITY_SUCCESS, payload: data });
 
@@ -115,7 +107,7 @@ export const updateItemQuantity = (cartItemId, quantityToRemove) => {
     } catch (error) {
       dispatch({
         type: UPDATE_ITEM_QUANTITY_ERROR,
-        payload: error.message,
+        payload: messageFor(error, error.message || "Errore durante l'aggiornamento della quantità"),
       });
     }
   };

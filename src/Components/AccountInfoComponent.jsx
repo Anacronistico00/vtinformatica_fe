@@ -23,7 +23,7 @@ const AccountInfoComponent = () => {
 
   useEffect(() => {
     if (user) {
-      dispatch(fetchOrders(user.email));
+      dispatch(fetchOrders());
     }
   }, [user, dispatch]);
   useEffect(() => {

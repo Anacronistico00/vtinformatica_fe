@@ -5,7 +5,6 @@ import {
   removeItemFromCart,
   updateItemQuantity,
 } from '../Redux/Actions/CartActions';
-import { getEmailFromToken } from '../Utils/jwtUtils';
 import { CreateOrder } from '../Redux/Actions/OrderAction';
 import { Link } from 'react-router-dom';
 
@@ -53,16 +52,15 @@ const CartComponent = () => {
     });
   };
 
-  const token = useSelector((state) => state.auth.token);
-  const userEmail = token ? getEmailFromToken(token) : null;
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleCreateOrder = () => {
     const confirmOrder = window.confirm(
       "Sei sicuro di voler completare l'ordine?"
     );
     if (confirmOrder) {
-      if (userEmail) {
-        dispatch(CreateOrder(userEmail));
+      if (isAuthenticated) {
+        dispatch(CreateOrder());
       } else {
         alert("Devi essere autenticato per completare l'ordine");
       }
