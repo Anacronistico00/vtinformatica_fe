@@ -33,6 +33,11 @@ const firstFieldError = (errors) => {
   return messages && messages.length > 0 ? messages[0] : null;
 };
 
+/** Per i .catch delle actions: rilancia un Error con il testo per l'utente (code del BE o fallback). */
+export const withMessage = (fallback) => (error) => {
+  throw new Error(messageFor(error, fallback));
+};
+
 /** Testo per l'utente: dal code del BE, altrimenti il fallback del chiamante. */
 export const messageFor = (error, fallback = 'Si è verificato un errore.') => {
   if (!(error instanceof ApiError)) return fallback;

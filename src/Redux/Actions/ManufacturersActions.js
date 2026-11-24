@@ -1,4 +1,5 @@
 import { api } from '../../Utils/apiClient';
+import { withMessage } from '../../Utils/errorMessages';
 
 export const GET_MANUFACTURERS_LOADING = 'GET_MANUFACTURERS_LOADING';
 export const GET_MANUFACTURERS_SUCCESS = 'GET_MANUFACTURERS_SUCCESS';
@@ -56,9 +57,7 @@ export const createManufacturer = (manufacturer) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_MANUFACTURER_LOADING });
     try {
-      const { data } = await api.post('/Manufacturer', manufacturer).catch(() => {
-        throw new Error('Errore nella creazione del brand');
-      });
+      const { data } = await api.post('/Manufacturer', manufacturer).catch(withMessage('Errore nella creazione del brand'));
       dispatch({ type: CREATE_MANUFACTURER_SUCCESS, payload: data });
     } catch (err) {
       dispatch({ type: CREATE_MANUFACTURER_ERROR, payload: err.message });
@@ -74,9 +73,9 @@ export const updateManufacturer = (id, updatedManufacturer) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_MANUFACTURER_LOADING });
     try {
-      const { status } = await api.put(`/Manufacturer/${id}`, updatedManufacturer).catch(() => {
-        throw new Error("Errore nell'aggiornamento del brand");
-      });
+      const { status } = await api
+        .put(`/Manufacturer/${id}`, updatedManufacturer)
+        .catch(withMessage("Errore nell'aggiornamento del brand"));
 
       if (status === 204) {
         dispatch({
@@ -98,9 +97,7 @@ export const deleteManufacturer = (id) => {
   return async (dispatch) => {
     dispatch({ type: DELETE_MANUFACTURER_LOADING });
     try {
-      await api.delete(`/Manufacturer/${id}`).catch(() => {
-        throw new Error("Errore nell'eliminazione del brand");
-      });
+      await api.delete(`/Manufacturer/${id}`).catch(withMessage("Errore nell'eliminazione del brand"));
 
       dispatch({ type: DELETE_MANUFACTURER_SUCCESS, payload: id });
     } catch (err) {

@@ -20,16 +20,22 @@ import {
   DELETE_PRODUCT_LOADING,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
+  FETCH_PRODUCTS_PAGE_SUCCESS,
 } from '../Actions/ProductsAction';
 
 const initialState = {
   products: [],
+  // Pagina corrente della lista del backoffice, separata dalle liste pubbliche del catalogo.
+  adminPage: { items: [], total: 0, page: 1, pageSize: 20 },
   loading: false,
   error: null,
 };
 
 const productsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_PRODUCTS_PAGE_SUCCESS:
+      return { ...state, loading: false, adminPage: action.payload };
+
     case FETCH_PRODUCTS_LOADING:
     case FETCH_PRODUCTS_BY_CATEGORY_LOADING:
     case FETCH_PRODUCTS_BY_SUBCATEGORY_LOADING:

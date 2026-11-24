@@ -1,4 +1,5 @@
 import { api } from '../../Utils/apiClient';
+import { withMessage } from '../../Utils/errorMessages';
 
 export const GET_SUBCATEGORIES_LOADING = 'GET_SUBCATEGORIES_LOADING';
 export const GET_SUBCATEGORIES_SUCCESS = 'GET_SUBCATEGORIES_SUCCESS';
@@ -56,9 +57,9 @@ export const createSubCategory = (category) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_SUBCATEGORY_LOADING });
     try {
-      const { data } = await api.post('/SubCategory', category).catch(() => {
-        throw new Error('Errore nella creazione della categoria');
-      });
+      const { data } = await api
+        .post('/SubCategory', category)
+        .catch(withMessage('Errore nella creazione della sottocategoria'));
       dispatch({ type: CREATE_SUBCATEGORY_SUCCESS, payload: data });
     } catch (err) {
       dispatch({ type: CREATE_SUBCATEGORY_ERROR, payload: err.message });
@@ -74,9 +75,9 @@ export const updateSubCategory = (id, updatedCategory) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_SUBCATEGORY_LOADING });
     try {
-      const { status } = await api.put(`/SubCategory/${id}`, updatedCategory).catch(() => {
-        throw new Error("Errore nell'aggiornamento della categoria");
-      });
+      const { status } = await api
+        .put(`/SubCategory/${id}`, updatedCategory)
+        .catch(withMessage("Errore nell'aggiornamento della sottocategoria"));
 
       if (status === 204) {
         dispatch({
@@ -98,9 +99,7 @@ export const deleteSubCategory = (id) => {
   return async (dispatch) => {
     dispatch({ type: DELETE_SUBCATEGORY_LOADING });
     try {
-      await api.delete(`/SubCategory/${id}`).catch(() => {
-        throw new Error("Errore nell'eliminazione della categoria");
-      });
+      await api.delete(`/SubCategory/${id}`).catch(withMessage("Errore nell'eliminazione della sottocategoria"));
 
       dispatch({ type: DELETE_SUBCATEGORY_SUCCESS, payload: id });
     } catch (err) {
