@@ -18,7 +18,7 @@ const ManufacturerComponent = () => {
     dispatch(fetchProductsByManufacturer(id));
     dispatch(fetchManufacturerById(id));
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [dispatch, id]);
 
   return (
     <div className='container my-4'>
