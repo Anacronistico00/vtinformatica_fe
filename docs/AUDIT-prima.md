@@ -124,3 +124,21 @@ Branch `feat/m4c-account`, test-first.
 - La password non passa mai tra le pagine né in `history.state`: la
   riattivazione la richiede di nuovo.
 - Nessuna azione offerta su Admin e su se stessi (il BE le rifiuta comunque).
+
+## Stato avanzamento M4d – backoffice (aggiornato 2026-11-24)
+
+Branch `feat/m4d-backoffice`, test-first (caratterizzazione della gestione
+prodotti prima del refactor).
+
+| Voce                                | Stato  | Come                                                                                                                         |
+| ----------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `ExpectedQuantity`                  | Chiuso | La modifica prodotto invia lo stock visto all'apertura del modale; 409 `stock_conflict` → messaggio e lista ricaricata       |
+| Paginazione lista prodotti admin    | Chiuso | `GET /Product?page&pageSize=20`, totale da `X-Total-Count`; "Pagina X di Y" e controlli Bootstrap                            |
+| 409 `resource_in_use`               | Chiuso | Categorie, sottocategorie, produttori: il testo del BE (prodotti collegati, anche eliminati) al posto del messaggio generico |
+| Restore ordine senza stock          | Chiuso | 409 `insufficient_stock` mostrato con il suo testo                                                                           |
+| Errori sottocategorie               | Chiuso | Il reducer ignorava gli errori di creazione/modifica/eliminazione: la pagina non li mostrava mai                             |
+| Pagina prodotti admin               | Chiuso | Carica da sé categorie e produttori (prima vuota se aperta direttamente); etichette del form collegate ai campi              |
+| FE 6 Componente più grande          | Chiuso | `ManageProductsComponent` 361 → 138 righe (`ProductFormModal`, `AdminPagination`)                                            |
+
+- Test: 70 → 83.
+- La lista mostra solo le categorie con prodotti nella pagina corrente.
