@@ -78,3 +78,22 @@ FE" delle milestone del BE: `../VTInformatica/docs/AUDIT-prima.md`.
 3. Backoffice `/admin/users` (solo Admin): elenco utenti con stato, "Sospendi"
    con nota obbligatoria, "Revoca sospensione" per gli account sospesi. Niente
    azioni su Admin e su se stessi (il BE le rifiuta).
+
+## Dettaglio M4d (branch `feat/m4d-backoffice`)
+
+1. Test di caratterizzazione di `ManageProductsComponent` (lista per categoria,
+   modale di modifica, eliminazione).
+2. Modifica prodotto con `expectedQuantity` (lo stock visto all'apertura del
+   modale): 409 `stock_conflict` → messaggio e lista ricaricata.
+3. Lista prodotti admin paginata dal server (20 per pagina, `X-Total-Count`); la
+   pagina carica da sé categorie e produttori che le servono.
+4. Eliminazione di categorie, sottocategorie e produttori: 409 `resource_in_use`
+   mostrato con il suo testo; restore ordine con 409 `insufficient_stock` idem.
+5. Refactor di `ManageProductsComponent` (361 righe) dopo i test: modale del
+   form e paginazione in componenti propri.
+
+## M4g – E2E (Playwright, solo in locale)
+
+Cartella `e2e/`, `npm run e2e`, contro BE e DB locali. Dati dedicati
+(`e2e.*@example.test`, prodotti propri) creati in setup e rimossi in teardown.
+Non in CI: futuro insieme a Testcontainers.
