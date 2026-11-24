@@ -29,33 +29,9 @@ export const cartReducer = (state = initialState, action) => {
     case UPDATE_ITEM_QUANTITY_REQUEST:
       return { ...state, loading: true, error: null };
 
-    case ADD_TO_CART_SUCCESS: {
-      const existingItemIndex = state.items.findIndex(
-        (item) => item.productId === action.payload.productId
-      );
-
-      if (existingItemIndex !== -1) {
-        const updatedItems = [...state.items];
-        updatedItems[existingItemIndex].quantity += action.payload.quantity;
-        return {
-          ...state,
-          loading: false,
-          items: updatedItems,
-          totalPrice: updatedItems.reduce(
-            (total, item) => total + item.quantity * item.price,
-            0
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          loading: false,
-          items: [...state.items, action.payload],
-          totalPrice:
-            state.totalPrice + action.payload.quantity * action.payload.price,
-        };
-      }
-    }
+    // La risposta dell'aggiunta è solo un messaggio: righe e totale arrivano dal getCart che segue.
+    case ADD_TO_CART_SUCCESS:
+      return { ...state, loading: false };
 
     case REMOVE_FROM_CART_SUCCESS: {
       const updatedItems = state.items.filter(
