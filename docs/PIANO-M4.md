@@ -45,3 +45,23 @@ FE" delle milestone del BE: `../VTInformatica/docs/AUDIT-prima.md`.
 - Pagina admin degli ordini (il BE offre `GET /Order` paginato, il FE non ha la
   schermata).
 - Token in cookie httpOnly (richiede il BE).
+
+## Dettaglio M4b (branch `feat/m4b-api-contract`)
+
+1. Route `/me`: carrello (`GET /Cart/me`, `POST /Cart/me/add`), ordini
+   (`GET /Order/me`, `POST /Order/me/from-cart`); l'email non serve più alle
+   actions né ai componenti.
+2. Errori per `code` (`Utils/errorMessages.js`, un solo punto per i testi):
+   aggiunta al carrello e checkout mostrano un toast con il motivo (oggi
+   falliscono in silenzio). `ADD_TO_CART_SUCCESS` non inserisce più la risposta
+   del BE (`{ message }`) tra le righe del carrello.
+3. Checkout con nota facoltativa (`customerComment`, max 500).
+4. Registrazione: niente `fiscalCode` (campo inesistente nel BE), errore per
+   `code`.
+5. `RoleRoute` senza login → `/account` (oggi `/login`, rotta inesistente).
+6. NavBar: nessuna richiesta del carrello senza login; non va in crash con lo
+   stato iniziale.
+7. Lista prodotti admin paginata dal server (`page`, `pageSize` 20,
+   `X-Total-Count`).
+8. Liste vuote `200 []` sulle pagine catalogo; warning `exhaustive-deps` dei tre
+   componenti catalogo dopo i loro test.
