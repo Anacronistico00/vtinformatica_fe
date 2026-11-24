@@ -1,4 +1,5 @@
 import { createTransform } from 'redux-persist';
+import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 import { isTokenExpired } from './jwtUtils';
 
 const EXPIRATION_TIME = 60 * 60 * 1000;
@@ -28,10 +29,18 @@ const expireTransform = createTransform(
   }
 );
 
+// Uno slice scartato dal transform (undefined) non va scritto sopra lo stato iniziale:
+// autoMergeLevel1 lo copierebbe e state.auth / state.cart diventerebbero undefined (crash all'avvio).
+const withoutDroppedSlices = (inboundState) =>
+  inboundState &&
+  Object.fromEntries(Object.entries(inboundState).filter(([, value]) => value !== undefined));
+
 export const makePersistConfig = (storage) => ({
   key: 'root',
   storage,
   transforms: [expireTransform],
+  stateReconciler: (inboundState, originalState, reducedState, config) =>
+    autoMergeLevel1(withoutDroppedSlices(inboundState), originalState, reducedState, config),
 });
 
 export default expireTransform;
