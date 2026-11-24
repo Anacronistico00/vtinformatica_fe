@@ -28,4 +28,10 @@ const expireTransform = createTransform(
   }
 );
 
+export const makePersistConfig = (storage) => ({
+  key: 'root',
+  storage,
+  transforms: [expireTransform],
+});
+
 export default expireTransform;
