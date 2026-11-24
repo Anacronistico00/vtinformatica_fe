@@ -32,6 +32,18 @@ export const getEmailFromToken = (token) => {
   }
 };
 
+/** true se il token manca, non è leggibile o il suo exp (secondi) è già passato. */
+export const isTokenExpired = (token, now = Date.now()) => {
+  if (!token) return true;
+  try {
+    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const { exp } = JSON.parse(atob(payload));
+    return typeof exp !== 'number' || exp * 1000 <= now;
+  } catch {
+    return true;
+  }
+};
+
 export const getBirthDateFromToken = (token) => {
   if (!token) return null;
   try {

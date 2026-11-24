@@ -23,10 +23,6 @@ export const login = (email, password) => {
       const role = getRoleFromToken(data.token);
       const birthDate = getBirthDateFromToken(data.token);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', role);
-      localStorage.setItem('birthDate', birthDate);
-
       const user = { email, role, birthDate };
 
       dispatch(loginSuccess(user, data.token, isAuthenticated));
@@ -44,9 +40,6 @@ export const registerUser = (registration) =>
 
 export const logout = () => {
   return (dispatch) => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('birthDate');
     dispatch({ type: LOGOUT });
     dispatch(resetCart());
   };
