@@ -65,3 +65,16 @@ FE" delle milestone del BE: `../VTInformatica/docs/AUDIT-prima.md`.
    `X-Total-Count`).
 8. Liste vuote `200 []` sulle pagine catalogo; warning `exhaustive-deps` dei tre
    componenti catalogo dopo i loro test.
+
+## Dettaglio M4c (branch `feat/m4c-account`)
+
+1. Login: errori mostrati nella pagina per `code`. `account_deactivated` →
+   `/reactivate` (email precompilata, password richiesta di nuovo: non viene mai
+   salvata né passata tra pagine) → conferma → `/welcome`. `account_suspended` →
+   messaggio di negazione.
+2. Disattivazione self da "Account": conferma in un modale con motivo facoltativo
+   (max 500), `DELETE /Account/{id}` con l'id dal token, poi logout. Non mostrata
+   all'Admin (il BE la rifiuta).
+3. Backoffice `/admin/users` (solo Admin): elenco utenti con stato, "Sospendi"
+   con nota obbligatoria, "Revoca sospensione" per gli account sospesi. Niente
+   azioni su Admin e su se stessi (il BE le rifiuta).
