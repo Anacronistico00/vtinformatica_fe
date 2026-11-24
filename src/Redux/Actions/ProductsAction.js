@@ -1,4 +1,4 @@
-import ApiURL from '../../Utils/ApiURL';
+import { api } from '../../Utils/apiClient';
 
 export const FETCH_PRODUCTS_LOADING = 'FETCH_PRODUCTS_LOADING';
 export const FETCH_PRODUCTS_SUCCESS = 'FETCH_PRODUCTS_SUCCESS';
@@ -8,8 +8,7 @@ export const fetchProducts = () => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_LOADING });
 
   try {
-    const response = await fetch(`${ApiURL.apiUrl}/Product`);
-    const data = await response.json();
+    const { data } = await api.get('/Product', { auth: false });
     dispatch({ type: FETCH_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -17,6 +16,13 @@ export const fetchProducts = () => async (dispatch) => {
       payload: error.message,
     });
   }
+};
+
+export const searchProducts = async (query) => {
+  const { data } = await api.get(`/Product/search?query=${query}`, { auth: false }).catch(() => {
+    throw new Error('Errore nel recupero dei prodotti');
+  });
+  return data;
 };
 
 export const FETCH_PRODUCTS_BY_CATEGORY_LOADING =
@@ -30,10 +36,7 @@ export const fetchProductsByCategory = (categoryId) => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_BY_CATEGORY_LOADING });
 
   try {
-    const response = await fetch(
-      `${ApiURL.apiUrl}/Product/category/${categoryId}`
-    );
-    const data = await response.json();
+    const { data } = await api.get(`/Product/category/${categoryId}`, { auth: false });
     dispatch({ type: FETCH_PRODUCTS_BY_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -55,10 +58,7 @@ export const fetchProductsBySubCategory =
     dispatch({ type: FETCH_PRODUCTS_BY_SUBCATEGORY_LOADING });
 
     try {
-      const response = await fetch(
-        `${ApiURL.apiUrl}/Product/subcategory/${subCategoryId}`
-      );
-      const data = await response.json();
+      const { data } = await api.get(`/Product/subcategory/${subCategoryId}`, { auth: false });
       dispatch({ type: FETCH_PRODUCTS_BY_SUBCATEGORY_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
@@ -80,10 +80,7 @@ export const fetchProductsByManufacturer =
     dispatch({ type: FETCH_PRODUCTS_BY_MANUFACTURER_LOADING });
 
     try {
-      const response = await fetch(
-        `${ApiURL.apiUrl}/Product/manufacturer/${manufacturerId}`
-      );
-      const data = await response.json();
+      const { data } = await api.get(`/Product/manufacturer/${manufacturerId}`, { auth: false });
       dispatch({ type: FETCH_PRODUCTS_BY_MANUFACTURER_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
@@ -101,22 +98,9 @@ export const addProduct = (productData) => async (dispatch) => {
   dispatch({ type: ADD_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(productData),
-    });
-
-    if (!response.ok) {
+    const { data } = await api.post('/Product', productData).catch(() => {
       throw new Error("Errore durante l'aggiunta del prodotto");
-    }
-
-    const data = await response.json();
+    });
 
     dispatch({
       type: ADD_PRODUCT_SUCCESS,
@@ -139,20 +123,9 @@ export const updateProduct = (productId, updatedData) => async (dispatch) => {
   dispatch({ type: UPDATE_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product/${productId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
+    await api.put(`/Product/${productId}`, updatedData).catch(() => {
       throw new Error("Errore durante l'aggiornamento del prodotto");
-    }
+    });
 
     dispatch({
       type: UPDATE_PRODUCT_SUCCESS,
@@ -175,18 +148,9 @@ export const deleteProduct = (productId) => async (dispatch) => {
   dispatch({ type: DELETE_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product/${productId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
+    await api.delete(`/Product/${productId}`).catch(() => {
       throw new Error("Errore durante l'eliminazione del prodotto");
-    }
+    });
 
     dispatch({
       type: DELETE_PRODUCT_SUCCESS,

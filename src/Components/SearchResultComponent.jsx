@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ApiURL from '../Utils/ApiURL';
+import { searchProducts } from '../Redux/Actions/ProductsAction';
 import { motion } from 'framer-motion';
 import { Button } from 'react-bootstrap';
 
@@ -22,12 +22,7 @@ const SearchResultComponent = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          `${ApiURL.apiUrl}/Product/search?query=${query}`
-        );
-        if (!response.ok) throw new Error('Errore nel recupero dei prodotti');
-
-        const data = await response.json();
+        const data = await searchProducts(query);
         setProducts(data);
         setFilteredProducts(data);
         setCurrentPage(1); // Reset pagina alla nuova query
