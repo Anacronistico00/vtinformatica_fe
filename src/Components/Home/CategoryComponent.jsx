@@ -14,7 +14,7 @@ const CategoryComponent = () => {
 
   useEffect(() => {
     dispatch(fetchCategories());
-  }, []);
+  }, [dispatch]);
 
   if (loading) return <p>Caricamento categorie...</p>;
   if (error) return <p>Errore: {error}</p>;

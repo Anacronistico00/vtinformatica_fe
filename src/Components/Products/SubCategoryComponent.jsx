@@ -15,7 +15,7 @@ const SubCategoryComponent = () => {
     dispatch(fetchProductsBySubCategory(id));
     dispatch(fetchSubCategoryById(id));
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [dispatch, id]);
 
   return (
     <div className='container my-4'>
