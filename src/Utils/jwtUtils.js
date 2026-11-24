@@ -1,3 +1,18 @@
+/** Id utente (claim NameIdentifier): serve alle route del BE che lavorano per id, es. DELETE /Account/{id}. */
+export const getUserIdFromToken = (token) => {
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return (
+      JSON.parse(atob(payload))[
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+      ] || null
+    );
+  } catch {
+    return null;
+  }
+};
+
 export const getRoleFromToken = (token) => {
   if (!token) return null;
   try {
