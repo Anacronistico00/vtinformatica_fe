@@ -24,6 +24,9 @@ const productWith = (list) => ({
   quantity: 3,
   productImages: [{ imageUrl: 'https://img.test.local/a.png' }],
   subCategory: { id: 11, name: 'Mouse', categoryId: 2 },
+  category: { id: 2, name: 'Periferiche' },
+  manufacturerId: 4,
+  manufacturer: { manufacturerId: 4, manufacturerName: 'ASUS', manufacturerLogo: 'https://img.test.local/asus.svg' },
   reviews: list,
 });
 

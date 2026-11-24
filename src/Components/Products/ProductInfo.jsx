@@ -1,13 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { fetchProductsBySubCategory } from '../../Redux/Actions/ProductsAction';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { fetchProductById, fetchProductsBySubCategory } from '../../Redux/Actions/ProductsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../Redux/Actions/CartActions';
+import { messageFor } from '../../Utils/errorMessages';
+import ProductReviews from './ProductReviews';
 
+// Il prodotto arriva dallo stato della navigazione (click da una lista) oppure, se la pagina
+// è aperta direttamente o ricaricata, viene letto dall'API con l'id della route.
 const ProductInfo = () => {
+  const { id } = useParams();
   const location = useLocation();
+  const fromNavigation = location.state?.product;
+  const [product, setProduct] = useState(
+    fromNavigation && String(fromNavigation.id) === id ? fromNavigation : null
+  );
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (product && String(product.id) === id) return;
+    fetchProductById(id)
+      .then(setProduct)
+      .catch((e) => setError(messageFor(e, 'Prodotto non disponibile.')));
+  }, [id, product]);
+
+  if (error) return <p className='container my-5'>{error}</p>;
+  if (!product) return <p className='container my-5'>Caricamento...</p>;
+
+  return <ProductDetail product={product} />;
+};
+
+const ProductDetail = ({ product }) => {
   const dispatch = useDispatch();
-  const { product } = location.state || {};
   const products = useSelector((state) => state.products.products);
   const loading = useSelector((state) => state.products.loading);
 
@@ -306,6 +330,8 @@ const ProductInfo = () => {
           </div>
         </div>
       )}
+
+      <ProductReviews productId={product.id} />
     </div>
   );
 };
