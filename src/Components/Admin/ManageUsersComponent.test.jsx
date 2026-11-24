@@ -30,7 +30,7 @@ describe('ManageUsersComponent', () => {
     renderPage();
 
     expect(await screen.findByText('cliente@test.local')).toBeInTheDocument();
-    expect(within(rowOf('sospeso@test.local')).getByText(/sospeso/i)).toBeInTheDocument();
+    expect(within(rowOf('sospeso@test.local')).getByText('Sospeso')).toBeInTheDocument();
     expect(within(rowOf('sospeso@test.local')).getByText('Frode')).toBeInTheDocument();
     expect(within(rowOf(ADMIN_EMAIL)).queryByRole('button')).not.toBeInTheDocument();
   });

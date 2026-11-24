@@ -37,9 +37,9 @@ describe('login', () => {
     );
     const store = makeStore();
 
-    const ok = await store.dispatch(login(EMAIL, 'Password1!'));
+    const result = await store.dispatch(login(EMAIL, 'Password1!'));
 
-    expect(ok).toBe(true);
+    expect(result).toEqual({ ok: true });
     expect(body).toEqual({ email: EMAIL, password: 'Password1!' });
     expect(store.getState().auth).toMatchObject({
       isAuthenticated: true,
@@ -48,7 +48,7 @@ describe('login', () => {
     });
   });
 
-  it('returns false and stays logged out on 401', async () => {
+  it('returns a failure and stays logged out on 401', async () => {
     server.use(
       http.post('*/Account/login', () =>
         HttpResponse.json(problem(401, 'invalid_credentials'), { status: 401 })
@@ -56,9 +56,9 @@ describe('login', () => {
     );
     const store = makeStore();
 
-    const ok = await store.dispatch(login(EMAIL, 'wrong'));
+    const result = await store.dispatch(login(EMAIL, 'wrong'));
 
-    expect(ok).toBe(false);
+    expect(result.ok).toBe(false);
     expect(store.getState().auth.isAuthenticated).toBe(false);
   });
 });
