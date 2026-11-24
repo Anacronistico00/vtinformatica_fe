@@ -14,7 +14,9 @@ const CartComponent = () => {
     (state) => state.cart
   );
 
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [quantityToRemove, setQuantityToRemove] = useState({});
+  const [customerComment, setCustomerComment] = useState('');
 
   useEffect(() => {
     dispatch(getCart());
@@ -52,23 +54,17 @@ const CartComponent = () => {
     });
   };
 
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
   const handleCreateOrder = () => {
     const confirmOrder = window.confirm(
       "Sei sicuro di voler completare l'ordine?"
     );
     if (confirmOrder) {
-      if (isAuthenticated) {
-        dispatch(CreateOrder());
-      } else {
-        alert("Devi essere autenticato per completare l'ordine");
-      }
+      dispatch(CreateOrder({ customerComment }));
+      setCustomerComment('');
     }
   };
 
-  if (loading) return <div className='text-center mt-5'>Caricamento...</div>;
-  if (error)
+  if (!isAuthenticated)
     return (
       <div className='text-center mt-5'>
         <h1 className='fs-3'>Per poter visualizzare il carrello</h1>
@@ -77,6 +73,8 @@ const CartComponent = () => {
         </h4>
       </div>
     );
+  if (loading) return <div className='text-center mt-5'>Caricamento...</div>;
+  if (error) return <div className='text-center mt-5'>{error}</div>;
 
   return (
     <div>
@@ -163,13 +161,28 @@ const CartComponent = () => {
         </div>
       )}
       {items.length > 0 ? (
-        <button
-          className='btn btn-success'
-          onClick={handleCreateOrder}
-          disabled={items.length === 0}
-        >
-          Completa l'ordine
-        </button>
+        <>
+          <div className='mb-3'>
+            <label htmlFor='customerComment' className='form-label'>
+              Note per l&apos;ordine (facoltative)
+            </label>
+            <textarea
+              id='customerComment'
+              className='form-control'
+              rows={2}
+              maxLength={500}
+              value={customerComment}
+              onChange={(e) => setCustomerComment(e.target.value)}
+            />
+          </div>
+          <button
+            className='btn btn-success'
+            onClick={handleCreateOrder}
+            disabled={items.length === 0}
+          >
+            Completa l&apos;ordine
+          </button>
+        </>
       ) : (
         ''
       )}

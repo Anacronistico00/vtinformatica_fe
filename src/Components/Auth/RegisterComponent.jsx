@@ -2,6 +2,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../Redux/Actions/authActions';
+import { messageFor } from '../../Utils/errorMessages';
 
 const RegisterComponent = () => {
   const [firstName, setFirstName] = useState('');
@@ -10,7 +11,6 @@ const RegisterComponent = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [birthDate, setBirthDate] = useState('');
-  const [fiscalCode, setFiscalCode] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -23,14 +23,10 @@ const RegisterComponent = () => {
         email,
         password,
         birthDate,
-        fiscalCode,
-      }).catch(() => {
-        alert('Errore nella registrazione');
-        throw new Error('Errore nella registrazione');
       });
       navigate('/');
     } catch (error) {
-      console.error('Errore nella registrazione e login:', error.message);
+      alert(messageFor(error, 'Errore nella registrazione'));
     }
   };
 
@@ -108,17 +104,6 @@ const RegisterComponent = () => {
             required
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group className='mb-3' controlId='formFiscalCode'>
-          <Form.Label id='verde'>Codice Fiscale</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Inserisci il codice fiscale'
-            required
-            value={fiscalCode}
-            onChange={(e) => setFiscalCode(e.target.value)}
           />
         </Form.Group>
 
