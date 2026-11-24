@@ -49,3 +49,35 @@ Letto: BE (`VTInformatica`, ~2400 righe tra controller e service) e FE (`vtinfor
 4. **M3 – Refactor BE**: middleware errori + `ProblemDetails`, mapping centralizzato, paginazione e `AsNoTracking`.
 5. **M4 – FE**: `apiClient` unico con 401 handling, `VITE_API_URL`, rimozione email dall'URL, split dei componenti grandi, test Vitest sui reducer e sui flussi carrello/ordine.
 6. **M5 – Rifinitura**: README prima/dopo con le metriche, sezione "Come ho lavorato con l'AI", subagent reviewer + review automatica sulle PR.
+
+---
+
+## Stato avanzamento M4a – infrastruttura FE (aggiornato 2026-11-24)
+
+Il testo sopra è la baseline e non va modificato. Piano in `docs/PIANO-M4.md`.
+
+| Voce                          | Stato  | Come                                                                                                                                          |
+| ----------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| FE 2 URL hardcoded            | Chiuso | `VITE_API_URL` (`.env.example`, `.env*` ignorati); errore chiaro se manca                                                                    |
+| FE 3 Boilerplate `fetch`      | Chiuso | `Utils/apiClient.js`: base URL, Bearer, `ProblemDetails` → `ApiError { status, code, detail, errors }`, 204, errori di rete. 33 chiamate migrate, nessun `fetch` nei componenti |
+| FE 1 Token duplicato          | Chiuso | Un solo token nello slice `auth` persistito (niente più chiavi `token`/`role`/`birthDate` in localStorage); alla riapertura un token con `exp` passato non viene ripristinato |
+| 401                           | Chiuso | 401 su una richiesta con token → logout (non sul login con credenziali errate)                                                                |
+| FE 5 Test e CI                | Chiuso | Vitest + Testing Library + MSW (rete simulata col contratto reale del BE); GitHub Actions: lint, test, build                                 |
+| Lint                          | Chiuso | 2 errori → 0 (`motion` usato solo in JSX: `react/jsx-uses-vars`). 3 warning `exhaustive-deps` lasciati alla fetta che tocca quei componenti |
+
+- Test: 0 → 23.
+- **CSP**: non messa via `<meta>`: in sviluppo Vite inietta uno script inline
+  (React Refresh) e il catalogo usa immagini esterne e stili inline. Da
+  impostare al deploy come header HTTP, indicativamente
+  `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';
+  img-src 'self' https: data:; connect-src 'self' <VITE_API_URL>`.
+- Il token resta in localStorage (via redux-persist): un XSS potrebbe leggerlo.
+  La soluzione vera (cookie httpOnly + refresh token) richiede il BE.
+
+### Fuori scope emersi (non toccati)
+
+1. `FETCH_PRODUCTS_BY_MANUFACTURER_*` usano le stesse stringhe dei tipi
+   `..._BY_SUBCATEGORY_*` (`ProductsAction.js`): le due liste condividono lo
+   stato. Funziona per caso; da verificare quando si tocca la vista produttore.
+2. Le letture pubbliche (catalogo) ora vanno in stato di errore su risposte non
+   2xx; prima il corpo dell'errore finiva nello stato come se fosse la lista.

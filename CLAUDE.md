@@ -20,7 +20,9 @@
 - `Components/` (pagine e componenti; sotto-cartelle `Admin/`, `Auth/`, `Home/`,
   `NavBar/`, `Products/`)
 - `Redux/Actions` (thunk), `Redux/Reducers`, `Redux/Store/index.js`
-- `Utils/` (ApiURL, jwtUtils, PersistConfig, ScrollToTop)
+- `Utils/` (apiClient, jwtUtils, PersistConfig, ScrollToTop)
+- `src/test/` (setup Vitest, server MSW, store e JWT di test); i test stanno accanto al
+  file che verificano (`*.test.js[x]`)
 - Rotte in `App.jsx`; rotte admin protette da `Components/Auth/roleRoute.jsx`
 
 ## Convenzioni

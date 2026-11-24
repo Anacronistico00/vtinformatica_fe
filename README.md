@@ -27,9 +27,10 @@
    cd vtinformatica_fe
    ```
    
-3. Installa le dipendenze
+3. Installa le dipendenze e configura l'URL del back-end
    ```bash
-   npm i
+   npm ci
+   cp .env.example .env.local   # imposta VITE_API_URL (default https://localhost:7286)
    ```
 4. Clonare anche la repository del BackEnd
    ```bash
@@ -51,6 +52,11 @@
    ~~SHIFT+CLICK sull'URL che appare nella finestra di comando~~
    ```
    L'app sarà disponibile in una porta del localHost
+
+9. Test, lint e build (gli stessi controlli della CI)
+   ```bash
+   npm test && npm run lint && npm run build
+   ```
    
 ## Struttura del progetto
 ```plaintext
