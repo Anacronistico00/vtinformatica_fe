@@ -5,7 +5,7 @@ const RoleRoute = ({ children, requiredRole }) => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to='/account' replace />;
   }
 
   if (user.role !== requiredRole) {

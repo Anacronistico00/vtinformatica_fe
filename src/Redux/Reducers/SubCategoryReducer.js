@@ -1,4 +1,7 @@
 import {
+  CREATE_SUBCATEGORY_ERROR,
+  UPDATE_SUBCATEGORY_ERROR,
+  DELETE_SUBCATEGORY_ERROR,
   GET_SUBCATEGORIES_ERROR,
   GET_SUBCATEGORIES_LOADING,
   GET_SUBCATEGORIES_SUCCESS,
@@ -37,6 +40,9 @@ const subCategoryReducer = (state = initialState, action) => {
       };
     case GET_SUBCATEGORY_ERROR:
     case GET_SUBCATEGORIES_ERROR:
+    case CREATE_SUBCATEGORY_ERROR:
+    case UPDATE_SUBCATEGORY_ERROR:
+    case DELETE_SUBCATEGORY_ERROR:
       return {
         ...state,
         loading: false,

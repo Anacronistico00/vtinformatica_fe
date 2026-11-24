@@ -22,12 +22,11 @@ const OrderInfoComponent = () => {
   };
 
   const handleCloseModal = () => setShowModal(false);
-  const email = useSelector((state) => state.auth.user.email);
   const handleConfirmAction = () => {
     if (actionType === 'delete') {
-      dispatch(deleteOrder(order.id, email));
+      dispatch(deleteOrder(order.id));
     } else if (actionType === 'restore') {
-      dispatch(restoreOrder(order.id, email));
+      dispatch(restoreOrder(order.id));
     }
     setShowModal(false);
     navigate('/orders');

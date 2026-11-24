@@ -23,6 +23,9 @@ const AdminComponent = () => {
         <Nav.Link as={Link} to='/admin/manufacturers'>
           Gestione Marchi
         </Nav.Link>
+        <Nav.Link as={Link} to='/admin/users'>
+          Gestione Utenti
+        </Nav.Link>
       </Nav>
     </Container>
   );

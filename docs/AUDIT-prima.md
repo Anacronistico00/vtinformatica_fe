@@ -1,0 +1,202 @@
+# VTInformatica – audit "PRIMA" (baseline per il confronto prima/dopo)
+
+Letto: BE (`VTInformatica`, ~2400 righe tra controller e service) e FE (`vtinformatica_fe`, ~3100 righe di componenti). Ogni punto va riverificato dall'agente in Plan mode prima di intervenire.
+
+## Cosa è già buono (da non rompere)
+- BE già a strati: Controllers → Services (con interfacce) → DbContext, DTO separati dalle entity, migrazioni EF, Serilog, Swagger con Bearer, soft delete degli ordini, password policy Identity.
+- FE organizzato: Redux Toolkit con store persistito e scadenza, thunk per risorsa, rotte admin protette, toast.
+
+## BE – problemi (per gravità)
+
+### Critici (sicurezza / correttezza)
+1. **Ogni registrazione crea un Admin**: `AccountController.Register` fa `AddToRoleAsync(newUser, "Admin")`. Chiunque si registra ha accesso a tutto il backoffice. Il ruolo di default deve essere `Customer`.
+2. **IDOR su ordini e carrello** (non visibile dalla UI, il FE manda sempre i dati dell'utente loggato; sfruttabile solo chiamando l'API direttamente con un token valido): `GET /Order/user/{email}`, `POST /Order/from-cart/{userEmail}`, `/Cart/{email}/*` hanno solo `[Authorize]` e si fidano dell'email in route. L'email va letta dai claim del JWT.
+3. **Cancella/ripristina ordine senza controllo di proprietà** (stesso discorso: dalla UI ognuno agisce solo sui propri ordini, ma l'API non lo impone): `PUT /Order/{id}/delete` e `/restore` sono `[Authorize]` senza controllo di proprietà; gli id sono interi sequenziali, quindi enumerabili (e il delete rimette a magazzino lo stock).
+5. **Segreti committati**: chiave JWT in `appsettings.json`. Va ruotata e spostata in User Secrets / variabili d'ambiente (e il repo è pubblico, quindi la chiave attuale è da considerare compromessa).
+6. **Nessun prezzo storico sull'ordine**: `OrderItem` non salva il prezzo; se cambia il prezzo del prodotto cambiano retroattivamente gli ordini vecchi e i totali.
+
+### Importanti
+4. **`PUT /Account/UpdateUser/{id}` senza `[Authorize]`** (severità media: il FE non lo chiama e l'id è un GUID non esposto da nessuna API, quindi sfruttarlo è difficile): resta un endpoint di scrittura aperto; deve richiedere login e usare l'id dai claim.
+7. **Stock non atomico**: `CreateOrderFromCartAsync` controlla e scala lo stock senza transazione né concurrency token; due ordini simultanei possono vendere oltre la disponibilità. Due `SaveChanges` separati (ordine, poi svuotamento carrello) senza transazione.
+8. **Validazione quantità**: `CartItemDto.Quantity` senza `[Range]`; `AddItemAsync` accetta quantità negative/zero e non controlla lo stock disponibile.
+9. **`Register`**: `IsActive` arriva dal client; un utente disattivato può essere "riattivato" da chiunque registrandosi con la sua email.
+10. **CORS `AllowAnyOrigin`** in tutti gli ambienti.
+11. **Gestione errori**: ogni action ha lo stesso `try/catch` con 500 generico (boilerplate); manca un middleware centrale / `ProblemDetails`. In `Program.cs` il `catch` esterno logga solo `ex.Message` e inghiotte gli errori di avvio.
+12. **Query**: `GetAllAsync` ordini e `GET /Product` senza paginazione; `GetOrdersByEmailAsync` include 5 livelli di navigazione per poi mappare solo nome/prezzo/immagini; nessun `AsNoTracking`. Possibile N+1/over-fetching.
+13. **Mapping duplicato a mano**: lo stesso blocco entity→DTO è copiato più volte in `ProductController` e nei service (README cita AutoMapper ma non è referenziato nel csproj).
+14. **Test: zero**. Nessun progetto test, nessuna CI.
+
+### Minori
+15. `DateTime.Now` per la scadenza del token (usare UTC); titolo Swagger "CustomersManager API"; `AccountService` senza interfaccia; messaggi misti IT/EN; `Log/` e file generati da verificare nel `.gitignore`.
+
+## FE – problemi
+1. **Token JWT in `localStorage`** (esposto a XSS) più ruolo e data di nascita duplicati in localStorage; il ruolo letto dal FE decide solo la UI (ok), ma non deve mai essere considerato sicurezza.
+2. **URL backend hardcoded** in `Utils/ApiURL.js` (`https://localhost:7286`): niente env per dev/prod.
+3. **Boilerplate `fetch` ripetuto** in tutte le actions (header, token da localStorage, gestione errori): manca un client API unico con gestione 401 (logout/redirect) e refresh.
+4. **L'email utente viaggia nell'URL** (`/Cart/{email}`, `/Order/user/{email}`): segue il problema IDOR lato BE.
+5. **Nessun test**, nessuno script `test` in `package.json`, nessuna CI.
+6. Componenti grandi (es. `ManageProductsComponent` 361 righe, `ProductInfo` 313): logica e UI mescolate.
+7. Admin CRUD senza validazione/conferme coerenti (da verificare nel dettaglio).
+
+## Metriche baseline da registrare prima di iniziare
+- Test BE/FE: 0 / 0. Warning `dotnet build`: <contare>. Problemi `npm run lint`: <contare>.
+- Endpoint senza `[Authorize]` che modificano dati: 1 (`UpdateUser`). Endpoint con IDOR: ~8.
+
+## Milestone proposte (un branch + PR ciascuna)
+1. **M0 – Rete di sicurezza**: progetto xUnit + test di caratterizzazione su Cart/Order/Account (con SQLite in-memory o `WebApplicationFactory`); CI GitHub Actions (build + test BE, lint + build FE).
+2. **M1 – Sicurezza BE**: ruolo `Customer` di default, email dai claim, controllo proprietà su ordini/carrello, `[Authorize]` su `UpdateUser`, rotazione chiave JWT + User Secrets, CORS ristretto. Un test per ogni falla chiusa (prima il test che fallisce, poi il fix).
+3. **M2 – Ordini corretti**: prezzo su `OrderItem`, transazione + concurrency token sullo stock, validazione quantità.
+4. **M3 – Refactor BE**: middleware errori + `ProblemDetails`, mapping centralizzato, paginazione e `AsNoTracking`.
+5. **M4 – FE**: `apiClient` unico con 401 handling, `VITE_API_URL`, rimozione email dall'URL, split dei componenti grandi, test Vitest sui reducer e sui flussi carrello/ordine.
+6. **M5 – Rifinitura**: README prima/dopo con le metriche, sezione "Come ho lavorato con l'AI", subagent reviewer + review automatica sulle PR.
+
+---
+
+## Stato avanzamento M4a – infrastruttura FE (aggiornato 2026-11-24)
+
+Il testo sopra è la baseline e non va modificato. Piano in `docs/PIANO-M4.md`.
+
+| Voce                          | Stato  | Come                                                                                                                                          |
+| ----------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| FE 2 URL hardcoded            | Chiuso | `VITE_API_URL` (`.env.example`, `.env*` ignorati); errore chiaro se manca                                                                    |
+| FE 3 Boilerplate `fetch`      | Chiuso | `Utils/apiClient.js`: base URL, Bearer, `ProblemDetails` → `ApiError { status, code, detail, errors }`, 204, errori di rete. 33 chiamate migrate, nessun `fetch` nei componenti |
+| FE 1 Token duplicato          | Chiuso | Un solo token nello slice `auth` persistito (niente più chiavi `token`/`role`/`birthDate` in localStorage); alla riapertura un token con `exp` passato non viene ripristinato |
+| 401                           | Chiuso | 401 su una richiesta con token → logout (non sul login con credenziali errate)                                                                |
+| FE 5 Test e CI                | Chiuso | Vitest + Testing Library + MSW (rete simulata col contratto reale del BE); GitHub Actions: lint, test, build                                 |
+| Lint                          | Chiuso | 2 errori → 0 (`motion` usato solo in JSX: `react/jsx-uses-vars`). 3 warning `exhaustive-deps` lasciati alla fetta che tocca quei componenti |
+
+- Test: 0 → 23.
+- **CSP**: non messa via `<meta>`: in sviluppo Vite inietta uno script inline
+  (React Refresh) e il catalogo usa immagini esterne e stili inline. Da
+  impostare al deploy come header HTTP, indicativamente
+  `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';
+  img-src 'self' https: data:; connect-src 'self' <VITE_API_URL>`.
+- Il token resta in localStorage (via redux-persist): un XSS potrebbe leggerlo.
+  La soluzione vera (cookie httpOnly + refresh token) richiede il BE.
+
+- **`npm audit`** (branch `chore/npm-audit`): 16 alla baseline (19 con le
+  dipendenze di test) → **0**. `npm audit fix` senza `--force` (tra gli altri
+  `react-router-dom` 7.18, `vite` 6.4) e Vitest 3 → 5 (gli ultimi 3 avvisi erano
+  tutti nella toolchain di test).
+
+### Fuori scope emersi (non toccati)
+
+1. `FETCH_PRODUCTS_BY_MANUFACTURER_*` usano le stesse stringhe dei tipi
+   `..._BY_SUBCATEGORY_*` (`ProductsAction.js`): le due liste condividono lo
+   stato. Funziona per caso; da verificare quando si tocca la vista produttore.
+2. Le letture pubbliche (catalogo) ora vanno in stato di errore su risposte non
+   2xx; prima il corpo dell'errore finiva nello stato come se fosse la lista.
+
+## Stato avanzamento M4b – allineamento al contratto dell'API (aggiornato 2026-11-24)
+
+Branch `feat/m4b-api-contract`, test-first (dettaglio in `docs/PIANO-M4.md`).
+
+| Voce                            | Stato    | Come                                                                                                                                  |
+| ------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| FE 4 Email nell'URL             | Chiuso   | Carrello e ordini su `/Cart/me`, `/Order/me`, `/Order/me/from-cart`: nessuna email nelle route, nelle actions o nei componenti       |
+| Errori per `code`               | Chiuso   | `Utils/errorMessages.js` (un solo punto per i testi). Aggiunta al carrello e checkout mostrano il motivo (prima fallivano in silenzio) |
+| Carrello dopo l'aggiunta        | Chiuso   | La risposta del BE (`{ message }`) non viene più inserita tra le righe; righe e totale arrivano dal ricaricamento                     |
+| Errore nella pagina carrello    | Chiuso   | "Accedi ora" solo senza login; con login si vede il motivo dell'errore                                                                |
+| `CustomerComment`               | Chiuso   | Campo "Note per l'ordine (facoltative)", max 500, inviato al checkout                                                                 |
+| Registrazione                   | Chiuso   | Campo "Codice Fiscale" rimosso (il BE non lo prevede); errore mostrato per `code` (es. email già registrata)                           |
+| `RoleRoute` senza login         | Chiuso   | Redirect a `/account` (prima `/login`, rotta inesistente → 404)                                                                       |
+| NavBar                          | Verificato | Nessuna richiesta del carrello senza login; render con stato iniziale senza crash. Crash con BE acceso da ricontrollare nel browser |
+| Liste vuote `200 []`            | Chiuso   | Pagine sottocategoria/produttore mostrano "Nessun prodotto disponibile."; test di caratterizzazione                                    |
+| Lint                            | Chiuso   | 3 warning `exhaustive-deps` → 0 dopo i test delle tre pagine                                                                          |
+| Paginazione lista prodotti admin | Spostata | In M4d, insieme a `ExpectedQuantity`: tocca lo stesso componente (361 righe) una volta sola                                           |
+
+- Test: 23 → 52. Lint: 0 errori, 0 warning.
+- Checkout riuscito: toast "Ordine creato con successo!" (prima nessun riscontro).
+
+## Stato avanzamento M4c – account (aggiornato 2026-11-24)
+
+Branch `feat/m4c-account`, test-first.
+
+| Voce                         | Stato  | Come                                                                                                                              |
+| ---------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Errori di login              | Chiuso | Messaggio nella pagina per `code` (prima `alert('Login fallito')` per qualsiasi errore)                                           |
+| `account_deactivated`        | Chiuso | Login → `/reactivate` (email precompilata, password richiesta di nuovo) → `POST /Account/reactivate` → `/welcome` "Bentornato!"   |
+| `account_suspended`          | Chiuso | Messaggio di negazione nel login e nella riattivazione; la nota di sospensione non arriva mai al cliente                           |
+| Disattivazione self          | Chiuso | "Disattiva il mio account" in Account: modale con motivo facoltativo (max 500), `DELETE /Account/{id}` (id dal token), logout     |
+| Backoffice utenti            | Chiuso | `/admin/users` (solo Admin): stato, data e nota; "Sospendi" con nota obbligatoria, "Revoca sospensione"; errori per `code`        |
+
+- Test: 52 → 70.
+- La password non passa mai tra le pagine né in `history.state`: la
+  riattivazione la richiede di nuovo.
+- Nessuna azione offerta su Admin e su se stessi (il BE le rifiuta comunque).
+
+## Stato avanzamento M4d – backoffice (aggiornato 2026-11-24)
+
+Branch `feat/m4d-backoffice`, test-first (caratterizzazione della gestione
+prodotti prima del refactor).
+
+| Voce                                | Stato  | Come                                                                                                                         |
+| ----------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `ExpectedQuantity`                  | Chiuso | La modifica prodotto invia lo stock visto all'apertura del modale; 409 `stock_conflict` → messaggio e lista ricaricata       |
+| Paginazione lista prodotti admin    | Chiuso | `GET /Product?page&pageSize=20`, totale da `X-Total-Count`; "Pagina X di Y" e controlli Bootstrap                            |
+| 409 `resource_in_use`               | Chiuso | Categorie, sottocategorie, produttori: il testo del BE (prodotti collegati, anche eliminati) al posto del messaggio generico |
+| Restore ordine senza stock          | Chiuso | 409 `insufficient_stock` mostrato con il suo testo                                                                           |
+| Errori sottocategorie               | Chiuso | Il reducer ignorava gli errori di creazione/modifica/eliminazione: la pagina non li mostrava mai                             |
+| Pagina prodotti admin               | Chiuso | Carica da sé categorie e produttori (prima vuota se aperta direttamente); etichette del form collegate ai campi              |
+| FE 6 Componente più grande          | Chiuso | `ManageProductsComponent` 361 → 138 righe (`ProductFormModal`, `AdminPagination`)                                            |
+
+- Test: 70 → 83.
+- La lista mostra solo le categorie con prodotti nella pagina corrente.
+
+## Stato avanzamento M4f – recensioni (aggiornato 2026-11-24)
+
+Branch `feat/m4f-reviews`, test-first. Usa `GET /Review/me`, aggiunto al BE nella
+fetta `feat/review-mine`.
+
+| Voce                       | Stato  | Come                                                                                                                  |
+| -------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| Lista recensioni           | Chiuso | Nella pagina prodotto: stelle (`aria-label` "N su 5"), testo e data; nessun autore (il BE non lo espone)              |
+| Crea                       | Chiuso | Solo con login: voto con stelle (1–5) e testo; errori per `code` (es. `validation_failed`, `product_not_found`)       |
+| Modifica/elimina           | Chiuso | Solo sulle proprie: gli id vengono incrociati con `GET /Review/me`                                                     |
+| Pagina prodotto diretta    | Chiuso | `/product/:id` aperta o ricaricata senza stato di navigazione andava in crash: ora il prodotto si legge con l'id       |
+
+- Test: 83 → 90.
+- `ProductInfo` passa da 313 a 339 righe (caricamento per id e innesto delle
+  recensioni, che stanno in `ProductReviews`, 166 righe): ora è il componente
+  più grande. Il refactor della galleria e dei prodotti correlati resta da fare,
+  dopo i loro test di caratterizzazione.
+
+## Stato avanzamento M4g – E2E (aggiornato 2026-11-24)
+
+Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
+`e2e/README.md`) contro BE e DB SQL Server locali, dati dedicati creati e rimossi.
+
+| Flusso                                                        | Esito |
+| ------------------------------------------------------------- | ----- |
+| Login → carrello → checkout (con nota) → ordine in "i miei ordini" | ok    |
+| Checkout con stock diventato insufficiente → 409 con il motivo | ok    |
+| Disattivazione self → login → riattivazione → benvenuto       | ok    |
+| Account sospeso → messaggio di negazione                      | ok    |
+| Sessione scaduta (token con `exp` passato) → non loggato, nessun errore JS | ok |
+| Lista prodotti admin paginata (`X-Total-Count` via CORS reale) | ok    |
+| Modifica prodotto con `ExpectedQuantity` superata → 409       | ok    |
+| Recensioni: crea/modifica/elimina solo la propria             | ok    |
+
+- 8/8 verdi. DB prima e dopo: utenti 5, prodotti 12, ordini 5, review 0,
+  `AspNetUserRoles` 5 (backup verificato prima della prima esecuzione).
+- **Bug trovato dagli E2E e corretto (test-first)**: quando il transform di
+  persistenza scartava uno slice scaduto (token con `exp` passato, carrello inattivo
+  da più di un'ora), `autoMergeLevel1` di redux-persist copiava `undefined` sullo
+  stato iniziale: `state.auth` / `state.cart` undefined e crash dell'app all'avvio.
+  È con ogni probabilità il "crash di NavBar dopo il reset della persistenza"
+  annotato nella baseline. Ora gli slice scartati tornano allo stato iniziale.
+- Gli E2E usano una porta propria (5174) e un BE con quell'origine nel CORS: un dev
+  server già acceso sulla 5173 senza `VITE_API_URL` veniva riusato e faceva fallire
+  ogni flusso.
+
+### Lavoro futuro
+
+- **E2E e race reale in CI**: servono SQL Server nel runner (container `mssql` in
+  GitHub Actions, o Testcontainers come previsto per il BE). Fino ad allora gli E2E
+  si lanciano solo in locale.
+
+### Fuori scope emersi (non toccati)
+
+1. `/orders` non carica gli ordini da sé (li carica la pagina Account): aperta o
+   ricaricata direttamente può mostrare un elenco vecchio o vuoto.
+2. Seller: il BE gli consente prodotti e categorie, il backoffice FE è solo Admin.

@@ -27,6 +27,9 @@ import ManageProductsComponent from './Components/Admin/ManageProductsComponent.
 import ManageCategoriesComponent from './Components/Admin/ManageCategoriesComponent.jsx';
 import ManageSubCategoriesComponent from './Components/Admin/ManageSubCategoriesComponent.jsx';
 import ManageManufacturersComponent from './Components/Admin/ManageManufacturersComponent.jsx';
+import ManageUsersComponent from './Components/Admin/ManageUsersComponent.jsx';
+import ReactivateComponent from './Components/Auth/ReactivateComponent.jsx';
+import WelcomeBackComponent from './Components/Auth/WelcomeBackComponent.jsx';
 
 const App = () => {
   return (
@@ -49,6 +52,8 @@ const MainApp = () => {
           <Route path='/register' element={<RegisterComponent />} />
           <Route path='/search/:query' element={<SearchResultComponent />} />
           <Route path='/account' element={<LoginComponent />} />
+          <Route path='/reactivate' element={<ReactivateComponent />} />
+          <Route path='/welcome' element={<WelcomeBackComponent />} />
           <Route path='/orders' element={<OrdersComponent />} />
           <Route path='/orderInfo/:id' element={<OrderInfoComponent />} />
 
@@ -109,6 +114,14 @@ const MainApp = () => {
             element={
               <RoleRoute requiredRole='Admin'>
                 <ManageManufacturersComponent />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path='/admin/users'
+            element={
+              <RoleRoute requiredRole='Admin'>
+                <ManageUsersComponent />
               </RoleRoute>
             }
           />

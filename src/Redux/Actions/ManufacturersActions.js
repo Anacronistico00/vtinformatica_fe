@@ -1,4 +1,5 @@
-import ApiURL from '../../Utils/ApiURL';
+import { api } from '../../Utils/apiClient';
+import { withMessage } from '../../Utils/errorMessages';
 
 export const GET_MANUFACTURERS_LOADING = 'GET_MANUFACTURERS_LOADING';
 export const GET_MANUFACTURERS_SUCCESS = 'GET_MANUFACTURERS_SUCCESS';
@@ -8,11 +9,9 @@ export const fetchManufacturers = () => {
   return async (dispatch) => {
     dispatch({ type: GET_MANUFACTURERS_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Manufacturer`);
-      if (!response.ok)
+      const { data } = await api.get('/Manufacturer', { auth: false }).catch(() => {
         throw new Error('Errore nel caricamento delle categorie');
-
-      const data = await response.json();
+      });
       dispatch({
         type: GET_MANUFACTURERS_SUCCESS,
         payload: data,
@@ -34,10 +33,9 @@ export const fetchManufacturerById = (id) => {
   return async (dispatch) => {
     dispatch({ type: GET_MANUFACTURERBYID_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Manufacturer/${id}`);
-      if (!response.ok) throw new Error('Errore nel caricamento dei brand');
-
-      const data = await response.json();
+      const { data } = await api.get(`/Manufacturer/${id}`, { auth: false }).catch(() => {
+        throw new Error('Errore nel caricamento dei brand');
+      });
       dispatch({
         type: GET_MANUFACTURERBYID_SUCCESS,
         payload: data,
@@ -56,22 +54,10 @@ export const CREATE_MANUFACTURER_SUCCESS = 'CREATE_MANUFACTURER_SUCCESS';
 export const CREATE_MANUFACTURER_ERROR = 'CREATE_MANUFACTURER_ERROR';
 
 export const createManufacturer = (manufacturer) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: CREATE_MANUFACTURER_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Manufacturer`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(manufacturer),
-      });
-
-      if (!response.ok) throw new Error('Errore nella creazione del brand');
-
-      const data = await response.json();
+      const { data } = await api.post('/Manufacturer', manufacturer).catch(withMessage('Errore nella creazione del brand'));
       dispatch({ type: CREATE_MANUFACTURER_SUCCESS, payload: data });
     } catch (err) {
       dispatch({ type: CREATE_MANUFACTURER_ERROR, payload: err.message });
@@ -84,22 +70,14 @@ export const UPDATE_MANUFACTURER_SUCCESS = 'UPDATE_MANUFACTURER_SUCCESS';
 export const UPDATE_MANUFACTURER_ERROR = 'UPDATE_MANUFACTURER_ERROR';
 
 export const updateManufacturer = (id, updatedManufacturer) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: UPDATE_MANUFACTURER_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Manufacturer/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedManufacturer),
-      });
+      const { status } = await api
+        .put(`/Manufacturer/${id}`, updatedManufacturer)
+        .catch(withMessage("Errore nell'aggiornamento del brand"));
 
-      if (!response.ok) throw new Error("Errore nell'aggiornamento del brand");
-
-      if (response.status === 204) {
+      if (status === 204) {
         dispatch({
           type: UPDATE_MANUFACTURER_SUCCESS,
           payload: updatedManufacturer,
@@ -116,18 +94,10 @@ export const DELETE_MANUFACTURER_SUCCESS = 'DELETE_MANUFACTURER_SUCCESS';
 export const DELETE_MANUFACTURER_ERROR = 'DELETE_MANUFACTURER_ERROR';
 
 export const deleteManufacturer = (id) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: DELETE_MANUFACTURER_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Manufacturer/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error("Errore nell'eliminazione del brand");
+      await api.delete(`/Manufacturer/${id}`).catch(withMessage("Errore nell'eliminazione del brand"));
 
       dispatch({ type: DELETE_MANUFACTURER_SUCCESS, payload: id });
     } catch (err) {

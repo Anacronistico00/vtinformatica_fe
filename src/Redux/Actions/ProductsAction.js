@@ -1,4 +1,6 @@
-import ApiURL from '../../Utils/ApiURL';
+import { toast } from 'react-toastify';
+import { api } from '../../Utils/apiClient';
+import { messageFor } from '../../Utils/errorMessages';
 
 export const FETCH_PRODUCTS_LOADING = 'FETCH_PRODUCTS_LOADING';
 export const FETCH_PRODUCTS_SUCCESS = 'FETCH_PRODUCTS_SUCCESS';
@@ -8,8 +10,7 @@ export const fetchProducts = () => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_LOADING });
 
   try {
-    const response = await fetch(`${ApiURL.apiUrl}/Product`);
-    const data = await response.json();
+    const { data } = await api.get('/Product', { auth: false });
     dispatch({ type: FETCH_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -17,6 +18,18 @@ export const fetchProducts = () => async (dispatch) => {
       payload: error.message,
     });
   }
+};
+
+export const fetchProductById = async (id) => {
+  const { data } = await api.get(`/Product/${id}`, { auth: false });
+  return data;
+};
+
+export const searchProducts = async (query) => {
+  const { data } = await api.get(`/Product/search?query=${query}`, { auth: false }).catch(() => {
+    throw new Error('Errore nel recupero dei prodotti');
+  });
+  return data;
 };
 
 export const FETCH_PRODUCTS_BY_CATEGORY_LOADING =
@@ -30,10 +43,7 @@ export const fetchProductsByCategory = (categoryId) => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_BY_CATEGORY_LOADING });
 
   try {
-    const response = await fetch(
-      `${ApiURL.apiUrl}/Product/category/${categoryId}`
-    );
-    const data = await response.json();
+    const { data } = await api.get(`/Product/category/${categoryId}`, { auth: false });
     dispatch({ type: FETCH_PRODUCTS_BY_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -55,10 +65,7 @@ export const fetchProductsBySubCategory =
     dispatch({ type: FETCH_PRODUCTS_BY_SUBCATEGORY_LOADING });
 
     try {
-      const response = await fetch(
-        `${ApiURL.apiUrl}/Product/subcategory/${subCategoryId}`
-      );
-      const data = await response.json();
+      const { data } = await api.get(`/Product/subcategory/${subCategoryId}`, { auth: false });
       dispatch({ type: FETCH_PRODUCTS_BY_SUBCATEGORY_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
@@ -80,10 +87,7 @@ export const fetchProductsByManufacturer =
     dispatch({ type: FETCH_PRODUCTS_BY_MANUFACTURER_LOADING });
 
     try {
-      const response = await fetch(
-        `${ApiURL.apiUrl}/Product/manufacturer/${manufacturerId}`
-      );
-      const data = await response.json();
+      const { data } = await api.get(`/Product/manufacturer/${manufacturerId}`, { auth: false });
       dispatch({ type: FETCH_PRODUCTS_BY_MANUFACTURER_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
@@ -93,6 +97,40 @@ export const fetchProductsByManufacturer =
     }
   };
 
+export const ADMIN_PAGE_SIZE = 20;
+export const FETCH_PRODUCTS_PAGE_SUCCESS = 'FETCH_PRODUCTS_PAGE_SUCCESS';
+
+/** Lista prodotti del backoffice, paginata dal server: il totale arriva da X-Total-Count. */
+export const fetchProductsPage = (page) => async (dispatch) => {
+  dispatch({ type: FETCH_PRODUCTS_LOADING });
+
+  try {
+    const { data, headers } = await api.get(`/Product?page=${page}&pageSize=${ADMIN_PAGE_SIZE}`);
+    dispatch({
+      type: FETCH_PRODUCTS_PAGE_SUCCESS,
+      payload: {
+        items: data,
+        total: Number(headers.get('X-Total-Count') ?? data.length),
+        page,
+        pageSize: ADMIN_PAGE_SIZE,
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_PRODUCTS_ERROR,
+      payload: messageFor(error, 'Errore nel caricamento dei prodotti'),
+    });
+  }
+};
+
+// Le modifiche del backoffice restituiscono l'esito alla pagina, che decide cosa ricaricare.
+const productFailure = (dispatch, type, error, fallback) => {
+  const message = messageFor(error, fallback);
+  toast.error(message);
+  dispatch({ type, payload: message });
+  return { ok: false, code: error?.code ?? null, message };
+};
+
 export const ADD_PRODUCT_LOADING = 'ADD_PRODUCT_LOADING';
 export const ADD_PRODUCT_SUCCESS = 'ADD_PRODUCT_SUCCESS';
 export const ADD_PRODUCT_ERROR = 'ADD_PRODUCT_ERROR';
@@ -101,33 +139,15 @@ export const addProduct = (productData) => async (dispatch) => {
   dispatch({ type: ADD_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(productData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Errore durante l'aggiunta del prodotto");
-    }
-
-    const data = await response.json();
+    const { data } = await api.post('/Product', productData);
 
     dispatch({
       type: ADD_PRODUCT_SUCCESS,
       payload: data,
     });
-    dispatch(fetchProducts());
+    return { ok: true };
   } catch (error) {
-    dispatch({
-      type: ADD_PRODUCT_ERROR,
-      payload: error.message,
-    });
+    return productFailure(dispatch, ADD_PRODUCT_ERROR, error, "Errore durante l'aggiunta del prodotto");
   }
 };
 
@@ -139,31 +159,15 @@ export const updateProduct = (productId, updatedData) => async (dispatch) => {
   dispatch({ type: UPDATE_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product/${productId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Errore durante l'aggiornamento del prodotto");
-    }
+    await api.put(`/Product/${productId}`, updatedData);
 
     dispatch({
       type: UPDATE_PRODUCT_SUCCESS,
       payload: updatedData,
     });
-    dispatch(fetchProducts());
+    return { ok: true };
   } catch (error) {
-    dispatch({
-      type: UPDATE_PRODUCT_ERROR,
-      payload: error.message,
-    });
+    return productFailure(dispatch, UPDATE_PRODUCT_ERROR, error, "Errore durante l'aggiornamento del prodotto");
   }
 };
 
@@ -175,28 +179,14 @@ export const deleteProduct = (productId) => async (dispatch) => {
   dispatch({ type: DELETE_PRODUCT_LOADING });
 
   try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${ApiURL.apiUrl}/Product/${productId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Errore durante l'eliminazione del prodotto");
-    }
+    await api.delete(`/Product/${productId}`);
 
     dispatch({
       type: DELETE_PRODUCT_SUCCESS,
       payload: productId,
     });
-    dispatch(fetchProducts());
+    return { ok: true };
   } catch (error) {
-    dispatch({
-      type: DELETE_PRODUCT_ERROR,
-      payload: error.message,
-    });
+    return productFailure(dispatch, DELETE_PRODUCT_ERROR, error, "Errore durante l'eliminazione del prodotto");
   }
 };

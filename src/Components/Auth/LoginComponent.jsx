@@ -1,4 +1,4 @@
-import { Container, Form, Button } from 'react-bootstrap';
+import { Alert, Container, Form, Button } from 'react-bootstrap';
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,20 +10,25 @@ import { getCart } from '../../Redux/Actions/CartActions';
 const LoginComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
 
-    const isLoggedIn = await dispatch(login(email, password));
+    const result = await dispatch(login(email, password));
 
-    if (isLoggedIn) {
+    if (result.ok) {
       dispatch(getCart());
       navigate('/accountInfo');
+    } else if (result.code === 'account_deactivated') {
+      // Solo l'email passa alla pagina di riattivazione: la password viene richiesta di nuovo.
+      navigate('/reactivate', { state: { email } });
     } else {
-      alert('Login fallito');
+      setError(result.message);
     }
   };
 
@@ -41,6 +46,12 @@ const LoginComponent = () => {
     >
       <h4 className='mb-3'>Accedi qui!</h4>
       <p id='verde'>Inserisci email e password per poter acquistare!</p>
+
+      {error && (
+        <Alert variant='danger' className='w-50'>
+          {error}
+        </Alert>
+      )}
 
       <Form className='w-50 mt-4' onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formEmail'>

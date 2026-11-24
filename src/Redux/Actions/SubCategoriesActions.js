@@ -1,4 +1,5 @@
-import ApiURL from '../../Utils/ApiURL';
+import { api } from '../../Utils/apiClient';
+import { withMessage } from '../../Utils/errorMessages';
 
 export const GET_SUBCATEGORIES_LOADING = 'GET_SUBCATEGORIES_LOADING';
 export const GET_SUBCATEGORIES_SUCCESS = 'GET_SUBCATEGORIES_SUCCESS';
@@ -8,12 +9,9 @@ export const fetchSubCategories = () => {
   return async (dispatch) => {
     dispatch({ type: GET_SUBCATEGORIES_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/SubCategory`);
-      if (!response.ok)
+      const { data } = await api.get('/SubCategory', { auth: false }).catch(() => {
         throw new Error('Errore nel caricamento delle sottocategorie');
-
-      const data = await response.json();
-
+      });
       dispatch({
         type: GET_SUBCATEGORIES_SUCCESS,
         payload: data,
@@ -35,11 +33,9 @@ export const fetchSubCategoryById = (id) => {
   return async (dispatch) => {
     dispatch({ type: GET_SUBCATEGORY_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/SubCategory/${id}`);
-      if (!response.ok)
+      const { data } = await api.get(`/SubCategory/${id}`, { auth: false }).catch(() => {
         throw new Error('Errore nel caricamento delle categorie');
-
-      const data = await response.json();
+      });
       dispatch({
         type: GET_SUBCATEGORY_SUCCESS,
         payload: data,
@@ -58,25 +54,12 @@ export const CREATE_SUBCATEGORY_SUCCESS = 'CREATE_SUBCATEGORY_SUCCESS';
 export const CREATE_SUBCATEGORY_ERROR = 'CREATE_SUBCATEGORY_ERROR';
 
 export const createSubCategory = (category) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: CREATE_SUBCATEGORY_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/SubCategory`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(category),
-      });
-
-      if (!response.ok)
-        throw new Error('Errore nella creazione della categoria');
-
-      const data = await response.json();
-      console.log(data);
-
+      const { data } = await api
+        .post('/SubCategory', category)
+        .catch(withMessage('Errore nella creazione della sottocategoria'));
       dispatch({ type: CREATE_SUBCATEGORY_SUCCESS, payload: data });
     } catch (err) {
       dispatch({ type: CREATE_SUBCATEGORY_ERROR, payload: err.message });
@@ -89,23 +72,14 @@ export const UPDATE_SUBCATEGORY_SUCCESS = 'UPDATE_SUBCATEGORY_SUCCESS';
 export const UPDATE_SUBCATEGORY_ERROR = 'UPDATE_SUBCATEGORY_ERROR';
 
 export const updateSubCategory = (id, updatedCategory) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: UPDATE_SUBCATEGORY_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/SubCategory/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedCategory),
-      });
+      const { status } = await api
+        .put(`/SubCategory/${id}`, updatedCategory)
+        .catch(withMessage("Errore nell'aggiornamento della sottocategoria"));
 
-      if (!response.ok)
-        throw new Error("Errore nell'aggiornamento della categoria");
-
-      if (response.status === 204) {
+      if (status === 204) {
         dispatch({
           type: UPDATE_SUBCATEGORY_SUCCESS,
           payload: updatedCategory,
@@ -122,19 +96,10 @@ export const DELETE_SUBCATEGORY_SUCCESS = 'DELETE_SUBCATEGORY_SUCCESS';
 export const DELETE_SUBCATEGORY_ERROR = 'DELETE_SUBCATEGORY_ERROR';
 
 export const deleteSubCategory = (id) => {
-  const token = localStorage.getItem('token');
   return async (dispatch) => {
     dispatch({ type: DELETE_SUBCATEGORY_LOADING });
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/SubCategory/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok)
-        throw new Error("Errore nell'eliminazione della categoria");
+      await api.delete(`/SubCategory/${id}`).catch(withMessage("Errore nell'eliminazione della sottocategoria"));
 
       dispatch({ type: DELETE_SUBCATEGORY_SUCCESS, payload: id });
     } catch (err) {
