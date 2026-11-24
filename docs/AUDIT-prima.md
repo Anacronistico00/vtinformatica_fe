@@ -86,3 +86,24 @@ Il testo sopra è la baseline e non va modificato. Piano in `docs/PIANO-M4.md`.
    stato. Funziona per caso; da verificare quando si tocca la vista produttore.
 2. Le letture pubbliche (catalogo) ora vanno in stato di errore su risposte non
    2xx; prima il corpo dell'errore finiva nello stato come se fosse la lista.
+
+## Stato avanzamento M4b – allineamento al contratto dell'API (aggiornato 2026-11-24)
+
+Branch `feat/m4b-api-contract`, test-first (dettaglio in `docs/PIANO-M4.md`).
+
+| Voce                            | Stato    | Come                                                                                                                                  |
+| ------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| FE 4 Email nell'URL             | Chiuso   | Carrello e ordini su `/Cart/me`, `/Order/me`, `/Order/me/from-cart`: nessuna email nelle route, nelle actions o nei componenti       |
+| Errori per `code`               | Chiuso   | `Utils/errorMessages.js` (un solo punto per i testi). Aggiunta al carrello e checkout mostrano il motivo (prima fallivano in silenzio) |
+| Carrello dopo l'aggiunta        | Chiuso   | La risposta del BE (`{ message }`) non viene più inserita tra le righe; righe e totale arrivano dal ricaricamento                     |
+| Errore nella pagina carrello    | Chiuso   | "Accedi ora" solo senza login; con login si vede il motivo dell'errore                                                                |
+| `CustomerComment`               | Chiuso   | Campo "Note per l'ordine (facoltative)", max 500, inviato al checkout                                                                 |
+| Registrazione                   | Chiuso   | Campo "Codice Fiscale" rimosso (il BE non lo prevede); errore mostrato per `code` (es. email già registrata)                           |
+| `RoleRoute` senza login         | Chiuso   | Redirect a `/account` (prima `/login`, rotta inesistente → 404)                                                                       |
+| NavBar                          | Verificato | Nessuna richiesta del carrello senza login; render con stato iniziale senza crash. Crash con BE acceso da ricontrollare nel browser |
+| Liste vuote `200 []`            | Chiuso   | Pagine sottocategoria/produttore mostrano "Nessun prodotto disponibile."; test di caratterizzazione                                    |
+| Lint                            | Chiuso   | 3 warning `exhaustive-deps` → 0 dopo i test delle tre pagine                                                                          |
+| Paginazione lista prodotti admin | Spostata | In M4d, insieme a `ExpectedQuantity`: tocca lo stesso componente (361 righe) una volta sola                                           |
+
+- Test: 23 → 52. Lint: 0 errori, 0 warning.
+- Checkout riuscito: toast "Ordine creato con successo!" (prima nessun riscontro).
