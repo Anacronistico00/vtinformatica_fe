@@ -53,7 +53,7 @@ const CartComponent = () => {
     });
   };
 
-  const token = localStorage.getItem('token');
+  const token = useSelector((state) => state.auth.token);
   const userEmail = token ? getEmailFromToken(token) : null;
 
   const handleCreateOrder = () => {
