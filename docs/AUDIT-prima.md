@@ -160,3 +160,43 @@ fetta `feat/review-mine`.
   recensioni, che stanno in `ProductReviews`, 166 righe): ora è il componente
   più grande. Il refactor della galleria e dei prodotti correlati resta da fare,
   dopo i loro test di caratterizzazione.
+
+## Stato avanzamento M4g – E2E (aggiornato 2026-11-24)
+
+Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
+`e2e/README.md`) contro BE e DB SQL Server locali, dati dedicati creati e rimossi.
+
+| Flusso                                                        | Esito |
+| ------------------------------------------------------------- | ----- |
+| Login → carrello → checkout (con nota) → ordine in "i miei ordini" | ok    |
+| Checkout con stock diventato insufficiente → 409 con il motivo | ok    |
+| Disattivazione self → login → riattivazione → benvenuto       | ok    |
+| Account sospeso → messaggio di negazione                      | ok    |
+| Sessione scaduta (token con `exp` passato) → non loggato, nessun errore JS | ok |
+| Lista prodotti admin paginata (`X-Total-Count` via CORS reale) | ok    |
+| Modifica prodotto con `ExpectedQuantity` superata → 409       | ok    |
+| Recensioni: crea/modifica/elimina solo la propria             | ok    |
+
+- 8/8 verdi. DB prima e dopo: utenti 5, prodotti 12, ordini 5, review 0,
+  `AspNetUserRoles` 5 (backup verificato prima della prima esecuzione).
+- **Bug trovato dagli E2E e corretto (test-first)**: quando il transform di
+  persistenza scartava uno slice scaduto (token con `exp` passato, carrello inattivo
+  da più di un'ora), `autoMergeLevel1` di redux-persist copiava `undefined` sullo
+  stato iniziale: `state.auth` / `state.cart` undefined e crash dell'app all'avvio.
+  È con ogni probabilità il "crash di NavBar dopo il reset della persistenza"
+  annotato nella baseline. Ora gli slice scartati tornano allo stato iniziale.
+- Gli E2E usano una porta propria (5174) e un BE con quell'origine nel CORS: un dev
+  server già acceso sulla 5173 senza `VITE_API_URL` veniva riusato e faceva fallire
+  ogni flusso.
+
+### Lavoro futuro
+
+- **E2E e race reale in CI**: servono SQL Server nel runner (container `mssql` in
+  GitHub Actions, o Testcontainers come previsto per il BE). Fino ad allora gli E2E
+  si lanciano solo in locale.
+
+### Fuori scope emersi (non toccati)
+
+1. `/orders` non carica gli ordini da sé (li carica la pagina Account): aperta o
+   ricaricata direttamente può mostrare un elenco vecchio o vuoto.
+2. Seller: il BE gli consente prodotti e categorie, il backoffice FE è solo Admin.
