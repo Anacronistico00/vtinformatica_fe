@@ -142,3 +142,21 @@ prodotti prima del refactor).
 
 - Test: 70 → 83.
 - La lista mostra solo le categorie con prodotti nella pagina corrente.
+
+## Stato avanzamento M4f – recensioni (aggiornato 2026-11-24)
+
+Branch `feat/m4f-reviews`, test-first. Usa `GET /Review/me`, aggiunto al BE nella
+fetta `feat/review-mine`.
+
+| Voce                       | Stato  | Come                                                                                                                  |
+| -------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| Lista recensioni           | Chiuso | Nella pagina prodotto: stelle (`aria-label` "N su 5"), testo e data; nessun autore (il BE non lo espone)              |
+| Crea                       | Chiuso | Solo con login: voto con stelle (1–5) e testo; errori per `code` (es. `validation_failed`, `product_not_found`)       |
+| Modifica/elimina           | Chiuso | Solo sulle proprie: gli id vengono incrociati con `GET /Review/me`                                                     |
+| Pagina prodotto diretta    | Chiuso | `/product/:id` aperta o ricaricata senza stato di navigazione andava in crash: ora il prodotto si legge con l'id       |
+
+- Test: 83 → 90.
+- `ProductInfo` passa da 313 a 339 righe (caricamento per id e innesto delle
+  recensioni, che stanno in `ProductReviews`, 166 righe): ora è il componente
+  più grande. Il refactor della galleria e dei prodotti correlati resta da fare,
+  dopo i loro test di caratterizzazione.
