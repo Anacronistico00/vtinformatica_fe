@@ -1,137 +1,71 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import {
   addProduct,
   deleteProduct,
-  fetchProducts,
+  fetchProductsPage,
   updateProduct,
 } from '../../Redux/Actions/ProductsAction';
+import { fetchCategories } from '../../Redux/Actions/CategoriesActions';
+import { fetchManufacturers } from '../../Redux/Actions/ManufacturersActions';
 import { fetchSubCategories } from '../../Redux/Actions/SubCategoriesActions';
-import { Modal, Button, Form, Row, Col, Card, Spinner } from 'react-bootstrap';
+import AdminPagination from './AdminPagination';
+import ProductFormModal from './ProductFormModal';
 
 const ManageProductsComponent = () => {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const { adminPage, loading, error } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.categories);
-  const subcategories = useSelector(
-    (state) => state.subcategories.subcategories
-  );
-  const manufacturers = useSelector(
-    (state) => state.manufacturers.manufacturers
-  );
+  const subcategories = useSelector((state) => state.subcategories.subcategories);
+  const manufacturers = useSelector((state) => state.manufacturers.manufacturers);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  // null = modale chiuso; { product } = modifica, { product: null } = nuovo prodotto.
+  const [editing, setEditing] = useState(null);
+  const [formKey, setFormKey] = useState(0);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    manufacturerId: 0,
-    description: '',
-    price: 0,
-    quantity: 0,
-    fullDescription: '',
-    subCategoryId: 0,
-    productImages: [
-      {
-        imageUrl: '',
-      },
-    ],
-  });
+  const loadPage = useCallback((page) => dispatch(fetchProductsPage(page)), [dispatch]);
 
   useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(fetchManufacturers());
     dispatch(fetchSubCategories());
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-  const groupedProducts = categories.reduce((acc, category) => {
-    acc[category.id] = products.filter((product) => {
-      return product.category && product.category.id === category.id;
-    });
-    return acc;
-  }, {});
+    loadPage(1);
+  }, [dispatch, loadPage]);
 
   const openModal = (product = null) => {
-    setEditingProduct(product);
-    setFormData(
-      product
-        ? {
-            name: product.name,
-            manufacturerId: product.manufacturerId,
-            description: product.description,
-            price: product.price,
-            quantity: product.quantity,
-            fullDescription: product.fullDescription,
-            subCategoryId: product.subCategory.id,
-            productImages: product.productImages || [{ imageUrl: '' }],
-          }
-        : {
-            name: '',
-            manufacturerId: 0,
-            description: '',
-            price: 0,
-            quantity: 0,
-            fullDescription: '',
-            subCategoryId: 0,
-            productImages: [{ imageUrl: '' }],
-          }
+    setFormKey((key) => key + 1);
+    setEditing({ product });
+  };
+
+  const closeModal = () => setEditing(null);
+
+  const handleSubmit = async (body) => {
+    const product = editing.product;
+    // Lo stock visto all'apertura: se nel frattempo è cambiato, il BE risponde 409 stock_conflict.
+    // Gli errori (es. stock_conflict) li mostra l'action; in ogni caso si ricarica la pagina.
+    await dispatch(
+      product ? updateProduct(product.id, { ...body, expectedQuantity: product.quantity }) : addProduct(body)
     );
-    setModalVisible(true);
-  };
 
-  const closeModal = () => {
-    setModalVisible(false);
-    setEditingProduct(null);
-    setFormData({
-      name: '',
-      manufacturerId: 0,
-      description: '',
-      price: 0,
-      quantity: 0,
-      fullDescription: '',
-      subCategoryId: 0,
-      productImages: [{ imageUrl: '' }],
-    });
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const productData = {
-      ...formData,
-      productImages: formData.productImages.filter((img) => img.imageUrl),
-    };
-    console.log('Dati inviati alla PUT:', productData);
-    if (editingProduct) {
-      dispatch(updateProduct(editingProduct.id, productData));
-    } else {
-      dispatch(addProduct(productData));
-    }
     closeModal();
+    loadPage(adminPage.page);
   };
 
-  const handleImageChange = (index, value) => {
-    const updatedImages = [...formData.productImages];
-
-    updatedImages[index] = { imageUrl: value };
-
-    setFormData({ ...formData, productImages: updatedImages });
+  const handleDelete = async (product) => {
+    if (!window.confirm(`Sei sicuro di voler eliminare il prodotto "${product.name}"?`)) return;
+    await dispatch(deleteProduct(product.id));
+    const lastOnPage = adminPage.items.length === 1 && adminPage.page > 1;
+    loadPage(lastOnPage ? adminPage.page - 1 : adminPage.page);
   };
 
-  const handleAddImageField = () => {
-    setFormData({
-      ...formData,
-      productImages: [...formData.productImages, { imageUrl: '' }],
-    });
-  };
-
-  const handleRemoveImageField = (indexToRemove) => {
-    const updatedImages = formData.productImages.filter(
-      (_, i) => i !== indexToRemove
-    );
-    setFormData({
-      ...formData,
-      productImages: updatedImages,
-    });
-  };
+  // Solo le categorie con prodotti nella pagina corrente.
+  const sections = categories
+    .map((category) => ({
+      category,
+      products: adminPage.items.filter((product) => product.category?.id === category.id),
+    }))
+    .filter((section) => section.products.length > 0);
 
   return (
     <div className='container mt-4'>
@@ -143,217 +77,60 @@ const ManageProductsComponent = () => {
         </Button>
       </div>
 
-      {categories.map((category) => (
+      {loading && <Spinner animation='border' />}
+      {error && <p className='text-danger'>{error}</p>}
+      {!loading && sections.length === 0 && <p>Nessun prodotto.</p>}
+
+      {sections.map(({ category, products }) => (
         <div key={category.id} className='mb-5'>
           <h3>{category.name}</h3>
-
-          {loading && <Spinner animation='border' />}
-          {error && <p className='text-danger'>{error}</p>}
-
           <Row>
-            {groupedProducts[category.id] &&
-            groupedProducts[category.id].length === 0 ? (
-              <p>Non ci sono prodotti in questa categoria.</p>
-            ) : (
-              groupedProducts[category.id]?.map((product) => (
-                <Col
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  className='mb-4'
-                  key={product.id}
-                >
-                  <Card className='product-card h-100'>
-                    <Card.Img
-                      variant='top'
-                      src={product.productImages[0]?.imageUrl}
-                      className='product-image'
-                    />
-                    <Card.Body className='card-body-custom'>
-                      <div>
-                        <Card.Title className='fs-6'>{product.name}</Card.Title>
-                        <Card.Text className='product-description'>
-                          {product.description}
-                        </Card.Text>
-                        <p className='mb-1'>
-                          <strong>Prezzo:</strong> €{product.price}
-                        </p>
-                      </div>
-                      <div className='d-flex justify-content-between mt-3'>
-                        <Button
-                          variant='outline-primary'
-                          size='sm'
-                          onClick={() => openModal(product)}
-                        >
-                          Modifica
-                        </Button>
-                        <Button
-                          variant='outline-danger'
-                          size='sm'
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                `Sei sicuro di voler eliminare il prodotto "${product.name}"?`
-                              )
-                            ) {
-                              dispatch(deleteProduct(product.id));
-                            }
-                          }}
-                        >
-                          Elimina
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))
-            )}
+            {products.map((product) => (
+              <Col xs={12} sm={6} md={4} lg={3} className='mb-4' key={product.id}>
+                <Card className='product-card h-100'>
+                  <Card.Img variant='top' src={product.productImages[0]?.imageUrl} className='product-image' />
+                  <Card.Body className='card-body-custom'>
+                    <div>
+                      <Card.Title className='fs-6'>{product.name}</Card.Title>
+                      <Card.Text className='product-description'>{product.description}</Card.Text>
+                      <p className='mb-1'>
+                        <strong>Prezzo:</strong> €{product.price}
+                      </p>
+                    </div>
+                    <div className='d-flex justify-content-between mt-3'>
+                      <Button variant='outline-primary' size='sm' onClick={() => openModal(product)}>
+                        Modifica
+                      </Button>
+                      <Button variant='outline-danger' size='sm' onClick={() => handleDelete(product)}>
+                        Elimina
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </div>
       ))}
 
-      {/* Modal Bootstrap */}
-      <Modal show={modalVisible} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {editingProduct ? 'Modifica Prodotto' : 'Aggiungi Prodotto'}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleFormSubmit}>
-            <Form.Group className='mb-2'>
-              <Form.Label>Nome Prodotto</Form.Label>
-              <Form.Control
-                type='text'
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
-            </Form.Group>
+      <AdminPagination
+        page={adminPage.page}
+        pageSize={adminPage.pageSize}
+        total={adminPage.total}
+        onChange={loadPage}
+      />
 
-            <Form.Group className='mb-2'>
-              <Form.Label>Produttore</Form.Label>
-              <Form.Control
-                as='select'
-                value={formData.manufacturerId}
-                onChange={(e) =>
-                  setFormData({ ...formData, manufacturerId: e.target.value })
-                }
-              >
-                <option value={0}>Seleziona un produttore</option>
-                {manufacturers.map((man) => (
-                  <option key={man.id} value={man.manufacturerId}>
-                    {man.manufacturerName}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group className='mb-2'>
-              <Form.Label>Descrizione Breve</Form.Label>
-              <Form.Control
-                as='textarea'
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className='mb-2'>
-              <Form.Label>Prezzo (€)</Form.Label>
-              <Form.Control
-                type='number'
-                value={formData.price}
-                onChange={(e) =>
-                  setFormData({ ...formData, price: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className='mb-2'>
-              <Form.Label>Quantità Disponibile</Form.Label>
-              <Form.Control
-                type='number'
-                value={formData.quantity}
-                onChange={(e) =>
-                  setFormData({ ...formData, quantity: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className='mb-2'>
-              <Form.Label>Descrizione Completa</Form.Label>
-              <Form.Control
-                as='textarea'
-                value={formData.fullDescription}
-                onChange={(e) =>
-                  setFormData({ ...formData, fullDescription: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group className='mb-2'>
-              <Form.Label>Sottocategoria</Form.Label>
-              <Form.Control
-                as='select'
-                value={formData.subCategoryId}
-                onChange={(e) =>
-                  setFormData({ ...formData, subCategoryId: e.target.value })
-                }
-              >
-                <option value={0}>Seleziona una sottocategoria</option>
-                {subcategories.map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-
-            {/* Sezione per l'inserimento delle immagini */}
-
-            <h6>Immagini del prodotto</h6>
-            {formData.productImages.map((image, index) => (
-              <Form.Group
-                key={index}
-                className='mb-2 d-flex align-items-center gap-2'
-              >
-                <Form.Control
-                  type='text'
-                  placeholder={`Immagine ${index + 1} URL`}
-                  value={image.imageUrl}
-                  onChange={(e) => handleImageChange(index, e.target.value)}
-                />
-                <Button
-                  variant='danger'
-                  size='sm'
-                  onClick={() => handleRemoveImageField(index)}
-                  disabled={formData.productImages.length === 1}
-                >
-                  Rimuovi
-                </Button>
-              </Form.Group>
-            ))}
-            <div className='d-flex align-items-center justify-content-end'>
-              <Button
-                variant='info'
-                size='sm'
-                className='mb-3'
-                onClick={handleAddImageField}
-              >
-                Aggiungi immagine
-              </Button>
-            </div>
-
-            <Button variant='success' type='submit'>
-              {editingProduct ? 'Aggiorna' : 'Aggiungi'}
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      {editing && (
+        <ProductFormModal
+          key={formKey}
+          show
+          product={editing.product}
+          subcategories={subcategories}
+          manufacturers={manufacturers}
+          onSubmit={handleSubmit}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };
