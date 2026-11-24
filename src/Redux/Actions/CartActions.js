@@ -1,34 +1,25 @@
-// src/redux/actions/cartActions.js
 import { getEmailFromToken } from '../../Utils/jwtUtils';
-import ApiURL from '../../Utils/ApiURL';
+import { api } from '../../Utils/apiClient';
+
+const currentEmail = (getState) => getEmailFromToken(getState().auth.token);
 
 export const ADD_TO_CART_REQUEST = 'ADD_TO_CART_REQUEST';
 export const ADD_TO_CART_SUCCESS = 'ADD_TO_CART_SUCCESS';
 export const ADD_TO_CART_ERROR = 'ADD_TO_CART_ERROR';
 
 export const addToCart = (productId, quantity) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch({ type: ADD_TO_CART_REQUEST });
 
     try {
-      const token = localStorage.getItem('token');
-      const userEmail = getEmailFromToken(token);
-
+      const userEmail = currentEmail(getState);
       if (!userEmail) throw new Error('Utente non autenticato');
 
-      const response = await fetch(`${ApiURL.apiUrl}/Cart/${userEmail}/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId, quantity }),
-      });
-
-      if (!response.ok)
-        throw new Error("Errore durante l'aggiunta al carrello");
-
-      const data = await response.json();
+      const { data } = await api
+        .post(`/Cart/${userEmail}/add`, { productId, quantity })
+        .catch(() => {
+          throw new Error("Errore durante l'aggiunta al carrello");
+        });
 
       dispatch({
         type: ADD_TO_CART_SUCCESS,
@@ -49,27 +40,16 @@ export const GET_CART_SUCCESS = 'GET_CART_SUCCESS';
 export const GET_CART_ERROR = 'GET_CART_ERROR';
 
 export const getCart = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch({ type: GET_CART_REQUEST });
 
     try {
-      const token = localStorage.getItem('token');
-      const userEmail = getEmailFromToken(token);
-
+      const userEmail = currentEmail(getState);
       if (!userEmail) throw new Error('Utente non autenticato');
 
-      const response = await fetch(`${ApiURL.apiUrl}/Cart/${userEmail}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok)
+      const { data } = await api.get(`/Cart/${userEmail}`).catch(() => {
         throw new Error('Errore durante il recupero del carrello');
-
-      const data = await response.json();
+      });
 
       dispatch({
         type: GET_CART_SUCCESS,
@@ -89,27 +69,15 @@ export const REMOVE_FROM_CART_SUCCESS = 'REMOVE_FROM_CART_SUCCESS';
 export const REMOVE_FROM_CART_ERROR = 'REMOVE_FROM_CART_ERROR';
 
 export const removeItemFromCart = (itemId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch({ type: REMOVE_FROM_CART_REQUEST });
 
     try {
-      const token = localStorage.getItem('token');
-      const userEmail = getEmailFromToken(token);
+      if (!currentEmail(getState)) throw new Error('Utente non autenticato');
 
-      if (!userEmail) throw new Error('Utente non autenticato');
-
-      const response = await fetch(`${ApiURL.apiUrl}/Cart/${itemId}/delete`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+      await api.delete(`/Cart/${itemId}/delete`).catch(() => {
+        throw new Error("Errore durante la rimozione dell'articolo dal carrello");
       });
-
-      if (!response.ok)
-        throw new Error(
-          "Errore durante la rimozione dell'articolo dal carrello"
-        );
 
       dispatch({ type: REMOVE_FROM_CART_SUCCESS, payload: { id: itemId } });
       dispatch(getCart());
@@ -127,37 +95,19 @@ export const UPDATE_ITEM_QUANTITY_SUCCESS = 'UPDATE_ITEM_QUANTITY_SUCCESS';
 export const UPDATE_ITEM_QUANTITY_ERROR = 'UPDATE_ITEM_QUANTITY_ERROR';
 
 export const updateItemQuantity = (cartItemId, quantityToRemove) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch({ type: UPDATE_ITEM_QUANTITY_REQUEST });
 
     try {
-      const token = localStorage.getItem('token');
-      const userEmail = getEmailFromToken(token);
+      if (!currentEmail(getState)) throw new Error('Utente non autenticato');
 
-      if (!userEmail) throw new Error('Utente non autenticato');
-
-      const response = await fetch(
-        `${
-          ApiURL.apiUrl
-        }/Cart/${cartItemId}/delete/byquantity?quantityToRemove=${Math.abs(
-          quantityToRemove
-        )}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok)
-        throw new Error("Errore durante l'aggiornamento della quantità");
-
-      let data = null;
-      if (response.status !== 204) {
-        data = await response.json();
-      }
+      const { data } = await api
+        .patch(
+          `/Cart/${cartItemId}/delete/byquantity?quantityToRemove=${Math.abs(quantityToRemove)}`
+        )
+        .catch(() => {
+          throw new Error("Errore durante l'aggiornamento della quantità");
+        });
 
       dispatch({ type: UPDATE_ITEM_QUANTITY_SUCCESS, payload: data });
 

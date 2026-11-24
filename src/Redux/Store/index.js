@@ -15,6 +15,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import expireTransform from '../../Utils/PersistConfig';
+import { connectApiClient } from './connectApiClient';
 import { cartReducer } from '../Reducers/CartReducer';
 import ordersReducer from '../Reducers/OrderReducer';
 import subCategoryReducer from '../Reducers/SubCategoryReducer';
@@ -48,4 +49,5 @@ const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+connectApiClient(store);
 export default store;

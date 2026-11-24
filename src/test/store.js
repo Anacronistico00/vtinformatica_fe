@@ -6,10 +6,11 @@ import productsReducer from '../Redux/Reducers/ProductsReducer';
 import { cartReducer } from '../Redux/Reducers/CartReducer';
 import ordersReducer from '../Redux/Reducers/OrderReducer';
 import subCategoryReducer from '../Redux/Reducers/SubCategoryReducer';
+import { connectApiClient } from '../Redux/Store/connectApiClient';
 
-/** Store reale senza persistenza: un'istanza nuova per ogni test. */
-export const makeStore = (preloadedState) =>
-  configureStore({
+/** Store reale senza persistenza, collegato al client HTTP: un'istanza nuova per ogni test. */
+export const makeStore = (preloadedState) => {
+  const store = configureStore({
     reducer: combineReducers({
       auth: authentication,
       categories: categoryReducer,
@@ -21,3 +22,6 @@ export const makeStore = (preloadedState) =>
     }),
     preloadedState,
   });
+  connectApiClient(store);
+  return store;
+};

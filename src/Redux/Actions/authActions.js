@@ -1,6 +1,5 @@
 import { getBirthDateFromToken, getRoleFromToken } from '../../Utils/jwtUtils';
-import ApiURL from '../../Utils/ApiURL';
-import { DiSpark } from 'react-icons/di';
+import { api } from '../../Utils/apiClient';
 import { resetCart } from './CartActions';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -14,18 +13,12 @@ export const loginSuccess = (user, token, isAuthenticated, role) => ({
 export const login = (email, password) => {
   return async (dispatch) => {
     try {
-      const url = ApiURL.apiUrl;
-      const response = await fetch(`${url}/Account/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const { data } = await api
+        .post('/Account/login', { email, password }, { auth: false })
+        .catch(() => {
+          throw new Error('Credenziali non valide');
+        });
 
-      if (!response.ok) {
-        throw new Error('Credenziali non valide');
-      }
-
-      const data = await response.json();
       const isAuthenticated = true;
       const role = getRoleFromToken(data.token);
       const birthDate = getBirthDateFromToken(data.token);
@@ -45,6 +38,9 @@ export const login = (email, password) => {
     }
   };
 };
+
+export const registerUser = (registration) =>
+  api.post('/Account/register', registration, { auth: false });
 
 export const logout = () => {
   return (dispatch) => {

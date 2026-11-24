@@ -1,7 +1,7 @@
 import { Container, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApiURL from '../../Utils/ApiURL';
+import { registerUser } from '../../Redux/Actions/authActions';
 
 const RegisterComponent = () => {
   const [firstName, setFirstName] = useState('');
@@ -17,23 +17,17 @@ const RegisterComponent = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${ApiURL.apiUrl}/Account/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-          birthDate,
-          fiscalCode,
-        }),
-      });
-
-      if (!response.ok) {
+      await registerUser({
+        firstName,
+        lastName,
+        email,
+        password,
+        birthDate,
+        fiscalCode,
+      }).catch(() => {
         alert('Errore nella registrazione');
         throw new Error('Errore nella registrazione');
-      }
+      });
       navigate('/');
     } catch (error) {
       console.error('Errore nella registrazione e login:', error.message);
