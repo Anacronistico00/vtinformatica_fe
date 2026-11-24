@@ -20,6 +20,11 @@ export const fetchProducts = () => async (dispatch) => {
   }
 };
 
+export const fetchProductById = async (id) => {
+  const { data } = await api.get(`/Product/${id}`, { auth: false });
+  return data;
+};
+
 export const searchProducts = async (query) => {
   const { data } = await api.get(`/Product/search?query=${query}`, { auth: false }).catch(() => {
     throw new Error('Errore nel recupero dei prodotti');
