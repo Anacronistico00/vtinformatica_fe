@@ -18,24 +18,31 @@ jobs:
       E2E_SQL_SERVER: localhost,1433
       E2E_SQL_USER: sa
       E2E_SQL_DATABASE: VTInformatica
-      # Password del solo container SQL Server di questo job (effimero, raggiungibile solo dal runner).
-      E2E_SQL_PASSWORD: Ci-Only-Sql-Password-1
-
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: Y
-          MSSQL_SA_PASSWORD: Ci-Only-Sql-Password-1
-        ports:
-          - 1433:1433
-        options: >-
-          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Ci-Only-Sql-Password-1 -Q 'SELECT 1'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 12
 
     steps:
+      # Segreti di questa esecuzione: nascono qui e non sono salvati da nessuna parte.
+      # La password sa ha un prefisso fisso perché SQL Server chiede 3 classi di caratteri su 4.
+      - name: Segreti di questa esecuzione
+        run: |
+          key="$(openssl rand -hex 32)"
+          echo "::add-mask::$key"
+          echo "Jwt__SecurityKey=$key" >> "$GITHUB_ENV"
+          password="Sa-$(openssl rand -hex 24)"
+          echo "::add-mask::$password"
+          {
+            echo "E2E_SQL_PASSWORD=$password"
+            echo "ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=VTInformatica;User Id=sa;Password=$password;TrustServerCertificate=True"
+          } >> "$GITHUB_ENV"
+
+      # Avviato come step (non come service) perché un service parte prima degli step e non vede la password generata.
+      # Parte subito: si inizializza mentre il BE compila.
+      - name: SQL Server, avvio
+        run: >-
+          docker run -d --name mssql -p 1433:1433 -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD
+          mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          MSSQL_SA_PASSWORD: ${{ env.E2E_SQL_PASSWORD }}
+
       - uses: actions/checkout@v4
         with:
           path: vtinformatica_fe
@@ -56,13 +63,6 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # La chiave JWT nasce qui, per questa esecuzione: non è salvata da nessuna parte.
-      - name: Chiave JWT di questa esecuzione
-        run: |
-          key="$(openssl rand -hex 32)"
-          echo "::add-mask::$key"
-          echo "Jwt__SecurityKey=$key" >> "$GITHUB_ENV"
-
       - name: sqlcmd
         run: |
           if ! command -v sqlcmd >/dev/null; then
@@ -77,13 +77,22 @@ jobs:
         working-directory: VTInformatica
         run: dotnet build VTInformatica/VTInformatica.csproj -c Release
 
+      # La password la legge sqlcmd dall'ambiente del container: non passa dalla riga di comando.
+      - name: SQL Server, attesa
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec mssql bash -c '/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -Q "SELECT 1"' >/dev/null 2>&1; then
+              echo "SQL Server pronto"; exit 0
+            fi
+            sleep 5
+          done
+          echo "SQL Server non raggiungibile"; docker logs mssql; exit 1
+
       - name: BE, database con le migration vere
         working-directory: VTInformatica
         run: |
           dotnet tool install --global dotnet-ef --version 10.0.15
           dotnet ef database update --project VTInformatica --no-build --configuration Release
-        env:
-          ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=VTInformatica;User Id=sa;Password=Ci-Only-Sql-Password-1;TrustServerCertificate=True
 
       - name: Dati minimi
         working-directory: vtinformatica_fe
@@ -101,7 +110,6 @@ jobs:
           echo "BE non raggiungibile"; cat "$RUNNER_TEMP/be.log"; exit 1
         env:
           ASPNETCORE_URLS: http://localhost:5158
-          ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=VTInformatica;User Id=sa;Password=Ci-Only-Sql-Password-1;TrustServerCertificate=True
           Cors__AllowedOrigins__1: http://localhost:5174
 
       - name: FE, dipendenze e browser

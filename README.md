@@ -115,7 +115,7 @@ Gli E2E creano utenti `e2e.*@example.test` e prodotti `E2E …` e li cancellano 
 
 ### E2E in CI
 
-Il workflow [`e2e.yml`](.github/workflows/e2e.yml) gira sulle PR verso `develop` e `main`: container `mssql` 2022 come service, checkout del BE (branch `master`), `dotnet ef database update` con le migration vere, verifica dei dati minimi ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): ruoli e catalogo di base arrivano dal seed delle migration), BE avviato con `Cors__AllowedOrigins__1=http://localhost:5174` e chiave JWT generata al momento (mai salvata), poi `npm run e2e` con autenticazione SQL (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). Se falliscono, report e trace di Playwright restano come artifact del run.
+Il workflow [`e2e.yml`](.github/workflows/e2e.yml) gira sulle PR verso `develop` e `main`: container `mssql` 2022 avviato come step, checkout del BE (branch `master`), `dotnet ef database update` con le migration vere, verifica dei dati minimi ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): ruoli e catalogo di base arrivano dal seed delle migration), BE avviato con `Cors__AllowedOrigins__1=http://localhost:5174` e chiave JWT e password `sa` generate al momento (mascherate nei log, mai salvate), poi `npm run e2e` con autenticazione SQL (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). Se falliscono, report e trace di Playwright restano come artifact del run.
 
 ## Prima / dopo
 
