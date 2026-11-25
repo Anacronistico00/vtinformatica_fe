@@ -34,16 +34,13 @@ const RegisterComponent = () => {
     <Container
       fluid
       className='d-flex flex-column justify-content-start align-items-center pb-5'
-      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
-      <h4 id='verde' className='mb-3 mt-5'>
-        Registrati ora!
-      </h4>
-      <p className='text-muted'>Crea un account per acquistare!</p>
+      <h1 className='h4 mb-3 mt-5'>Crea il tuo account</h1>
+      <p className='text-muted'>Serve per acquistare e seguire i tuoi ordini.</p>
 
-      <Form className='w-50 mt-4' onSubmit={handleSubmit}>
+      <Form className='auth-form mt-4' onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formFirstName'>
-          <Form.Label id='verde'>Nome</Form.Label>
+          <Form.Label>Nome</Form.Label>
           <Form.Control
             type='text'
             placeholder='Inserisci il nome'
@@ -54,7 +51,7 @@ const RegisterComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formLastName'>
-          <Form.Label id='verde'>Cognome</Form.Label>
+          <Form.Label>Cognome</Form.Label>
           <Form.Control
             type='text'
             placeholder='Inserisci il cognome'
@@ -65,7 +62,7 @@ const RegisterComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formEmail'>
-          <Form.Label id='verde'>Email</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type='email'
             placeholder='Inserisci la email'
@@ -76,7 +73,7 @@ const RegisterComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formPassword'>
-          <Form.Label id='verde'>Password</Form.Label>
+          <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
             placeholder='Inserisci la password'
@@ -87,7 +84,7 @@ const RegisterComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formConfirmPassword'>
-          <Form.Label id='verde'>Conferma Password</Form.Label>
+          <Form.Label>Conferma password</Form.Label>
           <Form.Control
             type='password'
             placeholder='Conferma la password'
@@ -98,7 +95,7 @@ const RegisterComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formBirthDate'>
-          <Form.Label id='verde'>Data di Nascita</Form.Label>
+          <Form.Label>Data di nascita</Form.Label>
           <Form.Control
             type='date'
             required
@@ -107,11 +104,7 @@ const RegisterComponent = () => {
           />
         </Form.Group>
 
-        <Button
-          id='addbtn'
-          type='submit'
-          className='bg-transparent btn-outline-success '
-        >
+        <Button type='submit' variant='primary'>
           Registrati
         </Button>
       </Form>

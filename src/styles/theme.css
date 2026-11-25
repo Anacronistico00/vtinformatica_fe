@@ -405,3 +405,8 @@ a:has(> .card) {
   font-size: 1.25rem;
   font-variant-numeric: tabular-nums;
 }
+
+/* Moduli di accesso, registrazione e riattivazione: una colonna leggibile anche su mobile. */
+.auth-form {
+  width: min(100%, 28rem);
+}

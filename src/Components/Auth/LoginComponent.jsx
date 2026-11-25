@@ -42,20 +42,19 @@ const LoginComponent = () => {
     <Container
       fluid
       className='d-flex flex-column justify-content-start align-items-center pb-5 mt-5'
-      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
-      <h4 className='mb-3'>Accedi qui!</h4>
-      <p id='verde'>Inserisci email e password per poter acquistare!</p>
+      <h1 className='h4 mb-3'>Accedi al tuo account</h1>
+      <p className='text-muted'>Inserisci email e password per acquistare.</p>
 
       {error && (
-        <Alert variant='danger' className='w-50'>
+        <Alert variant='danger' className='auth-form'>
           {error}
         </Alert>
       )}
 
-      <Form className='w-50 mt-4' onSubmit={handleSubmit}>
+      <Form className='auth-form mt-4' onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formEmail'>
-          <Form.Label id='verde'>Email</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type='email'
             placeholder='Inserisci la tua email'
@@ -66,7 +65,7 @@ const LoginComponent = () => {
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='formPassword'>
-          <Form.Label id='verde'>Password</Form.Label>
+          <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
             placeholder='Inserisci la tua password'
@@ -77,11 +76,7 @@ const LoginComponent = () => {
         </Form.Group>
 
         <div className='d-flex justify-content-between align-items-end'>
-          <Button
-            id='addbtn'
-            type='submit'
-            className='bg-transparent btn-outline-success  '
-          >
+          <Button type='submit' variant='primary'>
             Accedi
           </Button>
 
