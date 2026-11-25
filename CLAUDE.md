@@ -62,6 +62,8 @@
 - Il backend non si modifica da questo repo: se serve qualcosa lato BE, annotarlo
   come fuori scope.
 - Mai committare `.env*` (tranne `.env.example`), token o segreti.
+- Mai `node_modules` condiviso tramite giunzione/symlink nei worktree: `npm ci` separato per
+  worktree (rimuovere il worktree segue il link e svuota il `node_modules` vero).
 - Se una scelta di architettura è ambigua, chiedi invece di decidere da solo.
 
 ## Flusso Git
