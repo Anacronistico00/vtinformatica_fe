@@ -147,7 +147,7 @@ Dall'audit (sezioni "fuori scope" e lavoro futuro):
 
 - **Test su SQL Server reale in CI.** Gli E2E e la corsa reale sullo stock girano solo in locale: servono SQL Server nel runner (container `mssql` in GitHub Actions) o Testcontainers, come previsto per il BE.
 - **SuperAdmin ed email.** Oggi gli admin si creano a mano via DB. Previsto lato BE: ruolo `SuperAdmin`, creazione admin con invito via email, "password dimenticata". Il FE non ha ancora una pagina di gestione admin.
-- **Email → id.** Il FE usa già solo le route `/me`; nel BE restano le vecchie route con `{email}` come `[Obsolete]`, da rimuovere.
+- **Email → id.** Il FE usa già solo le route `/me`; il BE ha rimosso le vecchie route con `{email}`. Resta da migrare la chiave email → `UserId` nel DB del BE (carrello e ordini sono ancora legati all'email).
 - **Cookie httpOnly.** Il token sta in localStorage (via redux-persist): un XSS può leggerlo. La soluzione è cookie httpOnly + refresh token, che richiede modifiche al BE. Al deploy va impostata una CSP come header HTTP (indicativamente `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' <VITE_API_URL>`).
 - **Seller nel backoffice.** Il BE consente a `Seller` prodotti e categorie; il backoffice del FE è solo per `Admin`.
 - **Componenti ancora grandi.** `ProductInfo` (339 righe) non è stato spezzato.
