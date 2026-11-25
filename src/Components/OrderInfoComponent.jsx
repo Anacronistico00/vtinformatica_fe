@@ -71,6 +71,7 @@ const OrderInfoComponent = () => {
                   marginRight: '15px',
                 }}
                 rounded
+                className='product-thumb'
               />
               <div>
                 <h5>{item.product.name}</h5>
@@ -98,7 +99,7 @@ const OrderInfoComponent = () => {
 
           {order.isDeleted ? (
             <Button
-              variant='success'
+              variant='primary'
               onClick={() => handleShowModal('restore')}
               className='mt-3 me-2'
             >

@@ -78,8 +78,8 @@ const CartComponent = () => {
   if (error) return <div className='text-center mt-5'>{error}</div>;
 
   return (
-    <div>
-      <h2 className='text-center mt-5'>Il tuo carrello</h2>
+    <div className='container my-4'>
+      <h2 className='mb-4'>Il tuo carrello</h2>
       {items.length === 0 ? (
         <p className='text-center'>Il tuo carrello è vuoto.</p>
       ) : (
@@ -88,7 +88,7 @@ const CartComponent = () => {
             {items.map((item) => (
               <li
                 key={item.id}
-                className='list-group-item d-flex justify-content-between align-items-center'
+                className='list-group-item d-flex flex-wrap justify-content-between align-items-center gap-3'
               >
                 <div className='d-flex align-items-center'>
                   <img
@@ -100,7 +100,7 @@ const CartComponent = () => {
                         : 'default-image.jpg'
                     }
                     alt={item.product ? item.product.name : 'Prodotto'}
-                    className='img-fluid rounded-3 me-3'
+                    className='img-fluid rounded-3 me-3 product-thumb'
                     style={{
                       width: '50px',
                       height: '50px',
@@ -130,11 +130,12 @@ const CartComponent = () => {
                     onChange={(e) =>
                       handleQuantityInputChange(item.id, e.target.value)
                     }
+                    aria-label='Quantità da rimuovere'
                     className='form-control form-control-sm'
                     style={{ width: '60px' }}
                   />
                   <button
-                    className='btn btn-outline-warning btn-sm ml-2 me-1'
+                    className='btn btn-outline-primary btn-sm ms-2 me-1'
                     onClick={() =>
                       handleQuantityChange(
                         item.id,
@@ -156,7 +157,7 @@ const CartComponent = () => {
               </li>
             ))}
           </ul>
-          <p className='mt-3'>
+          <p className='cart-total mt-3'>
             <strong>Totale: {totalPrice}€</strong>
           </p>
         </div>
@@ -177,7 +178,7 @@ const CartComponent = () => {
             />
           </div>
           <button
-            className='btn btn-success'
+            className='btn btn-primary'
             onClick={handleCreateOrder}
             disabled={items.length === 0}
           >
