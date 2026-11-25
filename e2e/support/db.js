@@ -9,10 +9,11 @@ export const runSql = (sql) => {
   try {
     return execFileSync(
       SQLCMD,
-      ['-S', SQL_SERVER, ...authArgs, '-C', '-d', SQL_DATABASE, '-b', '-h', '-1', '-W', '-Q', `SET NOCOUNT ON; ${sql}`],
+      ['-S', SQL_SERVER, ...authArgs, '-C', '-I', '-d', SQL_DATABASE, '-b', '-h', '-1', '-W', '-Q', `SET NOCOUNT ON; ${sql}`],
       { encoding: 'utf8' }
     ).trim();
   } catch (error) {
+    // -I: QUOTED_IDENTIFIER attivo (l'ODBC sqlcmd su Linux lo ha spento e le DELETE su indici filtrati falliscono).
     // sqlcmd scrive l'errore SQL su stdout: senza, il messaggio di Node mostra solo la riga di comando.
     throw new Error(`sqlcmd fallito:\n${error.stdout ?? ''}${error.stderr ?? ''}`, { cause: error });
   }
