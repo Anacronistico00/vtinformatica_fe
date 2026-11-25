@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { API, server } from '../test/server';
 import { renderWithProviders } from '../test/render';
+import AllManufacturersComponent from './AllManufacturersComponent';
 import HomeCategoryComponent from './Home/CategoryComponent';
 import ManufacturerComponent from './Products/ManufacturerComponent';
 import SubCategoryComponent from './Products/SubCategoryComponent';
@@ -68,6 +69,24 @@ describe('catalog pages', () => {
 
     expect(await screen.findByText(/ASUS/)).toBeInTheDocument();
     expect(await screen.findByText('Nessun prodotto disponibile.')).toBeInTheDocument();
+  });
+
+  it('all manufacturers: lists every brand with a link to its products', async () => {
+    server.use(
+      http.get(`${API}/Manufacturer`, () =>
+        HttpResponse.json({
+          manufacturers: [
+            { manufacturerId: 1, manufacturerName: 'Intel', manufacturerLogo: 'https://logos.test/intel.png' },
+            { manufacturerId: 4, manufacturerName: 'ASUS', manufacturerLogo: 'https://logos.test/asus.png' },
+          ],
+        })
+      )
+    );
+
+    renderWithProviders(<AllManufacturersComponent />, { path: '/manufacturers', route: '/manufacturers' });
+
+    expect(await screen.findByRole('link', { name: 'Intel' })).toHaveAttribute('href', '/products/manufacturer/1');
+    expect(screen.getByRole('link', { name: 'ASUS' })).toHaveAttribute('href', '/products/manufacturer/4');
   });
 
   it('home categories: loads the categories once', async () => {

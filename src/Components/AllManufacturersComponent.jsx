@@ -25,7 +25,7 @@ const AllManufacturersComponent = () => {
       </div>
       <Container fluid className='categories py-3 overflow-hidden'>
         <Row>
-          {manufacturers.manufacturers.map((Manufacturer, index) => (
+          {manufacturers.map((Manufacturer, index) => (
             <Col key={index} xs={6} md={4} className='categoryCard p-0'>
               <Link
                 to={`/products/manufacturer/${Manufacturer.manufacturerId}`}
