@@ -112,3 +112,32 @@ for (const scheme of SCHEMES) {
     await checkA11y(page, `profilo, conferma di disattivazione (${scheme})`);
   });
 }
+
+const ADMIN_PAGES = [
+  ['pannello', '/admin'],
+  ['prodotti', '/admin/products'],
+  ['categorie', '/admin/categories'],
+  ['sottocategorie', '/admin/subcategories'],
+  ['marchi', '/admin/manufacturers'],
+  ['utenti', '/admin/users'],
+];
+
+for (const scheme of SCHEMES) {
+  test(`a11y backoffice (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await loginAndWait(page, USERS.admin);
+    for (const [name, path] of ADMIN_PAGES) {
+      await page.goto(path);
+      await checkA11y(page, `backoffice/${name} (${scheme})`);
+    }
+  });
+
+  test(`a11y backoffice, modale del prodotto (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await loginAndWait(page, USERS.admin);
+    await page.goto('/admin/products');
+    await page.getByRole('button', { name: /nuovo prodotto/i }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await checkA11y(page, `backoffice/nuovo prodotto (${scheme})`);
+  });
+}
