@@ -32,3 +32,6 @@ e2e/.state.json
 *.njsproj
 *.sln
 *.sw?
+
+# Skill di Claude Code installate in locale (non versionate)
+.claude/skills/
