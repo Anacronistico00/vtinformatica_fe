@@ -21,7 +21,7 @@ const AllManufacturersComponent = () => {
   return (
     <Container className='mt-3'>
       <div>
-        <h2 className='text-center'>I NOSTRI BRAND</h2>
+        <h2 className='section-title text-center'>I nostri brand</h2>
       </div>
       <Container fluid className='categories py-3 overflow-hidden'>
         <Row>
@@ -34,6 +34,7 @@ const AllManufacturersComponent = () => {
                 <Card className='border-0 bg-transparent d-flex flex-column align-items-center justify-content-evenly mt-2'>
                   <Card.Img
                     variant='top'
+                    alt=''
                     style={{ height: '5em', width: '5em' }}
                     src={`${Manufacturer.manufacturerLogo}`}
                   />

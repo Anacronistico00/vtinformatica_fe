@@ -7,6 +7,8 @@ const BLOCKING = ['serious', 'critical'];
 export const checkA11y = async (page, label) => {
   await page.waitForLoadState('networkidle');
   await expect(page.locator('.spinner-border')).toHaveCount(0);
+  // Una pagina andata in errore e rimasta vuota non ha violazioni: deve avere contenuto.
+  await expect(page.locator('.main-content'), `Pagina vuota: ${label}`).toHaveText(/\S/);
   const { violations } = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();

@@ -178,6 +178,23 @@ textarea {
   color: var(--vt-on-accent);
 }
 
+.pagination {
+  --bs-pagination-color: var(--vt-accent-strong);
+  --bs-pagination-bg: var(--vt-surface);
+  --bs-pagination-border-color: var(--vt-border);
+  --bs-pagination-hover-color: var(--vt-accent-hover);
+  --bs-pagination-hover-bg: var(--vt-surface-2);
+  --bs-pagination-hover-border-color: var(--vt-border);
+  --bs-pagination-focus-color: var(--vt-accent-hover);
+  --bs-pagination-focus-bg: var(--vt-surface-2);
+  --bs-pagination-active-color: var(--vt-on-accent);
+  --bs-pagination-active-bg: var(--vt-accent-strong);
+  --bs-pagination-active-border-color: var(--vt-accent-strong);
+  --bs-pagination-disabled-color: var(--vt-text-muted);
+  --bs-pagination-disabled-bg: var(--vt-surface);
+  --bs-pagination-disabled-border-color: var(--vt-border);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

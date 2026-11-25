@@ -93,7 +93,7 @@ const SearchResultComponent = () => {
             Nessun prodotto trovato...
           </h1>
           <Link to='/'>
-            <Button variant='warning' size='lg' className='shadow-lg'>
+            <Button variant='primary' size='lg'>
               Torna indietro
             </Button>
           </Link>
@@ -123,8 +123,9 @@ const SearchResultComponent = () => {
       {showFilters && (
         <div className='row mb-4'>
           <div className='col-md-3'>
-            <label className='form-label'>Ordina per</label>
+            <label className='form-label' htmlFor='filter-sort'>Ordina per</label>
             <select
+              id='filter-sort'
               className='form-select'
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
@@ -138,8 +139,9 @@ const SearchResultComponent = () => {
           </div>
 
           <div className='col-md-3'>
-            <label className='form-label'>Prezzo minimo (€)</label>
+            <label className='form-label' htmlFor='filter-min'>Prezzo minimo (€)</label>
             <input
+              id='filter-min'
               type='number'
               className='form-control'
               value={minPrice}
@@ -149,8 +151,9 @@ const SearchResultComponent = () => {
           </div>
 
           <div className='col-md-3'>
-            <label className='form-label'>Prezzo massimo (€)</label>
+            <label className='form-label' htmlFor='filter-max'>Prezzo massimo (€)</label>
             <input
+              id='filter-max'
               type='number'
               className='form-control'
               value={maxPrice}
@@ -169,17 +172,16 @@ const SearchResultComponent = () => {
               <Link
                 to={`/product/${product.id}`}
                 state={{ product }}
-                className='text-decoration-none text-dark'
+                className='text-decoration-none product-link'
               >
-                <div className='card h-100 shadow-sm'>
+                <div className='card h-100'>
                   <img
                     src={product.productImages[0]?.imageUrl}
                     alt={product.name}
-                    className='card-img-top img-fluid'
+                    className='card-img-top img-fluid product-thumb'
                     style={{
                       objectFit: 'contain',
                       height: '200px',
-                      backgroundColor: '#f8f9fa',
                     }}
                   />
                   <div className='card-body'>
@@ -193,7 +195,7 @@ const SearchResultComponent = () => {
                         : product.description}
                     </p>
                   </div>
-                  <div className='card-footer d-flex justify-content-between align-items-center bg-white'>
+                  <div className='card-footer d-flex justify-content-between align-items-center'>
                     <strong className='text-primary fs-5'>
                       {product.price.toFixed(2)} €
                     </strong>

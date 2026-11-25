@@ -323,3 +323,33 @@ a:has(> .card) {
   font-size: 0.9375rem;
   font-weight: 600;
 }
+
+/* Catalogo e ricerca */
+.product-link {
+  color: var(--vt-text);
+}
+
+.product-link:hover {
+  color: var(--vt-accent-strong);
+}
+
+.product-thumb {
+  background-color: var(--vt-media-bg);
+}
+
+.card-footer {
+  background: transparent;
+  border-top: 1px solid var(--vt-border);
+}
+
+.card-footer .product-link {
+  color: var(--vt-text-muted);
+}
+
+.card-footer .product-link:hover {
+  color: var(--vt-accent-strong);
+}
+
+.form-label {
+  font-weight: 500;
+}
