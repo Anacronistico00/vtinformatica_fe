@@ -85,6 +85,7 @@ const ManageSubCategoriesComponent = () => {
             type='text'
             className='form-control'
             placeholder='Nome categoria'
+            aria-label='Nome sottocategoria'
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
@@ -104,7 +105,7 @@ const ManageSubCategoriesComponent = () => {
               </option>
             ))}
           </select>
-          <button type='submit' className='btn btn-success mt-2'>
+          <button type='submit' className='btn btn-primary mt-2'>
             {formData.id ? 'Aggiorna' : 'Aggiungi'}
           </button>
           {formData.id && (
