@@ -25,11 +25,13 @@ const HamburgerDropdown = () => {
       <div
         className={`hamburger-icon ${isOpen ? 'open' : ''}`}
         onClick={toggleDropdown}
+        role='button'
+        aria-label='Apri menu'
+        aria-expanded={isOpen}
       >
         <span></span>
         <span></span>
         <span></span>
-        <span className='text-center'>Menù</span>
       </div>
 
       <div className={`hamburger-dropdown ${isOpen ? 'show' : ''}`}>
