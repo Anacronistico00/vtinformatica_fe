@@ -5,7 +5,8 @@ const BLOCKING = ['serious', 'critical'];
 
 /** Attende che la pagina abbia finito di caricare dati e immagini, poi gira axe (WCAG 2.1 A e AA). */
 export const checkA11y = async (page, label) => {
-  await page.waitForLoadState('networkidle');
+  // Le immagini dei prodotti di test arrivano da un sito esterno: se è lento non si aspetta oltre 10 s, i dati dell'API sono già qui.
+  await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => {});
   await expect(page.locator('.spinner-border')).toHaveCount(0);
   // Una pagina andata in errore e rimasta vuota non ha violazioni: deve avere contenuto.
   await expect(page.locator('.main-content'), `Pagina vuota: ${label}`).toHaveText(/\S/);
