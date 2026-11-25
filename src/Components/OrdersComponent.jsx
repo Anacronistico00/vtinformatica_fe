@@ -1,9 +1,17 @@
 import { Card, ListGroup, Image, Container, Spinner } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { fetchOrders } from '../Redux/Actions/OrderAction';
 
 const OrdersComponent = () => {
+  const dispatch = useDispatch();
   const { error, orders, loading } = useSelector((state) => state.orders);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) dispatch(fetchOrders());
+  }, [dispatch, isAuthenticated]);
 
   return (
     <Container className='mt-5'>
