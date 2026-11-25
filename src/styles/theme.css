@@ -399,3 +399,9 @@ a:has(> .card) {
 .rating-star:focus-visible {
   color: var(--vt-accent-hover);
 }
+
+/* Carrello e ordini */
+.cart-total {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
