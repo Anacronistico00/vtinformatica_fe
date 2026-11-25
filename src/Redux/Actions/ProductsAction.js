@@ -76,11 +76,11 @@ export const fetchProductsBySubCategory =
   };
 
 export const FETCH_PRODUCTS_BY_MANUFACTURER_LOADING =
-  'FETCH_PRODUCTS_BY_SUBCATEGORY_REQUEST';
+  'FETCH_PRODUCTS_BY_MANUFACTURER_REQUEST';
 export const FETCH_PRODUCTS_BY_MANUFACTURER_SUCCESS =
-  'FETCH_PRODUCTS_BY_SUBCATEGORY_SUCCESS';
+  'FETCH_PRODUCTS_BY_MANUFACTURER_SUCCESS';
 export const FETCH_PRODUCTS_BY_MANUFACTURER_ERROR =
-  'FETCH_PRODUCTS_BY_SUBCATEGORY_FAILURE';
+  'FETCH_PRODUCTS_BY_MANUFACTURER_FAILURE';
 
 export const fetchProductsByManufacturer =
   (manufacturerId) => async (dispatch) => {
@@ -100,11 +100,23 @@ export const fetchProductsByManufacturer =
 export const ADMIN_PAGE_SIZE = 20;
 export const FETCH_PRODUCTS_PAGE_SUCCESS = 'FETCH_PRODUCTS_PAGE_SUCCESS';
 
-/** Lista prodotti del backoffice, paginata dal server: il totale arriva da X-Total-Count. */
-export const fetchProductsPage = (page) => async (dispatch) => {
+/**
+ * Lista prodotti del backoffice, paginata dal server: il totale arriva da X-Total-Count.
+ * Con `categoryId` il BE restituisce tutti i prodotti della categoria (senza paginazione): una sola pagina.
+ */
+export const fetchProductsPage = (page, categoryId = null) => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_LOADING });
 
   try {
+    if (categoryId) {
+      const { data } = await api.get(`/Product/category/${categoryId}`);
+      dispatch({
+        type: FETCH_PRODUCTS_PAGE_SUCCESS,
+        payload: { items: data, total: data.length, page: 1, pageSize: Math.max(data.length, ADMIN_PAGE_SIZE) },
+      });
+      return;
+    }
+
     const { data, headers } = await api.get(`/Product?page=${page}&pageSize=${ADMIN_PAGE_SIZE}`);
     dispatch({
       type: FETCH_PRODUCTS_PAGE_SUCCESS,
