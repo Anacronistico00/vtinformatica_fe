@@ -3,7 +3,7 @@ import { Card, Col, Container, Form, Row, Button } from 'react-bootstrap';
 const NewsletterComponent = () => {
   return (
     <Container className='mt-3'>
-      <h2 className='fs-5'>ISCRIVITI ALLA NEWSLETTER</h2>
+      <h2 className='section-title fs-5'>Iscriviti alla newsletter</h2>
       <Container fluid className='p-0 overflow-hidden newsletter text-center'>
         <Card className='p-4 border-0 shadow-sm newsletter'>
           <Row className='align-items-center'>

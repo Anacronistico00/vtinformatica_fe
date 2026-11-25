@@ -80,7 +80,7 @@ const ProductDetail = ({ product }) => {
       <div className='row'>
         {/* Immagine principale */}
         <div className='col-lg-5 mb-4'>
-          <div className='border rounded shadow-sm bg-white p-3 text-center'>
+          <div className='media-well border rounded shadow-sm p-3 text-center'>
             <img
               src={mainImage}
               alt={product.name}
@@ -183,7 +183,7 @@ const ProductDetail = ({ product }) => {
       {/* Descrizione estesa */}
       <div className='row mt-5'>
         <div className='col-12'>
-          <div className='bg-light p-4 rounded shadow-sm'>
+          <div className='bg-body-tertiary p-4 rounded shadow-sm'>
             <h4 className='mb-3'>Descrizione dettagliata</h4>
             <p>{product.fullDescription}</p>
           </div>
