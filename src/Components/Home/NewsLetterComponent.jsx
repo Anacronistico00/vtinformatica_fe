@@ -7,10 +7,9 @@ const NewsletterComponent = () => {
       <Container fluid className='p-0 overflow-hidden newsletter text-center'>
         <Card className='p-4 border-0 shadow-sm newsletter'>
           <Row className='align-items-center'>
-            <h5 className='mb-2'>Resta aggiornato!</h5>
+            <h5 className='mb-2'>Resta aggiornato</h5>
             <p className='text-muted mb-0'>
-              Ricevi le ultime novità, offerte e aggiornamenti direttamente
-              nella tua casella email.
+              Ricevi novità e offerte nella tua casella email.
             </p>
             <Form className='d-flex flex-column mt-5'>
               <Form.Control

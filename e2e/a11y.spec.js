@@ -69,7 +69,7 @@ for (const scheme of SCHEMES) {
     await checkA11y(page, `carrello pieno (${scheme})`);
 
     await page.getByRole('button', { name: "Completa l'ordine" }).click();
-    await expect(toast(page, 'Ordine creato con successo!')).toBeVisible();
+    await expect(toast(page, 'Ordine creato.')).toBeVisible();
     await checkA11y(page, `carrello con avviso di ordine creato (${scheme})`);
 
     await page.goto('/orders');

@@ -22,7 +22,7 @@ test('login → carrello → checkout → ordine in "i miei ordini"', async ({ p
   await expect(page.getByText('quantità: 2 pz')).toBeVisible();
   await page.getByLabel("Note per l'ordine (facoltative)").fill('Consegna dopo le 18');
   await page.getByRole('button', { name: "Completa l'ordine" }).click();
-  await expect(toast(page, 'Ordine creato con successo!')).toBeVisible();
+  await expect(toast(page, 'Ordine creato.')).toBeVisible();
   await expect(page.getByText('Il tuo carrello è vuoto.')).toBeVisible();
 
   await page.goto('/accountInfo');
