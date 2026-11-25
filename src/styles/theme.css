@@ -552,3 +552,11 @@ a:has(> .card) {
     justify-self: start;
   }
 }
+
+/* Logo nel footer: la parola per esteso, dove c'è spazio. */
+.footer-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  margin: 0 auto var(--vt-space-3);
+}

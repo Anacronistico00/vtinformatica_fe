@@ -177,6 +177,24 @@ bordo sottile.
 - **Box d'acquisto.** Nella scheda prodotto prezzo, disponibilità, quantità e "Aggiungi al
   carrello" stanno in un solo riquadro sotto il nome e la marca, anche su mobile.
 
+## Logo
+
+Tutto in SVG piatto, nessun raster. V e T sono tracciati Geist (V alta 100 e allungata del 18%, T più
+alta del 4% e appoggiata sul braccio destro della V, stessa linea di base); la scritta è Geist in
+tracciati. Solo la VT ha l'ombra: copia piena grigia sfalsata di 6,5 unità, senza blur né filtri.
+
+| Variante | File | Dove |
+| --- | --- | --- |
+| Lockup B1: VT e "INFORMATICA" in Geist SemiBold, tracking largo, maiuscole alte un terzo della VT | `public/Images/logo-lockup.svg` | Testata da 992 px in su (220 px di larghezza) e footer (150 px) |
+| Solo VT con ombra | `public/Images/logo-mark.svg` | Testata sotto 992 px (104 px di larghezza): la parola non si legge a quella larghezza |
+| Impilata C: "informatica" in Geist Bold sotto la VT, larga quanto la VT | `docs/restyle/proposals/logo-final/VT-c-*.svg` | Spazi quadrati; `public/og-image.png` (1200×630) è costruita da qui |
+| Monogramma: stessa VT in un quadrato arrotondato | `public/favicon.svg`, `favicon-16.png`, `favicon-32.png`, `apple-touch-icon.png` | Icone. Compatto a 32 px (ombra ridotta), senza ombra a 16 px. L'apple-touch-icon arriva a filo: iOS applica la maschera |
+
+Colori. Chiaro: V `#1D1D1F`, T `#2B62EB`, ombra `#A9ADB5`. Scuro: V `#FFFFFF`, T `#5B8CFF`, ombra
+`#5A606B`. La testata è scura in entrambi i temi, quindi usa la versione scura. Il nome accessibile è
+"VT Informatica" su ogni variante. Le versioni chiare, la B1 chiara e la C stanno in
+`docs/restyle/proposals/logo-final/`.
+
 ## Da fare e da non fare
 
 Da fare: un accento, superfici neutre, prodotto grande, prezzo leggibile, stato con colore e

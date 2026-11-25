@@ -49,13 +49,17 @@ const NavBarComponent = () => {
               to='/'
               className='fw-bold text-primary fs-4 order-1'
             >
-              <img
-                id='navLogo'
-                src='/Images/VT.webp'
-                width='500'
-                height='500'
-                alt='VT Informatica'
-              />
+              {/* Sotto il breakpoint della barra (lg) resta la sola VT con l'ombra: la parola non si legge a quella larghezza. */}
+              <picture>
+                <source media='(max-width: 991.98px)' srcSet='/Images/logo-mark.svg' />
+                <img
+                  id='navLogo'
+                  src='/Images/logo-lockup.svg'
+                  width='631'
+                  height='118'
+                  alt='VT Informatica'
+                />
+              </picture>
             </Navbar.Brand>
           </div>
 

@@ -93,7 +93,7 @@ body {
 }
 
 #navLogo {
-  width: 150px;
+  width: 220px;
   height: auto;
 }
 
@@ -265,7 +265,7 @@ body {
   border: 2px solid var(--vt-accent) !important;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
   .carousel-indicators button {
     width: 10px !important;
     height: 10px !important;
@@ -275,7 +275,7 @@ body {
   }
 
   #navLogo {
-    width: 80px;
+    width: 104px;
   }
 }
 

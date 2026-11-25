@@ -42,6 +42,17 @@ describe('NavBarComponent', () => {
     expect(cartRequests).not.toHaveBeenCalled();
   });
 
+  it('has one named logo: the full lockup on wide screens, only the VT under the navbar breakpoint', () => {
+    const { container } = renderWithProviders(<NavBarComponent />);
+
+    const logos = screen.getAllByRole('img', { name: 'VT Informatica' });
+    expect(logos).toHaveLength(1);
+    expect(logos[0]).toHaveAttribute('src', '/Images/logo-lockup.svg');
+    const mobile = container.querySelector('picture source');
+    expect(mobile).toHaveAttribute('srcset', '/Images/logo-mark.svg');
+    expect(mobile).toHaveAttribute('media', '(max-width: 991.98px)');
+  });
+
   it('shows the cart count of a logged-in user', async () => {
     server.use(http.get(`${API}/Cart/me`, () => HttpResponse.json({
       email: 'mario@test.local',

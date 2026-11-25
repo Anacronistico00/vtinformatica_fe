@@ -78,6 +78,13 @@ const FooterComponent = () => {
       </Container>
       <div className='footer-bottom text-center py-3 mt-4'>
         <Container>
+          <img
+            src='/Images/logo-lockup.svg'
+            width='631'
+            height='118'
+            alt='VT Informatica'
+            className='footer-logo'
+          />
           <small>
             © {new Date().getFullYear()} VTInformatica - Tutti i diritti
             riservati.
