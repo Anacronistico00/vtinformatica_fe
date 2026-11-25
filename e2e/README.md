@@ -51,3 +51,17 @@ Autenticazione Windows (`-E`): nessuna password nel repo.
   modifica con `ExpectedQuantity` superata → 409 `stock_conflict`.
 - `reviews`: crea, modifica ed elimina la propria recensione; un altro utente la vede
   senza azioni.
+
+## Screenshot delle pagine
+
+```bash
+npm run screenshots                                              # docs/restyle/before, tema chiaro
+SHOTS_DIR=docs/restyle/after SHOTS_THEME=dark npm run screenshots
+```
+
+Usa gli stessi server e lo stesso seed degli E2E ([`playwright.screenshots.config.js`](../playwright.screenshots.config.js)).
+Il setup aggiunge un ordine e un carrello pieno per `e2e.buyer` e una recensione sul
+prodotto `E2E Recensioni`. Fotografa a pagina intera le pagine pubbliche, account e admin
+a 1440 px (`desktop`) e 390 px (`mobile`), con `prefers-color-scheme` = `SHOTS_THEME`.
+I file si chiamano `<gruppo>-<pagina>-<viewport>-<tema>.png`. Data e numero dell'ordine
+cambiano a ogni esecuzione, il resto della pagina no.
