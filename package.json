@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "screenshots": "playwright test -c playwright.screenshots.config.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
