@@ -115,47 +115,31 @@ The tests create `e2e.*@example.test` users and `E2E …` products and delete th
 
 ## Before / after
 
-Numbers are **recomputed from the tags** (clean worktree per tag: `npm ci`, `npm run lint`, `npm test`, `npm run build`, `npm audit`; on the BE side `dotnet build --no-incremental`, `dotnet test`; `git diff --shortstat v1-epicode <tag>`), not copied from reports. The FE only has the tags `v1-epicode` and `v2-m4` (all its changes belong to M4), so the middle columns have no FE measurement.
+FE part, recomputed from the tags `v1-epicode` and `v2-m4` (clean worktree per tag: `npm ci`, `npm run lint`, `npm test`, `npm run build`, `npm audit`, `git diff --shortstat`).
 
-| | `v1-epicode` | `v2-m1` | `v2-m2` | `v2-m3` | `v2-m4-be` / FE `v2-m4` |
-|---|---:|---:|---:|---:|---:|
-| BE tests (xUnit) | 0 | 42 | 54 | 240 | **243** |
-| FE tests (Vitest) | 0 | – | – | – | **93** (+ 8 E2E flows) |
-| `dotnet build` warnings (Release, clean) | 114 | 112 | 110 | **0** | **0** |
-| FE lint (`npm run lint`) | 5 problems (2 errors, 3 warnings) | – | – | – | **0** |
-| FE build warnings | 1 (chunk > 500 kB) | – | – | – | 1 (unchanged) |
-| FE `npm audit` | 16 (12 high, 2 moderate, 2 low) | – | – | – | **0** |
-| CI | none | BE build + test | same | same | BE: build + test; FE: lint + test + build |
-| BE `.cs` files (tracked) | 96 | 108 | 117 | 174 | 176 |
-| FE `.js/.jsx` files in `src/` | 52 | – | – | – | 86 |
-| Diff vs `v1-epicode` (BE) | – | 27 files, +1620 −12 | 41 files, +3520 −93 | 172 files, +14558 −1459 | 175 files, +14720 −1457 |
-| Diff vs `v1-epicode` (FE) | – | – | – | – | 87 files, +8418 −1505 |
+| | `v1-epicode` | `v2-m4` |
+|---|---:|---:|
+| FE tests (Vitest) | 0 | **93** (+ 8 E2E flows) |
+| Lint (`npm run lint`) | 5 problems (2 errors, 3 warnings) | **0** |
+| `npm audit` | 16 (12 high, 2 moderate, 2 low) | **0** |
+| Build warnings | 1 (chunk > 500 kB) | 1 (unchanged) |
+| CI | none | lint + test + build |
+| `.js/.jsx` files in `src/` | 52 | 86 |
+| Diff vs `v1-epicode` | – | 87 files, +8418 −1505 |
 
-Notes:
+The E2E tests only run locally. Audit items closed: `VITE_API_URL` instead of the hardcoded URL, a single `apiClient`, token in one place, 401 → logout, `/me` routes instead of the email in the URL, tests and CI, lint and `npm audit` at 0, back office with server-side pagination and `expectedQuantity` (details in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md), in Italian).
 
-- Diff lines include tests (most of the growth). Large components: `ManageProductsComponent` 361 → 160 lines, `ProductInfo` 313 → 339 (not split yet).
-- The 8 E2E flows were not re-run for this table: they only run locally. CI does not run them (it would need SQL Server on the runner).
-
-FE audit items closed in `v2-m4` (details in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md), in Italian): hardcoded backend URL → `VITE_API_URL`; repeated `fetch` boilerplate → single `apiClient` (33 calls migrated); duplicated token in localStorage → one in the `auth` slice, expired token not restored; 401 handling → logout; email in the URL → `/me` routes; zero tests and no CI → Vitest/MSW/Playwright and GitHub Actions; lint (2 errors → 0); `npm audit` (16 → 0); product back office with server-side pagination (`X-Total-Count`) and `expectedQuantity` (409 `stock_conflict`).
-The BE items closed per tag (security, orders, errors, queries) are in the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md#before--after).
+The full table, with the BE numbers per tag (`v1-epicode` → `v2-m4-be`), is in the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md#before--after).
 
 ## How I worked with AI
 
-I used Claude Code for most of the code. The process changed over time.
+Short version for the FE. The full story (plan review with a second model, examples of corrections, migrations, autonomy with a deny list) is in the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md#how-i-worked-with-ai).
 
-- **Initial audit as the source of truth.** Before touching code I had an audit produced and reviewed ([`docs/AUDIT-prima.md`](docs/AUDIT-prima.md), in Italian): problems ranked by severity plus starting metrics. The baseline is never rewritten. Each slice appends a status section: closed, moved, out of scope.
-- **Milestones and slices.** The audit became milestones (M0–M4), split into small slices (M4a–M4g for the FE): one task, one branch, small commits, PR into `develop` with green CI using "Rebase and merge", `main` only at the end of a milestone with a merge commit and an annotated tag.
-- **M1–M2: everything approved by hand, plans reviewed by a second model.** I approved every agent action. I reviewed every plan (`docs/PIANO-*.md`, for the FE [`docs/PIANO-M4.md`](docs/PIANO-M4.md)) in a separate conversation with another model acting as reviewer, and only then gave the agent the go-ahead. The review produced concrete corrections (BE side):
-  - **Role seed drift.** Roles were seeded with `Guid.NewGuid()`: a new migration would have deleted and re-inserted the roles, emptying `AspNetUserRoles`. Found before generating the migration. Fixed GUIDs, identical to the existing DBs, plus a test comparing model and snapshot.
-  - **Wrong concurrency test.** It measured stock after the rollback, so it did not prove the decrement was atomic. Rewritten to check the outcome of two parallel requests.
-  - **Slices too large.** M3 was a single block. I split it (a1, a2, b, c1, c2, d) so each piece could be reviewed and reverted on its own.
-  - **Parallel `/me` routes.** To move identity into the token I did not break the FE: `/Cart/me` and `/Order/me` were added next to the `{email}` routes, which stay `[Obsolete]` until the FE has migrated. The FE moved to the `/me` routes in M4.
-- **Test-first, red commit → fix.** For every flaw or bug: first a failing test (`test: red - …` commit), then the minimal fix. The git history shows the pairs, e.g. `test(store): red - …` followed by `fix(store): …`.
-- **Manual migration checks on SQL Server** (BE side). The tests run on SQLite, which is not SQL Server. Every migration: backup with `RESTORE VERIFYONLY`, `database update`, `Down` and `Up` on a copy with real data.
-- **From M3c: autonomy with a deny list.** Once rules and process had settled, the agent worked autonomously within explicit limits. The deny list lives in `.claude/settings.json` (force push, `git reset --hard`, `git filter-repo`, `rm -rf`, reading `.env`, `.env.local` and secrets). The `CLAUDE.md` rules forbid direct push and merge to `main` and `develop`: everything goes through a PR.
-- **E2E tests found the NavBar crash.** It was already noted in the initial audit, but tests with a simulated network never reproduced it. Playwright against the real BE and DB did. When persistence dropped an expired slice (expired token, cart idle for over an hour), redux-persist's `autoMergeLevel1` copied `undefined` over the initial state and `state.auth` and `state.cart` were `undefined` on startup. Fixed test-first: dropped slices fall back to the initial state.
-
-What the AI did not replace: deciding what is in scope, checking the numbers, trying migrations on the real DB, reading the diff before merging.
+- **Initial audit as the source of truth** ([`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)): the baseline is never rewritten, each slice appends a status section.
+- **Slices M4a–M4g.** One task, one branch, small commits, PR into `develop` with green CI. The plan is in [`docs/PIANO-M4.md`](docs/PIANO-M4.md) (in Italian).
+- **Test-first.** For every bug a red test first (`test: red - …`), then the minimal fix, e.g. `test(store): red - …` followed by `fix(store): …`.
+- **Autonomy with a deny list** from M3c: limits in `.claude/settings.json` and rules in `CLAUDE.md` (no direct push or merge to `main` and `develop`).
+- **E2E tests found the NavBar crash**, already noted in the initial audit and never reproduced by tests with a simulated network. Persistence dropped an expired slice (expired token, cart idle for over an hour) and redux-persist's `autoMergeLevel1` copied `undefined` over the initial state: `state.auth` and `state.cart` were `undefined` on startup. Fixed test-first.
 
 ## Known limits and next steps
 

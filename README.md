@@ -115,47 +115,31 @@ Gli E2E creano utenti `e2e.*@example.test` e prodotti `E2E …` e li cancellano 
 
 ## Prima / dopo
 
-Numeri **ricalcolati dai tag** (worktree pulito per tag: `npm ci`, `npm run lint`, `npm test`, `npm run build`, `npm audit`; lato BE `dotnet build --no-incremental`, `dotnet test`; `git diff --shortstat v1-epicode <tag>`), non copiati dai report. Il FE ha solo i tag `v1-epicode` e `v2-m4` (tutte le sue modifiche sono M4), quindi nelle colonne intermedie non c'è una misura FE.
+Parte FE, ricalcolata dai tag `v1-epicode` e `v2-m4` (worktree pulito per tag: `npm ci`, `npm run lint`, `npm test`, `npm run build`, `npm audit`, `git diff --shortstat`).
 
-| | `v1-epicode` | `v2-m1` | `v2-m2` | `v2-m3` | `v2-m4-be` / FE `v2-m4` |
-|---|---:|---:|---:|---:|---:|
-| Test BE (xUnit) | 0 | 42 | 54 | 240 | **243** |
-| Test FE (Vitest) | 0 | – | – | – | **93** (+ 8 flussi E2E) |
-| Avvisi `dotnet build` (Release, da zero) | 114 | 112 | 110 | **0** | **0** |
-| Lint FE (`npm run lint`) | 5 problemi (2 errori, 3 avvisi) | – | – | – | **0** |
-| Avvisi build FE | 1 (chunk > 500 kB) | – | – | – | 1 (invariato) |
-| `npm audit` FE | 16 (12 high, 2 moderate, 2 low) | – | – | – | **0** |
-| CI | nessuna | build + test BE | idem | idem | BE: build + test; FE: lint + test + build |
-| File `.cs` BE (tracciati) | 96 | 108 | 117 | 174 | 176 |
-| File `.js/.jsx` FE in `src/` | 52 | – | – | – | 86 |
-| Diff vs `v1-epicode` (BE) | – | 27 file, +1620 −12 | 41 file, +3520 −93 | 172 file, +14558 −1459 | 175 file, +14720 −1457 |
-| Diff vs `v1-epicode` (FE) | – | – | – | – | 87 file, +8418 −1505 |
+| | `v1-epicode` | `v2-m4` |
+|---|---:|---:|
+| Test FE (Vitest) | 0 | **93** (+ 8 flussi E2E) |
+| Lint (`npm run lint`) | 5 problemi (2 errori, 3 avvisi) | **0** |
+| `npm audit` | 16 (12 high, 2 moderate, 2 low) | **0** |
+| Avvisi build | 1 (chunk > 500 kB) | 1 (invariato) |
+| CI | nessuna | lint + test + build |
+| File `.js/.jsx` in `src/` | 52 | 86 |
+| Diff vs `v1-epicode` | – | 87 file, +8418 −1505 |
 
-Note:
+Gli E2E girano solo in locale. Voci dell'audit chiuse: `VITE_API_URL` al posto dell'URL hardcoded, `apiClient` unico, token in un solo posto, 401 → logout, route `/me` al posto dell'email nell'URL, test e CI, lint e `npm audit` a 0, backoffice con paginazione dal server e `expectedQuantity` (dettaglio in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)).
 
-- Le righe di diff includono i test (gran parte dell'aumento). Componenti grandi: `ManageProductsComponent` 361 → 160 righe, `ProductInfo` 313 → 339 (non ancora spezzato).
-- Gli 8 flussi E2E non sono rieseguiti per questa tabella: girano solo in locale. La CI non li esegue (servirebbe SQL Server nel runner).
-
-Voci dell'audit FE chiuse in `v2-m4` (dettaglio in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)): URL del backend hardcoded → `VITE_API_URL`; boilerplate `fetch` → `apiClient` unico (33 chiamate migrate); token duplicato in localStorage → uno solo nello slice `auth`, token scaduto non ripristinato; gestione 401 → logout; email nell'URL → route `/me`; zero test e nessuna CI → Vitest/MSW/Playwright e GitHub Actions; lint (2 errori → 0); `npm audit` (16 → 0); backoffice prodotti con paginazione dal server (`X-Total-Count`) e `expectedQuantity` (409 `stock_conflict`).
-Le voci BE chiuse per tag (sicurezza, ordini, errori, query) sono nel [README del BE](https://github.com/Anacronistico00/VTInformatica#prima--dopo).
+La tabella completa, con i numeri del BE per tag (`v1-epicode` → `v2-m4-be`), è nel [README del BE](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.md#prima--dopo).
 
 ## Come ho lavorato con l'AI
 
-Ho usato Claude Code per la maggior parte del codice. Il processo è cambiato nel tempo.
+Versione breve per il FE. La storia completa (revisione dei piani con un secondo modello, esempi di correzioni, migration, autonomia con deny list) è nel [README del BE](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.md#come-ho-lavorato-con-lai).
 
-- **Audit iniziale come fonte di verità.** Prima di toccare codice ho fatto produrre e rivedere [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md): problemi per gravità e metriche di partenza. La baseline non si riscrive. Ogni fetta aggiunge sotto una sezione di stato: chiuso, spostato, fuori scope.
-- **Milestone e fette.** Dall'audit sono uscite le milestone (M0–M4), divise in fette piccole (per il FE M4a–M4g): un task, un branch, commit piccoli, PR verso `develop` a CI verde con "Rebase and merge", `main` solo a fine milestone con merge commit e tag annotato.
-- **M1–M2: tutto approvato a mano, piani rivisti da un secondo modello.** Ogni azione dell'agente passava dalla mia approvazione. Ogni piano (`docs/PIANO-*.md`, per il FE [`docs/PIANO-M4.md`](docs/PIANO-M4.md)) lo rivedevo in una conversazione separata con un altro modello usato come reviewer, e solo dopo davo l'ok all'agente. La revisione ha prodotto correzioni concrete (lato BE):
-  - **Drift del seed dei ruoli.** I ruoli erano seminati con `Guid.NewGuid()`: una nuova migration avrebbe cancellato e reinserito i ruoli, svuotando `AspNetUserRoles`. Scoperto prima di generare la migration. GUID fissi, uguali a quelli dei DB esistenti, più un test che confronta modello e snapshot.
-  - **Test di concorrenza sbagliato.** Misurava lo stock dopo il rollback, quindi non provava che il decremento fosse atomico. Riscritto per verificare l'esito di due richieste in parallelo.
-  - **Fette troppo grandi.** M3 era un blocco solo. L'ho divisa (a1, a2, b, c1, c2, d) perché ogni pezzo si potesse rivedere e annullare da solo.
-  - **Route `/me` in parallelo.** Per portare l'identità nel token non ho rotto il FE: `/Cart/me` e `/Order/me` sono nate accanto alle route con `{email}`, che restano `[Obsolete]` finché il FE non è migrato. Il FE è passato alle route `/me` in M4.
-- **Test-first con commit rosso → fix.** Per ogni falla o bug: prima un test che fallisce (commit `test: red - …`), poi il fix minimo. La storia git mostra le coppie, ad esempio `test(store): red - …` seguito da `fix(store): …`.
-- **Verifica manuale delle migration su SQL Server** (lato BE). I test girano su SQLite, che non è SQL Server. Ogni migration: backup con `RESTORE VERIFYONLY`, `database update`, `Down` e `Up` su una copia con dati reali.
-- **Da M3c: autonomia con deny list.** Quando regole e processo si sono stabilizzati, l'agente ha lavorato in autonomia dentro limiti espliciti. La deny list sta in `.claude/settings.json` (force push, `git reset --hard`, `git filter-repo`, `rm -rf`, lettura di `.env`, `.env.local` e dei segreti). Le regole di `CLAUDE.md` vietano push e merge diretti su `main` e `develop`: tutto passa da PR.
-- **Gli E2E hanno trovato il crash della NavBar.** Era già annotato nell'audit iniziale, ma i test con rete simulata non lo riproducevano. Playwright contro BE e DB reali sì. Quando la persistenza scartava uno slice scaduto (token scaduto, carrello inattivo da oltre un'ora), `autoMergeLevel1` di redux-persist copiava `undefined` sullo stato iniziale e `state.auth` e `state.cart` erano `undefined` all'avvio. Corretto test-first: gli slice scartati tornano allo stato iniziale.
-
-Cosa l'AI non ha sostituito: decidere cosa è in scope, verificare i numeri, provare le migration sul DB vero, leggere il diff prima del merge.
+- **Audit iniziale come fonte di verità** ([`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)): la baseline non si riscrive, ogni fetta aggiunge una sezione di stato.
+- **Fette M4a–M4g.** Un task, un branch, commit piccoli, PR verso `develop` a CI verde. Il piano è in [`docs/PIANO-M4.md`](docs/PIANO-M4.md).
+- **Test-first.** Per ogni bug prima un test rosso (`test: red - …`), poi il fix minimo, ad esempio `test(store): red - …` seguito da `fix(store): …`.
+- **Autonomia con deny list** dalla M3c: limiti in `.claude/settings.json` e regole in `CLAUDE.md` (niente push o merge diretti su `main` e `develop`).
+- **Gli E2E hanno trovato il crash della NavBar**, già annotato nell'audit iniziale e mai riprodotto dai test con rete simulata. La persistenza scartava uno slice scaduto (token scaduto, carrello inattivo da oltre un'ora) e `autoMergeLevel1` di redux-persist copiava `undefined` sullo stato iniziale: `state.auth` e `state.cart` erano `undefined` all'avvio. Corretto test-first.
 
 ## Limiti noti e prossimi passi
 
