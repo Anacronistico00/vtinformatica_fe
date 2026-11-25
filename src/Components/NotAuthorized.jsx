@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 const NotAuthorized = () => {
   return (
-    <div>
-      <h2>Accesso Negato</h2>
+    <div className='container text-center my-5'>
+      <h1 className='h3'>Accesso negato</h1>
       <p>Non hai i permessi per accedere a questa pagina.</p>
       <Link to='/'>
-        <Button variant='warning' size='lg' className='shadow-lg'>
+        <Button variant='primary' size='lg'>
           Torna alla home
         </Button>
       </Link>

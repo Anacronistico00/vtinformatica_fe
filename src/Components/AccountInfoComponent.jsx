@@ -58,13 +58,10 @@ const AccountInfoComponent = () => {
 
   return (
     <div className='container mt-5'>
-      <div className='d-flex justify-content-between'>
-        <h2>Dettagli Profilo</h2>
-        <h2>I miei ordini</h2>
-      </div>
       <Row>
         <Col xs='12' lg='6'>
-          <Card className='mb-4 h-100'>
+          <h2 className='h4 mb-3'>Dettagli profilo</h2>
+          <Card className='mb-4'>
             <Card.Body>
               <Card.Title>Username: {user.email}</Card.Title>
               <Card.Subtitle className='mb-2 text-muted'>
@@ -75,7 +72,7 @@ const AccountInfoComponent = () => {
                 <br />
                 <strong>Data di nascita:</strong> {user.birthDate}
               </Card.Text>
-              <Button variant='danger' onClick={handleLogout}>
+              <Button variant='secondary' onClick={handleLogout}>
                 Logout
               </Button>
               {/* Il BE non consente a un Admin di disattivare se stesso. */}
@@ -88,7 +85,8 @@ const AccountInfoComponent = () => {
           </Card>
         </Col>
         <Col xs='12' lg='6'>
-          <Card className='mb-4 h-100'>
+          <h2 className='h4 mb-3'>I miei ordini</h2>
+          <Card className='mb-4'>
             <Card.Body>
               {loading ? (
                 <div className='d-flex justify-content-center'>
