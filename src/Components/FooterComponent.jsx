@@ -4,7 +4,7 @@ const FooterComponent = () => {
   return (
     <footer className='footer mt-5 pt-5'>
       <Container>
-        <Row className='text-white text-start'>
+        <Row className='text-start'>
           <Col md={3} sm={6} className='mb-4'>
             <h5>Informazioni</h5>
             <ul className='list-unstyled'>
@@ -59,23 +59,23 @@ const FooterComponent = () => {
           <Col md={3} sm={6} className='mb-4'>
             <h5>Seguici</h5>
             <div className='d-flex gap-3'>
-              <a href='#'>
-                <i className='bi bi-facebook text-white fs-4'></i>
+              <a href='#' aria-label='Facebook'>
+                <i className='bi bi-facebook fs-4' aria-hidden='true'></i>
               </a>
-              <a href='#'>
-                <i className='bi bi-instagram text-white fs-4'></i>
+              <a href='#' aria-label='Instagram'>
+                <i className='bi bi-instagram fs-4' aria-hidden='true'></i>
               </a>
-              <a href='#'>
-                <i className='bi bi-twitter-x text-white fs-4'></i>
+              <a href='#' aria-label='X'>
+                <i className='bi bi-twitter-x fs-4' aria-hidden='true'></i>
               </a>
-              <a href='#'>
-                <i className='bi bi-youtube text-white fs-4'></i>
+              <a href='#' aria-label='YouTube'>
+                <i className='bi bi-youtube fs-4' aria-hidden='true'></i>
               </a>
             </div>
           </Col>
         </Row>
       </Container>
-      <div className='footer-bottom text-center py-3 text-white mt-4'>
+      <div className='footer-bottom text-center py-3 mt-4'>
         <Container>
           <small>
             © {new Date().getFullYear()} VTInformatica - Tutti i diritti

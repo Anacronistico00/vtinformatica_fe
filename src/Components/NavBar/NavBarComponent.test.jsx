@@ -16,7 +16,7 @@ describe('NavBarComponent', () => {
     renderWithProviders(<NavBarComponent />);
     await new Promise((r) => setTimeout(r, 0));
 
-    expect(screen.getByAltText('AppLogo')).toBeInTheDocument();
+    expect(screen.getByAltText('VT Informatica')).toBeInTheDocument();
     expect(cartRequests).not.toHaveBeenCalled();
   });
 

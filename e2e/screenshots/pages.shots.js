@@ -8,6 +8,8 @@ import { loginAndWait } from '../support/ui.js';
 // Nome file: <gruppo>-<pagina>-<viewport>-<tema>.png, stabile tra "prima", direzioni e "dopo".
 const DIR = process.env.SHOTS_DIR ?? 'docs/restyle/before';
 const THEME = process.env.SHOTS_THEME ?? 'light';
+// SHOTS_ONLY: nomi separati da virgola (es. public-home,public-product) per fotografare solo quelle pagine.
+const ONLY = process.env.SHOTS_ONLY?.split(',').map((name) => name.trim()).filter(Boolean);
 
 // I toast dipendono dai tempi, non dalla pagina: restano fuori dalle foto.
 const HIDE = '.Toastify { visibility: hidden !important; }';
@@ -30,6 +32,7 @@ const settle = async (page) => {
 };
 
 const shoot = async (page, testInfo, name, path) => {
+  if (ONLY && !ONLY.includes(name)) return;
   await page.goto(path);
   await settle(page);
   mkdirSync(DIR, { recursive: true });

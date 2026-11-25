@@ -21,7 +21,7 @@ const CategoryComponent = () => {
 
   return (
     <Container className=' mt-5'>
-      <h2 className='fs-5'>CATEGORIE</h2>
+      <h2 className='section-title fs-5'>Categorie</h2>
       <Container fluid className='categories py-5'>
         <Row>
           {categories.map((cat, index) => (
@@ -35,7 +35,7 @@ const CategoryComponent = () => {
                     variant='top'
                     className='p-4'
                     style={{ height: '8em', width: '10em' }}
-                    src={`public/Images/categoria${index + 1}.jpg`}
+                    src={`/Images/categoria${index + 1}.jpg`}
                   />
                   <Card.Title>{cat.name}</Card.Title>
                 </Card>
