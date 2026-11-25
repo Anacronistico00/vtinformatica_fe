@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BsArrowDownShort, BsArrowUpShort, BsDiagram3, BsTag } from 'react-icons/bs';
 
 const ProductGrid = ({ products }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -68,9 +69,9 @@ const ProductGrid = ({ products }) => {
       <div className='mb-3 text-end'>
         <button className='btn' onClick={() => setShowFilters(!showFilters)}>
           {showFilters ? (
-            <i className='bi bi-arrow-up-short'></i>
+            <BsArrowUpShort aria-hidden='true' />
           ) : (
-            <i className='bi bi-arrow-down-short'></i>
+            <BsArrowDownShort aria-hidden='true' />
           )}
           {showFilters ? ' Nascondi filtri' : ' Filtra per...'}
         </button>
@@ -165,7 +166,7 @@ const ProductGrid = ({ products }) => {
                           to={`/products/subcategory/${product.subCategory.id}`}
                           className='text-decoration-none text-dark'
                         >
-                          <i className='bi bi-tag'></i>{' '}
+                          <BsTag aria-hidden='true' />{' '}
                           {product.subCategory.name}
                         </Link>
                       </div>
@@ -174,7 +175,7 @@ const ProductGrid = ({ products }) => {
                           to={`/products/category/${product.category.id}`}
                           className='text-decoration-none text-dark'
                         >
-                          <i className='bi bi-diagram-3'></i>{' '}
+                          <BsDiagram3 aria-hidden='true' />{' '}
                           {product.category.name}
                         </Link>
                       </div>

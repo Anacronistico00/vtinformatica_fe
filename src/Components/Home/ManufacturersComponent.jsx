@@ -37,6 +37,7 @@ const ManufacturersComponent = () => {
                 <Card className='border-0 bg-transparent d-flex flex-column align-items-center justify-content-evenly mt-2'>
                   <Card.Img
                     variant='top'
+                    alt=''
                     style={{ height: '5em', width: '5em' }}
                     src={`${Manufacturer.manufacturerLogo}`}
                   />

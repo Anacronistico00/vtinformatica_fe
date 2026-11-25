@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormControl, Button } from 'react-bootstrap';
+import { BsSearch } from 'react-icons/bs';
 
 const SearchBar = () => {
   const [search, setSearch] = useState('');
@@ -32,7 +33,7 @@ const SearchBar = () => {
         aria-label='Cerca'
         type='submit'
       >
-        <i className='bi bi-search' aria-hidden='true'></i>
+        <BsSearch aria-hidden='true' />
       </Button>
     </Form>
   );

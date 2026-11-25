@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { searchProducts } from '../Redux/Actions/ProductsAction';
 import { motion } from 'framer-motion';
 import { Button } from 'react-bootstrap';
+import { BsArrowDownShort, BsArrowUpShort, BsDiagram3, BsTag } from 'react-icons/bs';
 
 const SearchResultComponent = () => {
   const { query } = useParams();
@@ -110,9 +111,9 @@ const SearchResultComponent = () => {
       <div className='mb-3 text-end'>
         <button className='btn' onClick={() => setShowFilters(!showFilters)}>
           {showFilters ? (
-            <i class='bi bi-arrow-up-short'></i>
+            <BsArrowUpShort aria-hidden='true' />
           ) : (
-            <i class='bi bi-arrow-down-short'></i>
+            <BsArrowDownShort aria-hidden='true' />
           )}
 
           {showFilters ? 'Nascondi filtri' : 'Filtra per...'}
@@ -198,10 +199,10 @@ const SearchResultComponent = () => {
                     </strong>
                     <div className='text-end' style={{ fontSize: '0.8rem' }}>
                       <div>
-                        <i className='bi bi-tag'></i> {product.subCategory.name}
+                        <BsTag aria-hidden='true' /> {product.subCategory.name}
                       </div>
                       <div>
-                        <i className='bi bi-diagram-3'></i>{' '}
+                        <BsDiagram3 aria-hidden='true' />{' '}
                         {product.category.name}
                       </div>
                     </div>

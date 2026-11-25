@@ -33,6 +33,7 @@ const CategoryComponent = () => {
                 <Card className='border-0 bg-transparent d-flex flex-column align-items-center justify-content-evenly mt-2'>
                   <Card.Img
                     variant='top'
+                    alt=''
                     className='p-4'
                     style={{ height: '8em', width: '10em' }}
                     src={`/Images/categoria${index + 1}.jpg`}
