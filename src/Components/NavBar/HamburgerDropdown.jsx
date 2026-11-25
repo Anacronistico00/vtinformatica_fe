@@ -34,12 +34,12 @@ const HamburgerDropdown = () => {
 
       <div className={`hamburger-dropdown ${isOpen ? 'show' : ''}`}>
         <Nav className='flex-column'>
-          <Nav.Link href='/'>HOME</Nav.Link>
+          <Nav.Link href='/'>Home</Nav.Link>
           <NavbarDropdown />
           <Nav.Link className='mt-2' href='/contatti'>
-            CONTATTI
+            Contatti
           </Nav.Link>
-          <Nav.Link href='/chi-siamo'>CHI SIAMO</Nav.Link>
+          <Nav.Link href='/chi-siamo'>Chi siamo</Nav.Link>
         </Nav>
       </div>
     </div>

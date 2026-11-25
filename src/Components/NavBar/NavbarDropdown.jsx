@@ -14,9 +14,9 @@ const NavbarDropdown = () => {
       <Dropdown.Toggle
         variant='light'
         id='categoriesDropdown'
-        className='fw-semibold bg-transparent border-0 text-dark p-0'
+        className='fw-semibold bg-transparent border-0 p-0'
       >
-        CATEGORIE
+        Categorie
       </Dropdown.Toggle>
 
       <Dropdown.Menu className='p-0 shadow' style={{ width: '250px' }}>
@@ -29,7 +29,7 @@ const NavbarDropdown = () => {
           >
             <Link
               to={`products/category/${category.id}`}
-              className='text-decoration-none text-dark'
+              className='text-decoration-none'
             >
               <Dropdown.Item
                 as='div'
