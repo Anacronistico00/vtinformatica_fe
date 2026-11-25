@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Proposte di banner</title>
+    <!-- Anteprima delle proposte: ?set=a|b&theme=light|dark. Usa gli stessi token del sito. -->
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../../src/styles/tokens.css" />
+    <style>
+      @font-face {
+        font-family: 'Geist Variable';
+        font-weight: 100 900;
+        src: url('../../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2') format('woff2-variations');
+      }
+      :root { --vt-font: 'Geist Variable', system-ui, sans-serif; }
+      body { font-family: var(--vt-font); margin: 0; padding: 24px; }
+      .stack { display: grid; gap: 16px; max-width: 1296px; margin: 0 auto; }
+
+      .banner {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        align-items: center;
+        gap: 32px;
+        min-height: 400px;
+        padding: 48px 56px;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+      .banner h2 {
+        margin: 0 0 16px;
+        font-size: clamp(2rem, 1.2rem + 3vw, 3.5rem);
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        text-wrap: balance;
+      }
+      .banner p { margin: 0 0 28px; max-width: 34ch; font-size: 1.125rem; }
+      .banner .art { width: 100%; height: auto; max-height: 300px; }
+      .banner .btn { padding: 12px 24px; transition: none; }
+
+      /* Serie A: superficie del tema, illustrazione in tinta con l'accento. */
+      [data-set='a'] .banner {
+        background: var(--vt-surface);
+        border: 1px solid var(--vt-border);
+        color: var(--vt-text);
+      }
+      [data-set='a'] .banner h2::after {
+        content: '';
+        display: block;
+        width: 48px;
+        height: 4px;
+        margin-top: 20px;
+        border-radius: 2px;
+        background: var(--vt-accent);
+      }
+      [data-set='a'] .banner p { color: var(--vt-text-muted); }
+      [data-set='a'] .art .line { fill: none; stroke: var(--vt-accent); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      [data-set='a'] .art .fill { fill: var(--vt-surface-2); stroke: var(--vt-border-strong); stroke-width: 2; }
+      [data-set='a'] .art .dot { fill: var(--vt-accent); }
+
+      /* Serie B: campiture piene, titolo e sottocategorie reali. */
+      [data-set='b'] .banner.s1 { background: #2b62eb; color: #fff; }
+      [data-set='b'] .banner.s2 { background: #0b0d10; color: #f5f5f7; border: 1px solid #2a2f37; }
+      [data-set='b'] .banner.s3 { background: #f5f5f7; color: #1d1d1f; border: 1px solid #d9d9de; }
+      [data-set='b'] .banner p { opacity: 0.92; }
+      [data-set='b'] .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+      [data-set='b'] .chips li {
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 1rem;
+        font-weight: 500;
+        border: 1px solid currentColor;
+      }
+      [data-set='b'] .s1 .chips li { background: #fff; color: #1d1d1f; border-color: #fff; }
+      [data-set='b'] .s2 .chips li { background: #15181d; color: #f5f5f7; border-color: #727985; }
+      [data-set='b'] .s3 .chips li { background: #fff; color: #1d1d1f; border-color: #8a8a90; }
+      [data-set='b'] .s1 .btn { background: #fff; border-color: #fff; color: #1d1d1f; }
+      [data-set='b'] .s1 .btn:hover { background: #ededf0; }
+      [data-set='b'] .s2 .btn { background: #5b8cff; border-color: #5b8cff; color: #0b0d10; }
+      [data-set='b'] .s3 .btn { background: #2b62eb; border-color: #2b62eb; color: #fff; }
+      [data-set='b'] .s2 .rule { background: #5b8cff; }
+      [data-set='b'] .s3 .rule { background: #2b62eb; }
+      [data-set='b'] .s1 .rule { background: #fff; }
+      [data-set='b'] .rule { display: block; width: 48px; height: 4px; margin: 20px 0 20px; border-radius: 2px; }
+      [data-set='b'] .art { display: none; }
+
+      [data-set='a'] .chips, [data-set='a'] .rule { display: none; }
+      [data-set='b'] .art { display: none; }
+      [data-set='a'] .chips { display: none; }
+
+      @media (max-width: 767.98px) {
+        body { padding: 12px; }
+        .banner { grid-template-columns: 1fr; min-height: 0; padding: 32px 24px; gap: 24px; }
+        .banner p { font-size: 1rem; margin-bottom: 20px; }
+        [data-set='a'] .art { max-height: 140px; justify-self: start; }
+      }
+    </style>
+    <script>
+      const q = new URLSearchParams(location.search);
+      document.documentElement.setAttribute('data-bs-theme', q.get('theme') === 'dark' ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-set', q.get('set') === 'b' ? 'b' : 'a');
+    </script>
+  </head>
+  <body>
+    <div class="stack">
+      <section class="banner s1" aria-label="Componenti PC">
+        <div>
+          <h2>Componenti per il tuo PC</h2>
+          <span class="rule"></span>
+          <p>CPU, schede madri, RAM, schede video, SSD, alimentatori, case e dissipatori.</p>
+          <a class="btn btn-primary" href="#">Vedi i componenti</a>
+        </div>
+        <svg class="art" viewBox="0 0 360 280" aria-hidden="true">
+          <rect class="fill" x="80" y="30" width="200" height="200" rx="28" />
+          <rect class="line" x="118" y="68" width="124" height="124" rx="14" />
+          <rect class="dot" x="152" y="102" width="56" height="56" rx="8" />
+          <path class="line" d="M120 30V8M160 30V8M200 30V8M240 30V8M120 252v-22M160 252v-22M200 252v-22M240 252v-22M80 70H58M80 110H58M80 150H58M80 190H58M280 70h22M280 110h22M280 150h22M280 190h22" />
+        </svg>
+        <ul class="chips" aria-label="Sottocategorie">
+          <li>CPU</li><li>Schede madri</li><li>RAM</li><li>Schede video</li><li>SSD / Hard Disk</li><li>Alimentatori</li><li>Case</li><li>Dissipatori</li>
+        </ul>
+      </section>
+
+      <section class="banner s2" aria-label="PC assemblati">
+        <div>
+          <h2>PC assemblati</h2>
+          <span class="rule"></span>
+          <p>Gaming entry-level, mid-range e high-end, workstation e mini PC.</p>
+          <a class="btn btn-primary" href="#">Vedi i PC</a>
+        </div>
+        <svg class="art" viewBox="0 0 360 280" aria-hidden="true">
+          <rect class="fill" x="110" y="14" width="140" height="252" rx="20" />
+          <circle class="line" cx="180" cy="90" r="42" />
+          <circle class="line" cx="180" cy="90" r="16" />
+          <path class="line" d="M138 170h84M138 198h84" />
+          <circle class="dot" cx="228" cy="240" r="6" />
+        </svg>
+        <ul class="chips" aria-label="Sottocategorie">
+          <li>Gaming entry-level</li><li>Gaming mid-range</li><li>Gaming high-end</li><li>Workstation</li><li>Mini PC</li>
+        </ul>
+      </section>
+
+      <section class="banner s3" aria-label="Periferiche">
+        <div>
+          <h2>Periferiche</h2>
+          <span class="rule"></span>
+          <p>Monitor, tastiere, mouse, cuffie, microfoni e webcam.</p>
+          <a class="btn btn-primary" href="#">Vedi le periferiche</a>
+        </div>
+        <svg class="art" viewBox="0 0 360 280" aria-hidden="true">
+          <g class="fill">
+            <rect x="30" y="50" width="56" height="56" rx="10" /><rect x="98" y="50" width="56" height="56" rx="10" /><rect x="166" y="50" width="56" height="56" rx="10" /><rect x="234" y="50" width="56" height="56" rx="10" />
+            <rect x="30" y="118" width="56" height="56" rx="10" /><rect x="98" y="118" width="56" height="56" rx="10" /><rect x="234" y="118" width="56" height="56" rx="10" />
+            <rect x="98" y="186" width="192" height="48" rx="10" />
+          </g>
+          <rect class="dot" x="166" y="118" width="56" height="56" rx="10" />
+        </svg>
+        <ul class="chips" aria-label="Sottocategorie">
+          <li>Monitor</li><li>Tastiere</li><li>Mouse</li><li>Cuffie</li><li>Microfoni</li><li>Webcam</li>
+        </ul>
+      </section>
+    </div>
+    <style>
+      /* Visibilità per serie: A mostra l'illustrazione, B l'elenco. */
+      [data-set='a'] .art { display: block; }
+      [data-set='b'] .chips { display: flex; }
+      [data-set='b'] .art { display: none; }
+      [data-set='a'] .chips { display: none; }
+      [data-set='a'] .rule { display: none; }
+    </style>
+  </body>
+</html>
