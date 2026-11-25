@@ -20,3 +20,12 @@ audit('layout', [
   ['non autorizzato', '/not-authorized'],
   ['non trovata', '/pagina-inesistente'],
 ]);
+
+audit('catalogo e ricerca', [
+  ['categoria', '/products/category/1'],
+  ['sottocategoria', '/products/subcategory/1'],
+  ['marchi', '/manufacturers'],
+  ['marchio', '/products/manufacturer/1'],
+  ['ricerca', '/search/E2E'],
+  ['ricerca senza risultati', '/search/nessunprodottoconquestonome'],
+]);
