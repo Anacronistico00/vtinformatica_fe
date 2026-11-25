@@ -32,8 +32,11 @@ const audit = async (page, pages) => {
   }
 };
 
-test.beforeEach(async ({ page }, testInfo) => {
-  test.skip(!process.env.AXE_LABEL, 'rapporto axe solo su richiesta (AXE_LABEL)');
+test.skip(!process.env.AXE_LABEL, 'rapporto axe solo su richiesta (AXE_LABEL)');
+
+// Playwright vuole il destructuring come primo argomento anche quando non serve nessuna fixture.
+// eslint-disable-next-line no-empty-pattern
+test.beforeEach(({}, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'axe gira una volta sola, a 1440');
 });
 
