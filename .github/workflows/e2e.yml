@@ -1,0 +1,129 @@
+name: E2E
+
+# Flussi Playwright nel browser contro il BE vero (branch master) e un SQL Server vero.
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      E2E_API_URL: http://localhost:5158
+      E2E_SQL_SERVER: localhost,1433
+      E2E_SQL_USER: sa
+      E2E_SQL_DATABASE: VTInformatica
+      # Password del solo container SQL Server di questo job (effimero, raggiungibile solo dal runner).
+      E2E_SQL_PASSWORD: Ci-Only-Sql-Password-1
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: Ci-Only-Sql-Password-1
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Ci-Only-Sql-Password-1 -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 12
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: vtinformatica_fe
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Anacronistico00/VTInformatica
+          ref: master
+          path: VTInformatica
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vtinformatica_fe/package-lock.json
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # La chiave JWT nasce qui, per questa esecuzione: non è salvata da nessuna parte.
+      - name: Chiave JWT di questa esecuzione
+        run: |
+          key="$(openssl rand -hex 32)"
+          echo "::add-mask::$key"
+          echo "Jwt__SecurityKey=$key" >> "$GITHUB_ENV"
+
+      - name: sqlcmd
+        run: |
+          if ! command -v sqlcmd >/dev/null; then
+            curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc >/dev/null
+            curl -sSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | sudo tee /etc/apt/sources.list.d/mssql-release.list >/dev/null
+            sudo apt-get update
+            sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18
+            echo "/opt/mssql-tools18/bin" >> "$GITHUB_PATH"
+          fi
+
+      - name: BE, build
+        working-directory: VTInformatica
+        run: dotnet build VTInformatica/VTInformatica.csproj -c Release
+
+      - name: BE, database con le migration vere
+        working-directory: VTInformatica
+        run: |
+          dotnet tool install --global dotnet-ef --version 10.0.15
+          dotnet ef database update --project VTInformatica --no-build --configuration Release
+        env:
+          ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=VTInformatica;User Id=sa;Password=Ci-Only-Sql-Password-1;TrustServerCertificate=True
+
+      - name: Dati minimi
+        working-directory: vtinformatica_fe
+        run: sqlcmd -S "$E2E_SQL_SERVER" -U "$E2E_SQL_USER" -P "$E2E_SQL_PASSWORD" -C -d "$E2E_SQL_DATABASE" -b -i e2e/ci/seed.sql
+
+      # CORS: il FE degli E2E gira sulla porta fissa 5174.
+      - name: BE, avvio
+        working-directory: VTInformatica
+        run: |
+          nohup dotnet run --project VTInformatica --no-build -c Release --no-launch-profile > "$RUNNER_TEMP/be.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf "$E2E_API_URL/Category" >/dev/null; then echo "BE pronto"; exit 0; fi
+            sleep 2
+          done
+          echo "BE non raggiungibile"; cat "$RUNNER_TEMP/be.log"; exit 1
+        env:
+          ASPNETCORE_URLS: http://localhost:5158
+          ConnectionStrings__DefaultConnection: Server=localhost,1433;Database=VTInformatica;User Id=sa;Password=Ci-Only-Sql-Password-1;TrustServerCertificate=True
+          Cors__AllowedOrigins__1: http://localhost:5174
+
+      - name: FE, dipendenze e browser
+        working-directory: vtinformatica_fe
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: E2E
+        working-directory: vtinformatica_fe
+        run: npm run e2e
+
+      - name: Report e trace di Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            vtinformatica_fe/playwright-report
+            vtinformatica_fe/test-results
+          if-no-files-found: ignore
+
+      - name: Log del BE
+        if: failure()
+        run: cat "$RUNNER_TEMP/be.log" || true

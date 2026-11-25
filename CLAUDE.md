@@ -11,7 +11,8 @@
 ## Comandi
 
 - `npm ci` | `npm run dev` | `npm run build` | `npm run lint` | `npm run preview`
-- Test (da M4a): `npm test`
+- Test: `npm test`; E2E: `npm run e2e` (BE e DB locali, vedi `e2e/README.md`; in CI
+  workflow `E2E` sulle PR verso `develop` e `main`)
 - Backend: repo `../VTInformatica` (ASP.NET Core). URL da `VITE_API_URL` (file
   `.env.local`, mai committato); `.env.example` documenta le variabili.
 

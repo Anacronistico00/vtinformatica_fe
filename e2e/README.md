@@ -1,7 +1,8 @@
 # E2E (Playwright)
 
-Flussi completi nel browser contro il **BE e il DB SQL Server locali**. Non girano in CI
-(servirebbe SQL Server nel runner: lavoro futuro insieme a Testcontainers).
+Flussi completi nel browser contro il **BE e il DB SQL Server**. In locale: BE e DB locali.
+In CI: workflow `.github/workflows/e2e.yml` sulle PR verso `develop` e `main` (container
+`mssql`, BE da `master`, migration vere, `e2e/ci/seed.sql` per verificare i dati minimi).
 
 ```bash
 npx playwright install chromium   # una volta
@@ -25,6 +26,8 @@ npm run e2e
 | `E2E_SQLCMD`       | `sqlcmd`                 | Eseguibile sqlcmd (es. `C:\Program Files\sqlcmd\sqlcmd.exe`) |
 | `E2E_SQL_SERVER`   | `(local)`                | Server (es. `np:\\.\pipe\MSSQL$SQLEXPRESS\sql\query`)     |
 | `E2E_SQL_DATABASE` | `VTInformatica`          | Database                                                  |
+| `E2E_SQL_USER`     | (vuoto)                  | Utente SQL; se vuoto, autenticazione Windows              |
+| `E2E_SQL_PASSWORD` | (vuoto)                  | Password dell'utente SQL (in CI, del solo container)      |
 
 Autenticazione Windows (`-E`): nessuna password nel repo.
 

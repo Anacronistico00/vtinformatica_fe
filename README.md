@@ -84,7 +84,7 @@ Sono gli stessi controlli della CI (nessun backend né segreto: la rete è simul
 
 ## E2E (Playwright)
 
-Flussi completi nel browser contro il **BE e il DB SQL Server locali** (login → carrello → checkout → ordine, account, backoffice, recensioni). Non girano in CI.
+Flussi completi nel browser contro il **BE e il DB SQL Server** (login → carrello → checkout → ordine, account, backoffice, recensioni). In locale usano il BE e il DB locali; in CI girano nel workflow `E2E` sulle PR verso `develop` e `main` (vedi sotto).
 
 ```bash
 npx playwright install chromium   # una volta
@@ -112,6 +112,10 @@ Variabili (autenticazione Windows a SQL Server, nessuna password nel repo):
 Da Git Bash i backslash della named pipe vanno raddoppiati e conviene `MSYS_NO_PATHCONV=1`, ad esempio `MSYS_NO_PATHCONV=1 E2E_SQL_SERVER='np:\\\\.\\pipe\\MSSQL$SQLEXPRESS\\sql\\query' npm run e2e`.
 
 Gli E2E creano utenti `e2e.*@example.test` e prodotti `E2E …` e li cancellano a fine run (solo quelli, in una transazione). **Fai un backup del DB prima della prima esecuzione.** Dettagli in [`e2e/README.md`](e2e/README.md).
+
+### E2E in CI
+
+Il workflow [`e2e.yml`](.github/workflows/e2e.yml) gira sulle PR verso `develop` e `main`: container `mssql` 2022 come service, checkout del BE (branch `master`), `dotnet ef database update` con le migration vere, verifica dei dati minimi ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): ruoli e catalogo di base arrivano dal seed delle migration), BE avviato con `Cors__AllowedOrigins__1=http://localhost:5174` e chiave JWT generata al momento (mai salvata), poi `npm run e2e` con autenticazione SQL (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). Se falliscono, report e trace di Playwright restano come artifact del run.
 
 ## Prima / dopo
 
@@ -145,7 +149,6 @@ Versione breve per il FE. La storia completa (revisione dei piani con un secondo
 
 Dall'audit (sezioni "fuori scope" e lavoro futuro):
 
-- **Test su SQL Server reale in CI.** Gli E2E e la corsa reale sullo stock girano solo in locale: servono SQL Server nel runner (container `mssql` in GitHub Actions) o Testcontainers, come previsto per il BE.
 - **SuperAdmin ed email.** Oggi gli admin si creano a mano via DB. Previsto lato BE: ruolo `SuperAdmin`, creazione admin con invito via email, "password dimenticata". Il FE non ha ancora una pagina di gestione admin.
 - **Email → id.** Il FE usa già solo le route `/me`; il BE ha rimosso le vecchie route con `{email}`. Resta da migrare la chiave email → `UserId` nel DB del BE (carrello e ordini sono ancora legati all'email).
 - **Cookie httpOnly.** Il token sta in localStorage (via redux-persist): un XSS può leggerlo. La soluzione è cookie httpOnly + refresh token, che richiede modifiche al BE. Al deploy va impostata una CSP come header HTTP (indicativamente `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' <VITE_API_URL>`).
