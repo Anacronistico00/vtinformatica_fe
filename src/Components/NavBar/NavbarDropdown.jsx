@@ -5,9 +5,9 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 const NavbarDropdown = () => {
   const [hoveredCategoryId, setHoveredCategoryId] = useState(null);
-  const { categories, loading } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories);
 
-  if (loading || !categories || categories.length === 0) return null;
+  if (!categories || categories.length === 0) return null;
 
   return (
     <Dropdown className='position-relative'>
@@ -46,7 +46,7 @@ const NavbarDropdown = () => {
             {hoveredCategoryId === category.id &&
               category.subCategories?.length > 0 && (
                 <div
-                  className='position-absolute top-0 start-100 bg-white border rounded shadow zindex-tooltip'
+                  className='category-submenu position-absolute top-0 start-100'
                   style={{ minWidth: '220px' }}
                 >
                   <ul className='list-unstyled m-0 p-2'>

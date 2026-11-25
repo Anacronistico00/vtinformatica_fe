@@ -1,20 +1,13 @@
-import { useEffect } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
-import { fetchCategories } from '../../Redux/Actions/CategoriesActions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const CategoryComponent = () => {
-  const dispatch = useDispatch();
   const {
     categories: categories,
     loading,
     error,
   } = useSelector((state) => state.categories);
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
 
   if (loading) return <p>Caricamento categorie...</p>;
   if (error) return <p>Errore: {error}</p>;

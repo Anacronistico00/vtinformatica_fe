@@ -46,13 +46,19 @@ h5 {
   --vt-accent-strong: #5b8cff;
   --vt-accent-hover: #7ca3ff;
   --vt-on-accent: #0b0d10;
+  color: var(--vt-text);
+}
+
+/* Bootstrap dichiara le variabili del menu sul menu stesso: i valori scuri vanno messi qui, non sulla fascia. */
+.site-header .dropdown-menu {
   --bs-dropdown-bg: #15181d;
   --bs-dropdown-color: #f5f5f7;
   --bs-dropdown-link-color: #f5f5f7;
   --bs-dropdown-link-hover-bg: #1d2127;
   --bs-dropdown-link-hover-color: #f5f5f7;
+  --bs-dropdown-link-active-bg: #1d2127;
+  --bs-dropdown-link-active-color: #f5f5f7;
   --bs-dropdown-border-color: #2a2f37;
-  color: var(--vt-text);
 }
 
 .site-header {
@@ -435,4 +441,14 @@ a:has(> .card) {
   color: var(--vt-text);
   border-color: var(--vt-accent);
   box-shadow: var(--vt-hover-shadow);
+}
+
+/* Sottomenu delle categorie: pannello come il menu che lo apre, chiaro o scuro secondo la fascia. */
+.category-submenu {
+  min-width: 220px;
+  z-index: 1070;
+  background: var(--bs-dropdown-bg);
+  border: 1px solid var(--bs-dropdown-border-color);
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
 }
