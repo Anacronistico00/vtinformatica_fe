@@ -129,11 +129,11 @@ Parte FE, ricalcolata dai tag `v1-epicode` e `v2-m4` (worktree pulito per tag: `
 
 Gli E2E girano solo in locale. Voci dell'audit chiuse: `VITE_API_URL` al posto dell'URL hardcoded, `apiClient` unico, token in un solo posto, 401 → logout, route `/me` al posto dell'email nell'URL, test e CI, lint e `npm audit` a 0, backoffice con paginazione dal server e `expectedQuantity` (dettaglio in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)).
 
-La tabella completa, con i numeri del BE per tag (`v1-epicode` → `v2-m4-be`), è nel [README del BE](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.md#prima--dopo).
+La tabella completa, con i numeri del BE per tag (`v1-epicode` → `v2-m4-be`), è nel [README del BE](https://github.com/Anacronistico00/VTInformatica#prima--dopo).
 
 ## Come ho lavorato con l'AI
 
-Versione breve per il FE. La storia completa (revisione dei piani con un secondo modello, esempi di correzioni, migration, autonomia con deny list) è nel [README del BE](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.md#come-ho-lavorato-con-lai).
+Versione breve per il FE. La storia completa (revisione dei piani con un secondo modello, esempi di correzioni, migration, autonomia con deny list) è nel [README del BE](https://github.com/Anacronistico00/VTInformatica#come-ho-lavorato-con-lai).
 
 - **Audit iniziale come fonte di verità** ([`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)): la baseline non si riscrive, ogni fetta aggiunge una sezione di stato.
 - **Fette M4a–M4g.** Un task, un branch, commit piccoli, PR verso `develop` a CI verde. Il piano è in [`docs/PIANO-M4.md`](docs/PIANO-M4.md).
