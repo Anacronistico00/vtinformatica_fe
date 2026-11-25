@@ -135,6 +135,14 @@ Gli E2E girano solo in locale. Voci dell'audit chiuse: `VITE_API_URL` al posto d
 
 La tabella completa, con i numeri del BE per tag (`v1-epicode` → `v2-m4-be`), è nel [README del BE](https://github.com/Anacronistico00/VTInformatica#prima--dopo).
 
+## Restyle
+
+Il frontend ha un tema chiaro e scuro (Auto, Chiaro, Scuro) sopra React-Bootstrap: token CSS, font Geist nel repo, logo in SVG. Struttura, rotte, logica e Redux sono rimasti quelli di prima.
+
+- **Accessibilità** (axe, WCAG 2.1 A e AA): da 74 violazioni serious o critical a 0 su 24 pagine, in chiaro e in scuro. I controlli girano in CI (`e2e/a11y.spec.js`).
+- **Logo**: da 9 MB a 2,9 kB (lockup SVG).
+- Mappa delle pagine, foto prima e dopo e decisioni in [`docs/RESTYLE.md`](docs/RESTYLE.md). Regole di design in [`DESIGN.md`](DESIGN.md).
+
 ## Come ho lavorato con l'AI
 
 Versione breve per il FE. La storia completa (revisione dei piani con un secondo modello, esempi di correzioni, migration, autonomia con deny list) è nel [README del BE](https://github.com/Anacronistico00/VTInformatica#come-ho-lavorato-con-lai).

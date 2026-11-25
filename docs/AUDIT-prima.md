@@ -205,9 +205,10 @@ Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
 4. Anche il logo di Noctua è un'immagine rotta nei dati, e quelli di ThermalRight e Seagate sono
    chiari su fondo chiaro, quasi invisibili (nel FE stanno su un pozzetto chiaro, ma restano
    poco leggibili). Stessa correzione dei dati del punto 3.
-5. La voce "Categorie" della barra non carica le categorie da sola: compare solo se lo store le
-   ha già (home visitata prima, oppure stato persistito). Aprendo direttamente una pagina
-   categoria la voce manca.
+5. ~~La voce "Categorie" della barra non carica le categorie da sola~~ Chiuso nel restyle: le carica
+   il layout, quindi il menu c'è su qualsiasi pagina anche al primo accesso diretto.
+6. ~~Il carrello non mostrava un riscontro all'aggiunta di un prodotto~~ Chiuso nel restyle: toast di
+   successo. Il bottone "Aggiungi al carrello" è disabilitato con quantità non valida o scorta zero.
 
 ## Stato avanzamento – E2E in CI (aggiornato 2026-11-25)
 
