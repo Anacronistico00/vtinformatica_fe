@@ -84,7 +84,7 @@ These are the same checks as CI (no backend and no secrets: the network is simul
 
 ## E2E (Playwright)
 
-Full flows in the browser against the **local BE and SQL Server DB** (login → cart → checkout → order, account, back office, reviews). They do not run in CI.
+Full flows in the browser against the **BE and a SQL Server DB** (login → cart → checkout → order, account, back office, reviews). Locally they use the local BE and DB; in CI they run in the `E2E` workflow on PRs to `develop` and `main` (see below).
 
 ```bash
 npx playwright install chromium   # once
@@ -112,6 +112,10 @@ Variables (Windows authentication to SQL Server, no password in the repo):
 From Git Bash the backslashes of the named pipe must be doubled and `MSYS_NO_PATHCONV=1` helps, e.g. `MSYS_NO_PATHCONV=1 E2E_SQL_SERVER='np:\\\\.\\pipe\\MSSQL$SQLEXPRESS\\sql\\query' npm run e2e`.
 
 The tests create `e2e.*@example.test` users and `E2E …` products and delete them at the end of the run (only those, in one transaction). **Back up the DB before the first run.** Details in [`e2e/README.md`](e2e/README.md) (Italian).
+
+### E2E in CI
+
+The [`e2e.yml`](.github/workflows/e2e.yml) workflow runs on PRs to `develop` and `main`: an `mssql` 2022 container started as a step, a checkout of the BE (`master` branch), `dotnet ef database update` with the real migrations, a check of the minimal data ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): roles and the base catalogue come from the migrations' seed), the BE started with `Cors__AllowedOrigins__1=http://localhost:5174` and a JWT key and an `sa` password generated at run time (masked in the logs, never stored), then `npm run e2e` with SQL authentication (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). On failure, the Playwright report and traces are kept as a run artifact.
 
 ## Before / after
 
@@ -145,7 +149,6 @@ Short version for the FE. The full story (plan review with a second model, examp
 
 From the audit ("out of scope" sections and future work):
 
-- **Tests against a real SQL Server in CI.** The E2E tests and the real stock race only run locally: they need SQL Server on the runner (an `mssql` container in GitHub Actions) or Testcontainers, as planned for the BE.
 - **SuperAdmin and email.** Admins are currently created by hand in the DB. Planned on the BE: a `SuperAdmin` role, admin creation with an email invitation, "forgot password". The FE has no admin-management page yet.
 - **Email → id.** The FE already uses only the `/me` routes; the BE has removed the old `{email}` routes. Still to do: migrating the key from email to `UserId` in the BE's DB (cart and orders are still tied to the email).
 - **httpOnly cookie.** The token sits in localStorage (via redux-persist): an XSS can read it. The fix is an httpOnly cookie + refresh token, which needs BE changes. A CSP must be set as an HTTP header at deploy time (roughly `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' <VITE_API_URL>`).
