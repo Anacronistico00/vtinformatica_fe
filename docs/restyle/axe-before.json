@@ -1,0 +1,269 @@
+{
+  "light": {
+    "public-home": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 2,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "image-alt (critical)",
+        "link-name (serious)"
+      ]
+    },
+    "public-category": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-subcategory": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-manufacturer": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-search": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-product": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 2,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "label (critical)",
+        "link-name (serious)"
+      ]
+    },
+    "public-cart-empty": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-login": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-register": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-reactivate": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-not-authorized": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "public-not-found": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "account-info": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "account-cart": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 2,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "label (critical)",
+        "link-name (serious)"
+      ]
+    },
+    "account-orders": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "account-order-detail": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "account-product-reviews": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 2,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "label (critical)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-dashboard": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-products": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 2,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "image-alt (critical)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-categories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-subcategories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    },
+    "admin-users": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 2,
+      "critical": 1,
+      "rules": [
+        "button-name (critical)",
+        "color-contrast (serious)",
+        "link-name (serious)"
+      ]
+    }
+  }
+}
