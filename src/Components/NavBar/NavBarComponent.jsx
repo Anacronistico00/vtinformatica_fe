@@ -43,7 +43,13 @@ const NavBarComponent = () => {
               to='/'
               className='fw-bold text-primary fs-4 order-1'
             >
-              <img id='navLogo' src='/Images/VT.svg' alt='VT Informatica' />
+              <img
+                id='navLogo'
+                src='/Images/VT.webp'
+                width='500'
+                height='500'
+                alt='VT Informatica'
+              />
             </Navbar.Brand>
           </div>
 
