@@ -5,20 +5,18 @@ import { Button } from 'react-bootstrap';
 
 const NotFound = () => {
   return (
-    <div className='flex flex-col items-center justify-center h-screen bg-orange-100 text-gray-800 mt-5'>
+    <div className='container my-5'>
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}
         className='text-center'
       >
-        <h1 className='text-6xl font-bold mb-4'>404</h1>
-        <p className='text-xl mb-6'>
-          Oh no! Questa pagina non è stata trovata.
-        </p>
+        <h1 className='display-1 fw-semibold mb-3'>404</h1>
+        <p className='fs-5 mb-4'>Pagina non trovata.</p>
         <Link to='/'>
-          <Button variant='warning' size='lg' className='shadow-lg'>
-            Torna indietro
+          <Button variant='primary' size='lg'>
+            Torna alla home
           </Button>
         </Link>
       </motion.div>
