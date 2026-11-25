@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { BsStar, BsStarFill } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import {
   createReview,
@@ -13,9 +14,8 @@ import {
 import { messageFor } from '../../Utils/errorMessages';
 
 const Stars = ({ rating }) => (
-  <span className='text-warning' aria-label={`${rating} su 5`} role='img'>
-    {'★'.repeat(rating)}
-    {'☆'.repeat(5 - rating)}
+  <span className='rating-star' aria-label={`${rating} su 5`} role='img'>
+    {[1, 2, 3, 4, 5].map((star) => (star <= rating ? <BsStarFill key={star} /> : <BsStar key={star} />))}
   </span>
 );
 
@@ -25,12 +25,12 @@ const StarPicker = ({ value, onChange }) => (
       <Button
         key={star}
         variant='link'
-        className='p-0 me-1 text-warning fs-4 text-decoration-none'
+        className='rating-star p-0 me-1 fs-4 text-decoration-none'
         aria-label={`Voto ${star}`}
         aria-pressed={value === star}
         onClick={() => onChange(star)}
       >
-        {star <= value ? '★' : '☆'}
+        {star <= value ? <BsStarFill aria-hidden='true' /> : <BsStar aria-hidden='true' />}
       </Button>
     ))}
   </div>
@@ -144,7 +144,7 @@ const ProductReviews = ({ productId }) => {
             />
           </Form.Group>
           <div className='d-flex gap-2'>
-            <Button type='submit' variant='success' disabled={draft.rating === 0}>
+            <Button type='submit' variant='primary' disabled={draft.rating === 0}>
               {draft.id ? 'Salva modifiche' : 'Pubblica'}
             </Button>
             {draft.id && (
