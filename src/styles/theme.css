@@ -1,0 +1,302 @@
+/*
+ * Direzione C · Arena (DESIGN.md, sezione Direzioni).
+ * Densità media, titoli larghi in maiuscolo, superfici rialzate con raggio 14 e bordo che si accende,
+ * fascia grafite in testata e footer in entrambi i temi, indicatore blu sotto le voci di navigazione.
+ */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vt-font);
+  --bs-border-radius: 10px;
+  --vt-radius-card: 14px;
+  --vt-section-gap: var(--vt-space-7);
+}
+
+body {
+  font-family: var(--vt-font);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-stretch: 112%;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+/* Fascia grafite: i token di testata e footer restano scuri anche nel tema chiaro. */
+.site-header,
+.footer {
+  --vt-bg: #0b0d10;
+  --vt-surface: #15181d;
+  --vt-surface-2: #1d2127;
+  --vt-text: #f5f5f7;
+  --vt-text-muted: #a1a1a6;
+  --vt-border: #2a2f37;
+  --vt-border-strong: #727985;
+  --vt-accent: #5b8cff;
+  --vt-accent-strong: #5b8cff;
+  --vt-accent-hover: #7ca3ff;
+  --vt-on-accent: #0b0d10;
+  --bs-dropdown-bg: #15181d;
+  --bs-dropdown-color: #f5f5f7;
+  --bs-dropdown-link-color: #f5f5f7;
+  --bs-dropdown-link-hover-bg: #1d2127;
+  --bs-dropdown-link-hover-color: #f5f5f7;
+  --bs-dropdown-border-color: #2a2f37;
+  background-color: var(--vt-surface);
+  color: var(--vt-text);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--vt-border);
+}
+
+.nav-icon-link {
+  font-size: 0.75rem !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nav-icon-link svg {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.search-bar {
+  background-color: var(--vt-surface-2);
+  border-color: var(--vt-border);
+  border-radius: 10px;
+  padding-inline: var(--vt-space-2);
+}
+
+.search-bar:hover {
+  border-color: var(--vt-border-strong);
+}
+
+.site-nav .link,
+.site-nav #categoriesDropdown {
+  position: relative;
+  padding-block: var(--vt-space-2);
+  color: var(--vt-text-muted) !important;
+  font-size: 0.8125rem;
+  font-stretch: 112%;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+/* Indicatore blu sotto la voce: compare all'hover, cresce dal centro. */
+.site-nav .link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--vt-accent);
+  transform: scaleX(0);
+  transition: transform var(--vt-dur-base) var(--vt-ease-out);
+}
+
+.site-nav .link:hover,
+.site-nav #categoriesDropdown:hover {
+  color: var(--vt-text) !important;
+}
+
+.site-nav .link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Home */
+.carousel-item img {
+  border-radius: var(--vt-radius-card);
+}
+
+.section-title {
+  font-size: 1.375rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-top: var(--vt-section-gap);
+  margin-bottom: var(--vt-space-4);
+}
+
+.d-flex:has(> .section-title) {
+  align-items: baseline;
+  margin-top: var(--vt-section-gap);
+}
+
+.d-flex > .section-title {
+  margin-top: 0;
+}
+
+.categories {
+  background: transparent !important;
+  border-radius: 0;
+}
+
+.categories.py-5,
+.categories.py-3 {
+  padding-block: 0 !important;
+}
+
+.categories > .row {
+  --bs-gutter-x: var(--vt-space-4);
+  row-gap: var(--vt-space-4);
+}
+
+.categoryCard.p-0 {
+  padding-inline: calc(var(--vt-space-4) / 2) !important;
+}
+
+.categoryCard:hover {
+  background: transparent;
+}
+
+.categories .card {
+  height: 100%;
+  margin-top: 0 !important;
+  overflow: hidden;
+  background: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border) !important;
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.categoryCard:hover .card {
+  border-color: var(--vt-accent) !important;
+  transform: translateY(-2px);
+}
+
+/* L'immagine occupa la parte alta del riquadro, su fondo chiaro; il margine interno tiene interi i loghi. */
+.categories .card-img-top {
+  width: 100% !important;
+  padding: var(--vt-space-3) !important;
+  background-color: var(--vt-media-bg);
+  object-fit: contain;
+}
+
+.categories .card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: var(--vt-space-3) 0;
+  color: var(--vt-text);
+}
+
+.newsletter {
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.newsletter.card {
+  border: 1px solid var(--vt-border) !important;
+  box-shadow: var(--vt-shadow) !important;
+}
+
+/* Scheda prodotto */
+.media-well {
+  border: 1px solid var(--vt-border) !important;
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: var(--vt-shadow) !important;
+}
+
+h2.fw-bold {
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem);
+  font-stretch: 118%;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
+}
+
+h4.text-primary {
+  font-size: 2rem;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    background-color var(--vt-dur-fast) var(--vt-ease-out),
+    transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.btn-primary {
+  padding-inline: var(--vt-space-5);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  padding-block: var(--vt-space-3);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.bg-body-tertiary {
+  background-color: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.card {
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
+  overflow: hidden;
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+a:hover > .card {
+  border-color: var(--vt-accent);
+  transform: translateY(-2px);
+}
+
+a:has(> .card) {
+  text-decoration: none;
+}
+
+.card .card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--vt-text);
+}
+
+.card .card-img-top {
+  background-color: var(--vt-media-bg);
+}
+
+/* Sui telefoni le etichette perdono la spaziatura larga: account, carrello e tema restano su una riga. */
+@media (max-width: 575.98px) {
+  .nav-icon-link,
+  .btn-primary {
+    letter-spacing: 0;
+  }
+}
+
+/* Footer: stessa fascia grafite della testata. */
+.footer {
+  border-top: 1px solid var(--vt-border);
+  font-size: 0.875rem;
+}
+
+.footer h5 {
+  font-size: 0.8125rem;
+  font-stretch: 112%;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.footer-bottom {
+  background-color: var(--vt-bg);
+}
