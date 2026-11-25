@@ -4,6 +4,12 @@ import { USERS } from './support/env.js';
 import { readState } from './support/state.js';
 import { loginAndWait, toast } from './support/ui.js';
 
+// Le immagini dei banner arrivano da un sito di terzi: se la rete è lenta la pagina non va mai in "idle".
+// Il test misura l'accessibilità del nostro codice, quindi quelle richieste vengono interrotte.
+test.beforeEach(async ({ page }) => {
+  await page.route('https://media.ldlc.com/**', (route) => route.abort());
+});
+
 // Accessibilità (axe, WCAG 2.1 A e AA) di ogni gruppo di pagine, in tema chiaro e scuro.
 // Il tema segue prefers-color-scheme (preferenza "auto"): emulateMedia lo cambia prima di aprire la pagina.
 const audit = (group, pages) => {
