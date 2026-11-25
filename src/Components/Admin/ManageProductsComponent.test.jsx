@@ -147,6 +147,27 @@ describe('ManageProductsComponent (characterization)', () => {
     await vi.waitFor(() => expect(pages).toEqual(['1/20', '2/20']));
   });
 
+  it('offers every category from GET /Category as a filter, even when the current page has none of its products', async () => {
+    const mouse = catalogue[1];
+    let requested;
+    server.use(
+      http.get(`${API}/Product`, () => HttpResponse.json([catalogue[0]], { headers: { 'X-Total-Count': '2' } })),
+      http.get(`${API}/Product/category/:id`, ({ params }) => {
+        requested = params.id;
+        return HttpResponse.json([mouse]);
+      })
+    );
+    const user = userEvent.setup();
+    renderWithProviders(<ManageProductsComponent />, { preloadedState });
+
+    await screen.findByText('Intel i9');
+    await user.click(await screen.findByRole('button', { name: 'Periferiche' }));
+
+    expect(await screen.findByText('Mouse ottico')).toBeInTheDocument();
+    expect(requested).toBe('2');
+    expect(screen.queryByText('Intel i9')).not.toBeInTheDocument();
+  });
+
   it('loads categories and manufacturers by itself', async () => {
     renderWithProviders(<ManageProductsComponent />, { preloadedState: loggedIn({ role: 'Admin' }) });
 
