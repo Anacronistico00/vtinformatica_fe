@@ -35,7 +35,6 @@ const audit = async (page, pages) => {
 test.beforeEach(async ({ page }, testInfo) => {
   test.skip(!process.env.AXE_LABEL, 'rapporto axe solo su richiesta (AXE_LABEL)');
   test.skip(testInfo.project.name !== 'desktop', 'axe gira una volta sola, a 1440');
-  await page.route('https://media.ldlc.com/**', (route) => route.abort());
 });
 
 test('axe pagine pubbliche', async ({ page }) => audit(page, publicPages(readState())));

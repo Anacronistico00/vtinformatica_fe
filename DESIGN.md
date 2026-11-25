@@ -189,5 +189,3 @@ sopra i titoli, effetti che si muovono durante lo scroll.
 ## Lacune note
 
 - Logo ASUS: URL rotto nei dati, non nel FE (vedi `docs/AUDIT-prima.md`).
-- Il carosello della home carica due banner da `media.ldlc.com`, contenuti di un altro negozio
-  ospitati altrove: da sostituire con banner propri.
