@@ -17,7 +17,7 @@ const OrdersComponent = () => {
     <Container className='mt-5'>
       <Card className='h-100'>
         <Card.Body className='text-center'>
-          <Card.Title>I MIEI ORDINI</Card.Title>
+          <Card.Title as='h2' className='fs-4'>I miei ordini</Card.Title>
 
           {loading ? (
             <div className='d-flex justify-content-center'>
@@ -33,7 +33,7 @@ const OrdersComponent = () => {
                 <Link
                   key={index}
                   to={`/orderInfo/${order.id}`}
-                  className='text-decoration-none'
+                  className='text-decoration-none product-link'
                 >
                   <ListGroup.Item key={order.id} className='text-start'>
                     <div className='d-flex justify-content-between'>
@@ -73,6 +73,7 @@ const OrdersComponent = () => {
                             marginRight: '10px',
                           }}
                           rounded
+                          className='product-thumb'
                         />
                       ))}
                     </div>
