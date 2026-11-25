@@ -135,6 +135,14 @@ The E2E tests only run locally. Audit items closed: `VITE_API_URL` instead of th
 
 The full table, with the BE numbers per tag (`v1-epicode` → `v2-m4-be`), is in the [BE README](https://github.com/Anacronistico00/VTInformatica#readme).
 
+## Restyle
+
+The frontend has a light and dark theme (Auto, Light, Dark) on top of React-Bootstrap: CSS tokens, the Geist font served from the repo, an SVG logo. Structure, routes, logic and Redux are unchanged.
+
+- **Accessibility** (axe, WCAG 2.1 A and AA): from 74 serious or critical violations to 0 across 24 pages, in light and dark. The checks run in CI (`e2e/a11y.spec.js`).
+- **Logo**: from 9 MB to 2.9 kB (SVG lockup).
+- Page map, before and after screenshots and decisions in [`docs/RESTYLE.md`](docs/RESTYLE.md) (in Italian). Design rules in [`DESIGN.md`](DESIGN.md) (in Italian).
+
 ## How I worked with AI
 
 Short version for the FE. The full story (plan review with a second model, examples of corrections, migrations, autonomy with a deny list) is in the [BE README](https://github.com/Anacronistico00/VTInformatica#readme).
