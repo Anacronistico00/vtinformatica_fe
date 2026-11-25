@@ -198,6 +198,10 @@ Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
 1. `/orders` non carica gli ordini da sé (li carica la pagina Account): aperta o
    ricaricata direttamente può mostrare un elenco vecchio o vuoto.
 2. Seller: il BE gli consente prodotti e categorie, il backoffice FE è solo Admin.
+3. Logo ASUS: nel DB `Manufacturers.ManufacturerLogo` (id 4) punta a
+   `https://images.seeklogo.com/logo-png/1/1/asus-logo-png_seeklogo-12597.png`, che non
+   risponde: in home e in `/manufacturers` si vede l'immagine rotta. Va corretto nei dati con
+   lo script del BE `docs/sql/correggi-dati-catalogo.sql`, non nel FE.
 
 ## Stato avanzamento – E2E in CI (aggiornato 2026-11-25)
 
