@@ -5,10 +5,18 @@ import { SQLCMD, SQL_DATABASE, SQL_PASSWORD, SQL_SERVER, SQL_USER } from './env.
 const authArgs = SQL_USER ? ['-U', SQL_USER, '-P', SQL_PASSWORD ?? ''] : ['-E'];
 
 /** Esegue SQL sul DB con sqlcmd. -b: esce con errore se lo script fallisce. */
-export const runSql = (sql) =>
-  execFileSync(SQLCMD, ['-S', SQL_SERVER, ...authArgs, '-C', '-d', SQL_DATABASE, '-b', '-h', '-1', '-W', '-Q', `SET NOCOUNT ON; ${sql}`], {
-    encoding: 'utf8',
-  }).trim();
+export const runSql = (sql) => {
+  try {
+    return execFileSync(
+      SQLCMD,
+      ['-S', SQL_SERVER, ...authArgs, '-C', '-d', SQL_DATABASE, '-b', '-h', '-1', '-W', '-Q', `SET NOCOUNT ON; ${sql}`],
+      { encoding: 'utf8' }
+    ).trim();
+  } catch (error) {
+    // sqlcmd scrive l'errore SQL su stdout: senza, il messaggio di Node mostra solo la riga di comando.
+    throw new Error(`sqlcmd fallito:\n${error.stdout ?? ''}${error.stderr ?? ''}`, { cause: error });
+  }
+};
 
 // Rimuove SOLO i dati di test (utenti e2e.*@example.test, prodotti "E2E ..."), in un'unica transazione.
 // L'ordine rispetta le FK: righe d'ordine e carrelli prima di prodotti e utenti.
