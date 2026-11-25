@@ -191,12 +191,22 @@ Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
 
 ### Lavoro futuro
 
-- **E2E e race reale in CI**: servono SQL Server nel runner (container `mssql` in
-  GitHub Actions, o Testcontainers come previsto per il BE). Fino ad allora gli E2E
-  si lanciano solo in locale.
+- ~~**E2E e race reale in CI**~~ Chiuso: vedi "Stato avanzamento – E2E in CI" in fondo.
 
 ### Fuori scope emersi (non toccati)
 
 1. `/orders` non carica gli ordini da sé (li carica la pagina Account): aperta o
    ricaricata direttamente può mostrare un elenco vecchio o vuoto.
 2. Seller: il BE gli consente prodotti e categorie, il backoffice FE è solo Admin.
+
+## Stato avanzamento – E2E in CI (aggiornato 2026-11-25)
+
+Branch `ci/e2e`. Workflow `.github/workflows/e2e.yml`, sulle PR verso `develop` e `main`.
+
+| Voce                           | Stato  | Come                                                                                                                                                                                                  |
+| ------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E2E in CI su SQL Server vero   | Chiuso | Service container `mssql` 2022, checkout del BE (`master`), `dotnet ef database update`, BE su `http://localhost:5158` con `Cors__AllowedOrigins__1=http://localhost:5174`, poi `npm run e2e`            |
+| Dati minimi di seed            | Chiuso | `e2e/ci/seed.sql` verifica ruoli e catalogo di base e fallisce con un messaggio chiaro: i dati li crea già il seed (HasData) delle migration, quindi lo script non inserisce nulla                     |
+| Chiave JWT                     | Chiuso | Generata nel job (`openssl rand`), mascherata nel log, mai salvata. La password `sa` è quella del solo container effimero del job                                                                      |
+| Report in caso di fallimento   | Chiuso | Artifact `playwright-report` con report e trace; log del BE nel job                                                                                                                                   |
+| Race reale sullo stock         | Chiuso | Nel BE: `VTInformatica.IntegrationTests` (job `integration`)                                                                                                                                          |

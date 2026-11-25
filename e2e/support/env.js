@@ -1,4 +1,5 @@
-// Configurazione degli E2E da variabili d'ambiente (nessun segreto: SQL Server con autenticazione Windows).
+// Configurazione degli E2E da variabili d'ambiente. In locale SQL Server con autenticazione Windows (nessun segreto);
+// in CI E2E_SQL_USER/E2E_SQL_PASSWORD per il container SQL Server del job.
 export const API_URL = process.env.E2E_API_URL ?? 'https://localhost:7286';
 // Porta propria (non la 5173 del dev server abituale): il BE avviato dagli E2E ammette questa origine.
 export const FE_PORT = Number(process.env.E2E_FE_PORT ?? 5174);
@@ -7,6 +8,8 @@ export const FE_URL = `http://localhost:${FE_PORT}`;
 export const SQLCMD = process.env.E2E_SQLCMD ?? 'sqlcmd';
 export const SQL_SERVER = process.env.E2E_SQL_SERVER ?? '(local)';
 export const SQL_DATABASE = process.env.E2E_SQL_DATABASE ?? 'VTInformatica';
+export const SQL_USER = process.env.E2E_SQL_USER;
+export const SQL_PASSWORD = process.env.E2E_SQL_PASSWORD;
 
 export const PASSWORD = 'E2e-Password1!';
 
