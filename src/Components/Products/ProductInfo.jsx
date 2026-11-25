@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
 import { fetchProductById, fetchProductsBySubCategory } from '../../Redux/Actions/ProductsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../Redux/Actions/CartActions';
@@ -81,37 +82,34 @@ const ProductDetail = ({ product }) => {
         {/* Immagine principale */}
         <div className='col-lg-5 mb-4'>
           <div className='media-well border rounded shadow-sm p-3 text-center'>
-            <img
-              src={mainImage}
-              alt={product.name}
-              className='img-fluid'
-              style={{
-                maxHeight: '350px',
-                objectFit: 'contain',
-                cursor: 'pointer',
-              }}
+            <button
+              type='button'
+              className='image-button'
+              aria-label='Ingrandisci immagine'
               onClick={() => setShowModal(true)}
-            />
+            >
+              <img
+                src={mainImage}
+                alt={product.name}
+                className='img-fluid'
+                style={{ maxHeight: '350px', objectFit: 'contain' }}
+              />
+            </button>
           </div>
 
           {/* Miniature sotto */}
           <div className='d-flex flex-wrap justify-content-center mt-3'>
             {product.productImages.map((img, index) => (
-              <img
+              <button
                 key={index}
-                src={img.imageUrl}
-                alt={`Miniatura ${index + 1}`}
-                className='img-thumbnail m-1'
-                style={{
-                  width: '60px',
-                  height: '60px',
-                  objectFit: 'cover',
-                  cursor: 'pointer',
-                  border:
-                    mainImage === img.imageUrl ? '2px solid #0d6efd' : 'none',
-                }}
+                type='button'
+                className={`thumb-button m-1 ${mainImage === img.imageUrl ? 'is-selected' : ''}`}
+                aria-label={`Immagine ${index + 1}`}
+                aria-pressed={mainImage === img.imageUrl}
                 onClick={() => setMainImage(img.imageUrl)}
-              />
+              >
+                <img src={img.imageUrl} alt='' width='60' height='60' />
+              </button>
             ))}
           </div>
         </div>
@@ -119,7 +117,7 @@ const ProductDetail = ({ product }) => {
         {/* Info prodotto */}
         <div className='col-lg-7'>
           <h2 className='product-title mb-3'>{product.name}</h2>
-          <div className='mb-3'>
+          <div className='brand-chip mb-3'>
             <img
               src={product.manufacturer.manufacturerLogo}
               alt={product.manufacturer.manufacturerName}
@@ -213,14 +211,18 @@ const ProductDetail = ({ product }) => {
                     key={item.id}
                     className={`carousel-item ${index === 0 ? 'active' : ''}`}
                   >
-                    <Link to={`/product/${item.id}`} state={{ product: item }}>
+                    <Link
+                      to={`/product/${item.id}`}
+                      state={{ product: item }}
+                      className='text-decoration-none product-link'
+                    >
                       <div className='card mx-auto' style={{ width: '18rem' }}>
                         <img
                           src={
                             item.productImages[0]?.imageUrl ||
                             '/images/placeholder.jpg'
                           }
-                          className='card-img-top'
+                          className='card-img-top product-thumb'
                           alt={item.name}
                           style={{ height: '200px', objectFit: 'contain' }}
                         />
@@ -267,66 +269,38 @@ const ProductDetail = ({ product }) => {
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div
-          className='modal d-flex justify-content-center align-items-center'
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            zIndex: 1050,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          }}
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className='bg-white p-3 rounded shadow-lg'
-            style={{
-              position: 'relative',
-              maxWidth: '60vw',
-              width: '100%',
-              maxHeight: '90vh',
-              overflow: 'auto',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
+      {/* Immagini ingrandite: il Modal di React-Bootstrap gestisce focus, Esc e ruoli. */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered size='lg'>
+        <Modal.Header closeButton>
+          <Modal.Title as='h2' className='fs-5'>
+            {product.name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='media-well rounded p-2 text-center mb-3'>
             <img
               src={modalImage}
-              alt='Modal'
-              className='img-fluid mb-3'
-              style={{
-                width: '100%',
-                maxHeight: '50vh',
-                objectFit: 'contain',
-              }}
+              alt={product.name}
+              className='img-fluid'
+              style={{ width: '100%', maxHeight: '50vh', objectFit: 'contain' }}
             />
-            <div className='d-flex flex-wrap justify-content-center'>
-              {product.productImages.map((img, index) => (
-                <img
-                  key={index}
-                  src={img.imageUrl}
-                  alt={`Miniatura ${index + 1}`}
-                  className='img-thumbnail m-1'
-                  style={{
-                    width: '90px',
-                    height: '90px',
-                    objectFit: 'cover',
-                    cursor: 'pointer',
-                    border:
-                      modalImage === img.imageUrl
-                        ? '2px solid #0d6efd'
-                        : 'none',
-                  }}
-                  onClick={() => setModalImage(img.imageUrl)}
-                />
-              ))}
-            </div>
           </div>
-        </div>
-      )}
+          <div className='d-flex flex-wrap justify-content-center'>
+            {product.productImages.map((img, index) => (
+              <button
+                key={index}
+                type='button'
+                className={`thumb-button m-1 ${modalImage === img.imageUrl ? 'is-selected' : ''}`}
+                aria-label={`Immagine ${index + 1} ingrandita`}
+                aria-pressed={modalImage === img.imageUrl}
+                onClick={() => setModalImage(img.imageUrl)}
+              >
+                <img src={img.imageUrl} alt='' width='90' height='90' />
+              </button>
+            ))}
+          </div>
+        </Modal.Body>
+      </Modal>
 
       <ProductReviews productId={product.id} />
     </div>
