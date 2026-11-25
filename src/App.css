@@ -81,6 +81,17 @@ body {
   display: none;
 }
 
+/* Sotto i 576 px logo, account, carrello e tema stanno su una riga: spazi e testi più stretti. */
+@media (max-width: 575.98px) {
+  .site-header .navbar-nav {
+    gap: var(--vt-space-3) !important;
+  }
+
+  .nav-icon-link {
+    font-size: 0.75rem !important;
+  }
+}
+
 #navLogo {
   width: 150px;
   height: auto;
