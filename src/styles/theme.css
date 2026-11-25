@@ -1,0 +1,269 @@
+/*
+ * Direzione B · Catalogo (DESIGN.md, sezione Direzioni).
+ * Compatta, card con bordo sottile e raggio 8 senza ombra, fascia scura in testata in entrambi i temi.
+ */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vt-font);
+  --bs-border-radius: 6px;
+  --vt-radius-card: 8px;
+  --vt-section-gap: var(--vt-space-6);
+}
+
+body {
+  font-family: var(--vt-font);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 700;
+  letter-spacing: -0.011em;
+}
+
+/* Fascia scura: i token della testata e del footer restano scuri anche nel tema chiaro. */
+.site-header,
+.footer {
+  --vt-bg: #0b0d10;
+  --vt-surface: #15181d;
+  --vt-surface-2: #1d2127;
+  --vt-text: #f5f5f7;
+  --vt-text-muted: #a1a1a6;
+  --vt-border: #2a2f37;
+  --vt-border-strong: #727985;
+  --vt-accent: #5b8cff;
+  --vt-accent-strong: #5b8cff;
+  --vt-accent-hover: #7ca3ff;
+  --vt-on-accent: #0b0d10;
+  --bs-dropdown-bg: #15181d;
+  --bs-dropdown-color: #f5f5f7;
+  --bs-dropdown-link-color: #f5f5f7;
+  --bs-dropdown-link-hover-bg: #1d2127;
+  --bs-dropdown-link-hover-color: #f5f5f7;
+  --bs-dropdown-border-color: #2a2f37;
+  color: var(--vt-text);
+}
+
+.site-header {
+  background-color: var(--vt-surface);
+  border-bottom: 0;
+  padding-bottom: var(--vt-space-2) !important;
+}
+
+.site-header .navbar {
+  background-color: var(--vt-bg);
+  padding-block: var(--vt-space-3);
+}
+
+.nav-icon-link {
+  font-size: 0.8125rem !important;
+  font-weight: 600;
+}
+
+.nav-icon-link svg {
+  font-size: 1.25rem;
+}
+
+/* Ricerca chiara su fascia scura, bottone pieno: il campo è il controllo principale della testata. */
+.search-bar {
+  background-color: #ffffff;
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.search-bar .search-input {
+  color: #1d1d1f;
+}
+
+.search-bar .search-input::placeholder {
+  color: #5f5f64;
+}
+
+.search-bar .searchButton {
+  background-color: #2b62eb;
+  color: #ffffff;
+  border-radius: 0;
+  padding-inline: var(--vt-space-4);
+}
+
+.search-bar .searchButton:hover {
+  background-color: #2457d6;
+  color: #ffffff;
+}
+
+.site-nav {
+  justify-content: flex-start !important;
+  gap: var(--vt-space-6);
+  padding-top: var(--vt-space-2);
+}
+
+.site-nav .link,
+.site-nav #categoriesDropdown {
+  color: var(--vt-text) !important;
+  font-size: 0.8125rem;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.site-nav .link:hover,
+.site-nav #categoriesDropdown:hover {
+  color: var(--vt-accent) !important;
+}
+
+/* Home */
+.carousel-item img {
+  border-radius: var(--vt-radius-card);
+}
+
+.section-title {
+  font-size: 1.25rem !important;
+  margin-top: var(--vt-section-gap);
+  margin-bottom: var(--vt-space-3);
+}
+
+.d-flex:has(> .section-title) {
+  align-items: baseline;
+  margin-top: var(--vt-section-gap);
+}
+
+.d-flex > .section-title {
+  margin-top: 0;
+}
+
+/* Le categorie e i brand diventano una griglia di riquadri: il contenitore sparisce. */
+.categories {
+  background: transparent !important;
+  border-radius: 0;
+}
+
+.categories.py-5,
+.categories.py-3 {
+  padding-block: 0 !important;
+}
+
+.categories > .row {
+  --bs-gutter-x: var(--vt-space-3);
+  row-gap: var(--vt-space-3);
+}
+
+.categoryCard.p-0 {
+  padding-inline: calc(var(--vt-space-3) / 2) !important;
+}
+
+.categories .card {
+  height: 100%;
+  margin-top: 0 !important;
+  padding: var(--vt-space-3);
+  background: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border) !important;
+  border-radius: var(--vt-radius-card);
+  transition: border-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.categoryCard:hover {
+  background: transparent;
+}
+
+.categoryCard:hover .card {
+  border-color: var(--vt-accent) !important;
+}
+
+.categories .card-img-top {
+  background-color: var(--vt-media-bg);
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.categories .card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: var(--vt-space-2) 0 0;
+  color: var(--vt-text);
+}
+
+.newsletter {
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.newsletter.card {
+  border: 1px solid var(--vt-border) !important;
+  box-shadow: none !important;
+}
+
+/* Scheda prodotto */
+.media-well {
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+h2.fw-bold {
+  font-size: 1.75rem;
+  letter-spacing: -0.015em;
+}
+
+h4.text-primary {
+  color: var(--vt-text) !important;
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.bg-body-tertiary {
+  background-color: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+.card {
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  box-shadow: none;
+  overflow: hidden;
+  transition: border-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+a:hover > .card {
+  border-color: var(--vt-accent);
+}
+
+a:has(> .card) {
+  text-decoration: none;
+}
+
+.card .card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--vt-text);
+}
+
+.card .text-primary {
+  color: var(--vt-text) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Footer: stessa fascia scura della testata. */
+.footer {
+  background-color: var(--vt-bg);
+  border-top: 0;
+  font-size: 0.875rem;
+}
+
+.footer h5 {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

@@ -1,9 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-// Dopo Bootstrap: i token e il tema ridefiniscono le sue variabili.
+// Dopo Bootstrap: i token ridefiniscono le sue variabili; la direzione grafica (theme.css) viene per ultima.
 import './styles/tokens.css';
 import './App.css';
+import './styles/fonts.css';
+import './styles/theme.css';
 import { MotionConfig } from 'framer-motion';
 import HomeComponent from './Components/HomeComponent';
 import LoginComponent from './Components/Auth/LoginComponent';
