@@ -23,15 +23,21 @@ const ManageProductsComponent = () => {
   // null = modale chiuso; { product } = modifica, { product: null } = nuovo prodotto.
   const [editing, setEditing] = useState(null);
   const [formKey, setFormKey] = useState(0);
+  // Categoria scelta nel filtro (null = tutte, paginate dal server).
+  const [categoryId, setCategoryId] = useState(null);
 
-  const loadPage = useCallback((page) => dispatch(fetchProductsPage(page)), [dispatch]);
+  const loadPage = useCallback((page) => dispatch(fetchProductsPage(page, categoryId)), [dispatch, categoryId]);
 
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchManufacturers());
     dispatch(fetchSubCategories());
+  }, [dispatch]);
+
+  // Cambiando filtro si riparte dalla prima pagina.
+  useEffect(() => {
     loadPage(1);
-  }, [dispatch, loadPage]);
+  }, [loadPage]);
 
   const openModal = (product = null) => {
     setFormKey((key) => key + 1);
@@ -59,7 +65,7 @@ const ManageProductsComponent = () => {
     loadPage(lastOnPage ? adminPage.page - 1 : adminPage.page);
   };
 
-  // Solo le categorie con prodotti nella pagina corrente.
+  // I filtri vengono da GET /Category; le sezioni mostrano solo le categorie con prodotti nella lista caricata.
   const sections = categories
     .map((category) => ({
       category,
@@ -75,6 +81,22 @@ const ManageProductsComponent = () => {
         <Button variant='primary' onClick={() => openModal()}>
           Aggiungi Nuovo Prodotto
         </Button>
+      </div>
+
+      <div className='d-flex flex-wrap gap-2 mb-4'>
+        <Button variant={categoryId === null ? 'dark' : 'outline-dark'} size='sm' onClick={() => setCategoryId(null)}>
+          Tutte
+        </Button>
+        {categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={categoryId === category.id ? 'dark' : 'outline-dark'}
+            size='sm'
+            onClick={() => setCategoryId(category.id)}
+          >
+            {category.name}
+          </Button>
+        ))}
       </div>
 
       {loading && <Spinner animation='border' />}
