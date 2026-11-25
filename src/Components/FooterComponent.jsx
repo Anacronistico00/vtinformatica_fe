@@ -1,4 +1,5 @@
 import { Container, Row, Col } from 'react-bootstrap';
+import { BsFacebook, BsInstagram, BsTwitterX, BsYoutube } from 'react-icons/bs';
 
 const FooterComponent = () => {
   return (
@@ -60,16 +61,16 @@ const FooterComponent = () => {
             <h5>Seguici</h5>
             <div className='d-flex gap-3'>
               <a href='#' aria-label='Facebook'>
-                <i className='bi bi-facebook fs-4' aria-hidden='true'></i>
+                <BsFacebook className='fs-4' aria-hidden='true' />
               </a>
               <a href='#' aria-label='Instagram'>
-                <i className='bi bi-instagram fs-4' aria-hidden='true'></i>
+                <BsInstagram className='fs-4' aria-hidden='true' />
               </a>
               <a href='#' aria-label='X'>
-                <i className='bi bi-twitter-x fs-4' aria-hidden='true'></i>
+                <BsTwitterX className='fs-4' aria-hidden='true' />
               </a>
               <a href='#' aria-label='YouTube'>
-                <i className='bi bi-youtube fs-4' aria-hidden='true'></i>
+                <BsYoutube className='fs-4' aria-hidden='true' />
               </a>
             </div>
           </Col>

@@ -7,6 +7,7 @@ import {
 } from '../Redux/Actions/CartActions';
 import { CreateOrder } from '../Redux/Actions/OrderAction';
 import { Link } from 'react-router-dom';
+import { BsTrash } from 'react-icons/bs';
 
 const CartComponent = () => {
   const dispatch = useDispatch();
@@ -148,7 +149,7 @@ const CartComponent = () => {
                     className='btn btn-outline-danger btn-sm'
                     onClick={() => handleRemoveItem(item.id)}
                   >
-                    <i className='bi bi-trash'></i>
+                    <BsTrash aria-hidden='true' />
                     Rimuovi
                   </button>
                 </div>
