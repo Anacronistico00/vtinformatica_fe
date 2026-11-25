@@ -1,0 +1,19 @@
+import AxeBuilder from '@axe-core/playwright';
+import { expect } from '@playwright/test';
+
+const BLOCKING = ['serious', 'critical'];
+
+/** Attende che la pagina abbia finito di caricare dati e immagini, poi gira axe (WCAG 2.1 A e AA). */
+export const checkA11y = async (page, label) => {
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.spinner-border')).toHaveCount(0);
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  const blocking = violations
+    .filter((violation) => BLOCKING.includes(violation.impact))
+    .map((violation) => `${violation.id} (${violation.impact}): ${violation.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
+  expect(blocking, `Violazioni axe serious/critical in ${label}`).toEqual([]);
+};
+
+export const SCHEMES = ['light', 'dark'];
