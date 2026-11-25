@@ -91,3 +91,24 @@ for (const scheme of SCHEMES) {
     await checkA11y(page, `dettaglio ordine, conferma di annullamento (${scheme})`);
   });
 }
+
+audit('accesso, registrazione e riattivazione', [
+  ['login', '/account'],
+  ['registrazione', '/register'],
+  ['riattivazione', '/reactivate'],
+  ['bentornato', '/welcome'],
+  ['profilo da anonimo', '/accountInfo'],
+]);
+
+for (const scheme of SCHEMES) {
+  test(`a11y profilo e disattivazione dell'account (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await loginAndWait(page, USERS.other);
+    await expect(page.getByText('Totale ordini:').or(page.getByText('Non hai ancora effettuato ordini.'))).toBeVisible();
+    await checkA11y(page, `profilo (${scheme})`);
+
+    await page.getByRole('button', { name: 'Disattiva il mio account' }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await checkA11y(page, `profilo, conferma di disattivazione (${scheme})`);
+  });
+}
