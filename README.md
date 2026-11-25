@@ -133,7 +133,6 @@ Numeri **ricalcolati dai tag** (worktree pulito per tag: `npm ci`, `npm run lint
 
 Note:
 
-- Gli avvisi BE di `v1-epicode` sono 114 ricalcolati sul tag; il report di M3d citava 109 perché misurato su un altro commit.
 - Le righe di diff includono i test (gran parte dell'aumento). Componenti grandi: `ManageProductsComponent` 361 → 160 righe, `ProductInfo` 313 → 339 (non ancora spezzato).
 - Gli 8 flussi E2E non sono rieseguiti per questa tabella: girano solo in locale. La CI non li esegue (servirebbe SQL Server nel runner).
 
@@ -142,15 +141,19 @@ Le voci BE chiuse per tag (sicurezza, ordini, errori, query) sono nel [README de
 
 ## Come ho lavorato con l'AI
 
-Ho usato Claude Code per la maggior parte del codice; scelte e verifiche sono rimaste mie. In concreto:
+Ho usato Claude Code per la maggior parte del codice. Il processo è cambiato nel tempo.
 
-- **L'audit iniziale come fonte di verità.** Prima di toccare codice ho fatto produrre e rivedere [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md): problemi per gravità e metriche di partenza. La baseline non si riscrive; ogni fetta aggiunge sotto una sezione di stato (chiuso / spostato / fuori scope).
-- **Milestone e fette.** Milestone M0–M4, ciascuna in fette piccole (per il FE M4a–M4g): un task, un branch, commit piccoli, PR verso `develop` a CI verde con "Rebase and merge", `main` solo a fine milestone con merge commit e tag annotato.
-- **Plan mode e revisione dei piani.** Per ogni fetta non banale l'agente proponeva un piano (es. [`docs/PIANO-M4.md`](docs/PIANO-M4.md)) e io lo correggevo prima del via. Le regole stanno in `CLAUDE.md`: piano prima del codice, modifiche minime, niente restyling non richiesto, nessuna attribuzione all'AI in commit e PR.
-- **Test-first con commit rosso → fix.** Per ogni bug: prima un test che fallisce (commit `test: red - …`), poi il fix minimo. La storia git mostra le coppie, ad esempio `test(store): red - …` seguito da `fix(store): …`.
-- **Verifica manuale delle migration su SQL Server** (lato BE): i test girano su SQLite, quindi ogni migration è stata provata su una copia del DB vero con backup verificato, `database update`, `Down` e `Up`.
-- **Passaggio all'autonomia con deny list.** Nelle prime fette ogni passo veniva approvato. Poi l'agente ha lavorato in autonomia dentro limiti espliciti: una deny list in `.claude/settings.json` (force push, `git reset --hard`, `git filter-repo`, `rm -rf`, lettura di `.env`, `.env.local` e dei segreti) e le regole di `CLAUDE.md` (niente push o merge diretti su `main`/`develop`).
-- **E2E che hanno trovato un bug vero.** I test con rete simulata non lo vedevano: Playwright contro BE e DB reali ha fatto emergere il crash della NavBar. Quando la persistenza scartava uno slice scaduto (token scaduto, carrello inattivo da oltre un'ora), `autoMergeLevel1` di redux-persist copiava `undefined` sullo stato iniziale e `state.auth` / `state.cart` risultavano `undefined` all'avvio. Corretto test-first: ora gli slice scartati tornano allo stato iniziale.
+- **Audit iniziale come fonte di verità.** Prima di toccare codice ho fatto produrre e rivedere [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md): problemi per gravità e metriche di partenza. La baseline non si riscrive. Ogni fetta aggiunge sotto una sezione di stato: chiuso, spostato, fuori scope.
+- **Milestone e fette.** Dall'audit sono uscite le milestone (M0–M4), divise in fette piccole (per il FE M4a–M4g): un task, un branch, commit piccoli, PR verso `develop` a CI verde con "Rebase and merge", `main` solo a fine milestone con merge commit e tag annotato.
+- **M1–M2: tutto approvato a mano, piani rivisti da un secondo modello.** Ogni azione dell'agente passava dalla mia approvazione. Ogni piano (`docs/PIANO-*.md`, per il FE [`docs/PIANO-M4.md`](docs/PIANO-M4.md)) lo rivedevo in una conversazione separata con un altro modello usato come reviewer, e solo dopo davo l'ok all'agente. La revisione ha prodotto correzioni concrete (lato BE):
+  - **Drift del seed dei ruoli.** I ruoli erano seminati con `Guid.NewGuid()`: una nuova migration avrebbe cancellato e reinserito i ruoli, svuotando `AspNetUserRoles`. Scoperto prima di generare la migration. GUID fissi, uguali a quelli dei DB esistenti, più un test che confronta modello e snapshot.
+  - **Test di concorrenza sbagliato.** Misurava lo stock dopo il rollback, quindi non provava che il decremento fosse atomico. Riscritto per verificare l'esito di due richieste in parallelo.
+  - **Fette troppo grandi.** M3 era un blocco solo. L'ho divisa (a1, a2, b, c1, c2, d) perché ogni pezzo si potesse rivedere e annullare da solo.
+  - **Route `/me` in parallelo.** Per portare l'identità nel token non ho rotto il FE: `/Cart/me` e `/Order/me` sono nate accanto alle route con `{email}`, che restano `[Obsolete]` finché il FE non è migrato. Il FE è passato alle route `/me` in M4.
+- **Test-first con commit rosso → fix.** Per ogni falla o bug: prima un test che fallisce (commit `test: red - …`), poi il fix minimo. La storia git mostra le coppie, ad esempio `test(store): red - …` seguito da `fix(store): …`.
+- **Verifica manuale delle migration su SQL Server** (lato BE). I test girano su SQLite, che non è SQL Server. Ogni migration: backup con `RESTORE VERIFYONLY`, `database update`, `Down` e `Up` su una copia con dati reali.
+- **Da M3c: autonomia con deny list.** Quando regole e processo si sono stabilizzati, l'agente ha lavorato in autonomia dentro limiti espliciti. La deny list sta in `.claude/settings.json` (force push, `git reset --hard`, `git filter-repo`, `rm -rf`, lettura di `.env`, `.env.local` e dei segreti). Le regole di `CLAUDE.md` vietano push e merge diretti su `main` e `develop`: tutto passa da PR.
+- **Gli E2E hanno trovato il crash della NavBar.** Era già annotato nell'audit iniziale, ma i test con rete simulata non lo riproducevano. Playwright contro BE e DB reali sì. Quando la persistenza scartava uno slice scaduto (token scaduto, carrello inattivo da oltre un'ora), `autoMergeLevel1` di redux-persist copiava `undefined` sullo stato iniziale e `state.auth` e `state.cart` erano `undefined` all'avvio. Corretto test-first: gli slice scartati tornano allo stato iniziale.
 
 Cosa l'AI non ha sostituito: decidere cosa è in scope, verificare i numeri, provare le migration sul DB vero, leggere il diff prima del merge.
 
