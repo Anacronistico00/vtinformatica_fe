@@ -24,6 +24,7 @@ export const addToCart = (productId, quantity) => {
         type: ADD_TO_CART_SUCCESS,
         payload: data,
       });
+      toast.success('Prodotto aggiunto al carrello.');
       dispatch(getCart());
     } catch (error) {
       const message = messageFor(error, error.message || "Errore durante l'aggiunta al carrello");

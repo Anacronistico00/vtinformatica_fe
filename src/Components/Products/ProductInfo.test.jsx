@@ -1,10 +1,14 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { API, server } from '../../test/server';
 import { renderWithProviders } from '../../test/render';
+import { loggedIn } from '../../test/render';
 import ProductInfo from './ProductInfo';
+
+vi.mock('react-toastify', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+import { toast } from 'react-toastify';
 
 // Forma di GetProductDto del BE (la lista recensioni arriva dentro lo stesso prodotto).
 const product = {
@@ -21,12 +25,12 @@ const product = {
   reviews: [],
 };
 
-const renderProduct = () => {
+const renderProduct = (overrides = {}, options = {}) => {
   server.use(
-    http.get(`${API}/Product/5`, () => HttpResponse.json(product)),
+    http.get(`${API}/Product/5`, () => HttpResponse.json({ ...product, ...overrides })),
     http.get(`${API}/Product/subcategory/7`, () => HttpResponse.json([]))
   );
-  renderWithProviders(<ProductInfo />, { path: '/product/:id', route: '/product/5' });
+  renderWithProviders(<ProductInfo />, { path: '/product/:id', route: '/product/5', ...options });
 };
 
 describe('ProductInfo', () => {
@@ -62,5 +66,47 @@ describe('ProductInfo', () => {
 
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('confirms with a toast when the product is added to the cart', async () => {
+    let added = null;
+    server.use(
+      http.post(`${API}/Cart/me/add`, async ({ request }) => {
+        added = await request.json();
+        return HttpResponse.json({ items: [], totalPrice: 0 });
+      }),
+      http.get(`${API}/Cart/me`, () => HttpResponse.json({ items: [], totalPrice: 0 })),
+      http.get(`${API}/Review/me`, () => HttpResponse.json([]))
+    );
+    renderProduct({}, { preloadedState: loggedIn() });
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Aggiungi al carrello' }));
+
+    await waitFor(() => expect(toast.success).toHaveBeenCalledWith('Prodotto aggiunto al carrello.'));
+    expect(added).toEqual({ productId: 5, quantity: 1 });
+  });
+
+  it('disables add to cart for a quantity that is zero, empty, fractional or above the stock', async () => {
+    renderProduct();
+    const add = await screen.findByRole('button', { name: 'Aggiungi al carrello' });
+    const input = screen.getByRole('spinbutton', { name: 'Quantità' });
+    expect(add).toBeEnabled();
+
+    for (const invalid of ['0', '', '1.5', '4']) {
+      await userEvent.clear(input);
+      if (invalid) await userEvent.type(input, invalid);
+      expect(add, `quantità "${invalid}"`).toBeDisabled();
+    }
+
+    await userEvent.clear(input);
+    await userEvent.type(input, '3');
+    expect(add).toBeEnabled();
+  });
+
+  it('disables add to cart when the product is out of stock', async () => {
+    renderProduct({ quantity: 0 });
+
+    expect(await screen.findByText('Non disponibile')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Aggiungi al carrello' })).toBeDisabled();
   });
 });
