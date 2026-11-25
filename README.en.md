@@ -115,7 +115,7 @@ The tests create `e2e.*@example.test` users and `E2E …` products and delete th
 
 ### E2E in CI
 
-The [`e2e.yml`](.github/workflows/e2e.yml) workflow runs on PRs to `develop` and `main`: an `mssql` 2022 service container, a checkout of the BE (`master` branch), `dotnet ef database update` with the real migrations, a check of the minimal data ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): roles and the base catalogue come from the migrations' seed), the BE started with `Cors__AllowedOrigins__1=http://localhost:5174` and a JWT key generated at run time (never stored), then `npm run e2e` with SQL authentication (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). On failure, the Playwright report and traces are kept as a run artifact.
+The [`e2e.yml`](.github/workflows/e2e.yml) workflow runs on PRs to `develop` and `main`: an `mssql` 2022 container started as a step, a checkout of the BE (`master` branch), `dotnet ef database update` with the real migrations, a check of the minimal data ([`e2e/ci/seed.sql`](e2e/ci/seed.sql): roles and the base catalogue come from the migrations' seed), the BE started with `Cors__AllowedOrigins__1=http://localhost:5174` and a JWT key and an `sa` password generated at run time (masked in the logs, never stored), then `npm run e2e` with SQL authentication (`E2E_SQL_USER`, `E2E_SQL_PASSWORD`). On failure, the Playwright report and traces are kept as a run artifact.
 
 ## Before / after
 
