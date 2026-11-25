@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="VT Informatica">
   <rect width="128" height="128" rx="28.16" fill="#15181D" stroke="#2A2F37" stroke-width="1"/>
-  <path d="M10.7,46.82 L10.7,46.82 Q10.24,45.95 11.22,45.95 L18.66,45.95 Q19.64,45.95 20.1,46.82 L36.28,77.05 Q36.74,77.91 37.21,77.05 L53.39,46.82 Q53.85,45.95 54.83,45.95 L62.27,45.95 Q63.25,45.95 62.79,46.82 L43.6,82.69 Q43.14,83.55 42.16,83.55 L31.33,83.55 Q30.35,83.55 29.89,82.69 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M60.24,45.43 L60.24,45.43 Q60.24,44.45 61.22,44.45 L116.78,44.45 Q117.76,44.45 117.76,45.43 L117.76,51.74 Q117.76,52.72 116.78,52.72 L95.17,52.72 Q94.19,52.72 94.19,53.7 L94.19,82.57 Q94.19,83.55 93.21,83.55 L84.79,83.55 Q83.81,83.55 83.81,82.57 L83.81,53.7 Q83.81,52.72 82.83,52.72 L61.22,52.72 Q60.24,52.72 60.24,51.74 Z" fill="#5B8CFF" stroke="#5B8CFF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M33.17 91.97 10.24 38.18H23.38L40.72 80L58.02 38.18H71.16L48.14 91.97Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M85.98 91.97V45.53H66.85V36.03H117.76V45.53H98.63V91.97Z" fill="#5B8CFF" stroke="#5B8CFF" stroke-width="5" stroke-linejoin="round"/>
 </svg>
