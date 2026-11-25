@@ -1,11 +1,33 @@
 import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { API, server } from '../../test/server';
 import { loggedIn, renderWithProviders } from '../../test/render';
 import NavBarComponent from './NavBarComponent';
 
+const categories = [
+  { id: 1, name: 'Componenti PC', subCategories: [{ id: 3, name: 'CPU', categoryId: 1 }] },
+  { id: 2, name: 'Periferiche', subCategories: [] },
+];
+
 describe('NavBarComponent', () => {
+  beforeEach(() => {
+    server.use(http.get(`${API}/Category`, () => HttpResponse.json(categories)));
+  });
+
+  it('loads the categories itself: the Categorie menu is there on a direct visit to any page', async () => {
+    renderWithProviders(<NavBarComponent />);
+
+    // Una nella barra desktop e una nel menu mobile.
+    expect(await screen.findAllByRole('button', { name: 'Categorie' })).toHaveLength(2);
+  });
+
+  it('keeps the Categorie menu while another category request is running', () => {
+    renderWithProviders(<NavBarComponent />, { preloadedState: { categories: { categories, category: null, loading: true, error: null } } });
+
+    expect(screen.getAllByRole('button', { name: 'Categorie' })).toHaveLength(2);
+  });
+
   it('renders for an anonymous visitor without asking for a cart', async () => {
     const cartRequests = vi.fn();
     server.use(http.get(`${API}/Cart/*`, () => {
@@ -16,8 +38,19 @@ describe('NavBarComponent', () => {
     renderWithProviders(<NavBarComponent />);
     await new Promise((r) => setTimeout(r, 0));
 
-    expect(screen.getByAltText('AppLogo')).toBeInTheDocument();
+    expect(screen.getByAltText('VT Informatica')).toBeInTheDocument();
     expect(cartRequests).not.toHaveBeenCalled();
+  });
+
+  it('has one named logo: the full lockup on wide screens, only the VT under the navbar breakpoint', () => {
+    const { container } = renderWithProviders(<NavBarComponent />);
+
+    const logos = screen.getAllByRole('img', { name: 'VT Informatica' });
+    expect(logos).toHaveLength(1);
+    expect(logos[0]).toHaveAttribute('src', '/Images/logo-lockup.svg');
+    const mobile = container.querySelector('picture source');
+    expect(mobile).toHaveAttribute('srcset', '/Images/logo-mark.svg');
+    expect(mobile).toHaveAttribute('media', '(max-width: 991.98px)');
   });
 
   it('shows the cart count of a logged-in user', async () => {

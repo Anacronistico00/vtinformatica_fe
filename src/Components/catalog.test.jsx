@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { API, server } from '../test/server';
 import { renderWithProviders } from '../test/render';
+import AllManufacturersComponent from './AllManufacturersComponent';
 import HomeCategoryComponent from './Home/CategoryComponent';
 import ManufacturerComponent from './Products/ManufacturerComponent';
 import SubCategoryComponent from './Products/SubCategoryComponent';
@@ -70,18 +71,38 @@ describe('catalog pages', () => {
     expect(await screen.findByText('Nessun prodotto disponibile.')).toBeInTheDocument();
   });
 
-  it('home categories: loads the categories once', async () => {
+  it('all manufacturers: lists every brand with a link to its products', async () => {
+    server.use(
+      http.get(`${API}/Manufacturer`, () =>
+        HttpResponse.json({
+          manufacturers: [
+            { manufacturerId: 1, manufacturerName: 'Intel', manufacturerLogo: 'https://logos.test/intel.png' },
+            { manufacturerId: 4, manufacturerName: 'ASUS', manufacturerLogo: 'https://logos.test/asus.png' },
+          ],
+        })
+      )
+    );
+
+    renderWithProviders(<AllManufacturersComponent />, { path: '/manufacturers', route: '/manufacturers' });
+
+    expect(await screen.findByRole('link', { name: 'Intel' })).toHaveAttribute('href', '/products/manufacturer/1');
+    expect(screen.getByRole('link', { name: 'ASUS' })).toHaveAttribute('href', '/products/manufacturer/4');
+  });
+
+  it('home categories: shows the ones the layout already loaded, without asking again', async () => {
     const calls = vi.fn();
     server.use(
       http.get(`${API}/Category`, () => {
         calls();
-        return HttpResponse.json([{ id: 1, name: 'Componenti PC', subCategories: [] }]);
+        return HttpResponse.json([]);
       })
     );
 
-    renderWithProviders(<HomeCategoryComponent />);
+    renderWithProviders(<HomeCategoryComponent />, {
+      preloadedState: { categories: { categories: [{ id: 1, name: 'Componenti PC', subCategories: [] }], category: null, loading: false, error: null } },
+    });
 
     expect(await screen.findByText('Componenti PC')).toBeInTheDocument();
-    expect(calls).toHaveBeenCalledTimes(1);
+    expect(calls).not.toHaveBeenCalled();
   });
 });

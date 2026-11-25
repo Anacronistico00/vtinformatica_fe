@@ -21,7 +21,7 @@ const ManufacturersComponent = () => {
   return (
     <Container className='mt-3'>
       <div className='d-flex justify-content-between'>
-        <h2 className='fs-5'>I NOSTRI BRAND</h2>
+        <h2 className='section-title fs-5'>I nostri brand</h2>
         <Link to='/Manufacturers' className='link'>
           Visualizza tutti
         </Link>
@@ -37,6 +37,7 @@ const ManufacturersComponent = () => {
                 <Card className='border-0 bg-transparent d-flex flex-column align-items-center justify-content-evenly mt-2'>
                   <Card.Img
                     variant='top'
+                    alt=''
                     style={{ height: '5em', width: '5em' }}
                     src={`${Manufacturer.manufacturerLogo}`}
                   />

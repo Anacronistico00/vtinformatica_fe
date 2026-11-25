@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <style>
+    .sq { fill: #F5F5F7; stroke: #D9D9DE; stroke-width: 1; }
+    .sh { fill: #A9ADB5; stroke: #A9ADB5; }
+    .v { fill: #1D1D1F; stroke: #1D1D1F; }
+    .t { fill: #2B62EB; stroke: #2B62EB; }
+    .sh, .v, .t { stroke-width: 2.2; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) {
+      .sq { fill: #15181D; stroke: #2A2F37; }
+      .sh { fill: #5A606B; stroke: #5A606B; }
+      .v { fill: #FFFFFF; stroke: #FFFFFF; }
+      .t { fill: #5B8CFF; stroke: #5B8CFF; }
+    }
+  </style>
+  <rect class="sq" width="128" height="128" rx="28"/>
+  <path class="sh" d="M37.1 90.5 16.28 41.65H28.21L43.96 79.63L59.67 41.65H71.6L50.7 90.5Z"/>
+  <path class="sh" d="M85.06 90.5V48.32H67.69V39.7H113.92V48.32H96.55V90.5Z"/>
+  <path class="v" d="M34.9 88.3 14.08 39.46H26.01L41.76 77.43L57.47 39.46H69.4L48.5 88.3Z"/>
+  <path class="t" d="M82.86 88.3V46.12H65.49V37.5H111.72V46.12H94.35V88.3Z"/>
+</svg>

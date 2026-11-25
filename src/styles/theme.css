@@ -1,0 +1,562 @@
+/*
+ * Direzione grafica di VT Informatica (DESIGN.md): compatta, riquadri con bordo sottile e raggio 12,
+ * testata e footer scuri in entrambi i temi, tipografia Geist.
+ */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vt-font);
+  --bs-border-radius: 8px;
+  --vt-radius-card: 12px;
+  --vt-section-gap: var(--vt-space-6);
+  --vt-hover-shadow: 0 2px 8px rgba(16, 24, 40, 0.08);
+}
+
+[data-bs-theme='dark'] {
+  --vt-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  font-family: var(--vt-font);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Fascia scura: i token di testata e footer restano scuri anche nel tema chiaro. */
+.site-header,
+.footer {
+  --vt-bg: #0b0d10;
+  --vt-surface: #15181d;
+  --vt-surface-2: #1d2127;
+  --vt-text: #f5f5f7;
+  --vt-text-muted: #a1a1a6;
+  --vt-border: #2a2f37;
+  --vt-border-strong: #727985;
+  --vt-accent: #5b8cff;
+  --vt-accent-strong: #5b8cff;
+  --vt-accent-hover: #7ca3ff;
+  --vt-on-accent: #0b0d10;
+  color: var(--vt-text);
+}
+
+/* Bootstrap dichiara le variabili del menu sul menu stesso: i valori scuri vanno messi qui, non sulla fascia. */
+.site-header .dropdown-menu {
+  --bs-dropdown-bg: #15181d;
+  --bs-dropdown-color: #f5f5f7;
+  --bs-dropdown-link-color: #f5f5f7;
+  --bs-dropdown-link-hover-bg: #1d2127;
+  --bs-dropdown-link-hover-color: #f5f5f7;
+  --bs-dropdown-link-active-bg: #1d2127;
+  --bs-dropdown-link-active-color: #f5f5f7;
+  --bs-dropdown-border-color: #2a2f37;
+}
+
+.site-header {
+  background-color: var(--vt-surface);
+  border-bottom: 0;
+  padding-bottom: var(--vt-space-2) !important;
+}
+
+.site-header .navbar {
+  background-color: var(--vt-bg);
+  padding-block: var(--vt-space-3);
+}
+
+.nav-icon-link {
+  font-size: 0.8125rem !important;
+  font-weight: 500;
+}
+
+.nav-icon-link svg {
+  font-size: 1.25rem;
+}
+
+/*
+ * Ricerca: campo chiaro con bottone blu su fascia scura. Il bottone segue il tema della pagina
+ * (testo bianco su #2B62EB in chiaro, testo scuro su #5B8CFF in scuro: entrambi sopra 4,5:1).
+ */
+.search-bar {
+  background-color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-bar .search-input {
+  color: #1d1d1f;
+}
+
+.search-bar .search-input::placeholder {
+  color: #5f5f64;
+}
+
+.search-bar .searchButton {
+  background-color: #2b62eb;
+  color: #ffffff;
+  border-radius: 0;
+  padding-inline: var(--vt-space-4);
+}
+
+.search-bar .searchButton:hover {
+  background-color: #2457d6;
+  color: #ffffff;
+}
+
+[data-bs-theme='dark'] .search-bar {
+  border-color: #727985;
+}
+
+[data-bs-theme='dark'] .search-bar .searchButton {
+  background-color: #5b8cff;
+  color: #0b0d10;
+}
+
+[data-bs-theme='dark'] .search-bar .searchButton:hover {
+  background-color: #7ca3ff;
+  color: #0b0d10;
+}
+
+/* Navigazione: voci in sentence case, linea blu che cresce dal centro all'hover. */
+.site-nav {
+  justify-content: flex-start !important;
+  gap: var(--vt-space-6);
+  padding-top: var(--vt-space-2);
+}
+
+.site-nav .link,
+.site-nav #categoriesDropdown {
+  position: relative;
+  padding-block: var(--vt-space-2);
+  color: var(--vt-text) !important;
+  font-size: 0.9375rem;
+  font-weight: 500 !important;
+}
+
+.site-nav .link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--vt-accent);
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-nav .link::after {
+    transition: transform var(--vt-dur-base) var(--vt-ease-out);
+  }
+}
+
+.site-nav .link:hover::after,
+.site-nav .link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Home */
+.section-title {
+  font-size: 1.375rem !important;
+  margin-top: var(--vt-section-gap);
+  margin-bottom: var(--vt-space-3);
+}
+
+.d-flex:has(> .section-title) {
+  align-items: baseline;
+  margin-top: var(--vt-section-gap);
+}
+
+.d-flex > .section-title {
+  margin-top: 0;
+}
+
+/* Le categorie e i brand diventano una griglia di riquadri: il contenitore sparisce. */
+.categories {
+  background: transparent !important;
+  border-radius: 0;
+}
+
+.categories.py-5,
+.categories.py-3 {
+  padding-block: 0 !important;
+}
+
+.categories > .row {
+  --bs-gutter-x: var(--vt-space-3);
+  row-gap: var(--vt-space-3);
+}
+
+.categoryCard.p-0 {
+  padding-inline: calc(var(--vt-space-3) / 2) !important;
+}
+
+.categoryCard:hover {
+  background: transparent;
+}
+
+/* Riquadro: bordo sottile; all'hover bordo blu e un'ombra lievissima. */
+.categories .card,
+.card {
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  box-shadow: none;
+  overflow: hidden;
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    box-shadow var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.categories .card {
+  height: 100%;
+  margin-top: 0 !important;
+  padding: var(--vt-space-3);
+  border-color: var(--vt-border) !important;
+}
+
+.categoryCard:hover .card,
+a:hover > .card {
+  border-color: var(--vt-accent) !important;
+  box-shadow: var(--vt-hover-shadow);
+}
+
+a:has(> .card) {
+  text-decoration: none;
+}
+
+.categories .card-img-top {
+  background-color: var(--vt-media-bg);
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+.categories .card-title,
+.card .card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--vt-text);
+}
+
+.categories .card-title {
+  margin: var(--vt-space-2) 0 0;
+}
+
+.newsletter {
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.newsletter.card {
+  border: 1px solid var(--vt-border) !important;
+  box-shadow: none !important;
+}
+
+/* Scheda prodotto */
+.media-well {
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+.product-title {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* Box d'acquisto: prezzo, disponibilità, quantità e carrello in un solo riquadro. */
+.buy-box {
+  padding: var(--vt-space-5);
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+}
+
+.buy-box .price {
+  margin: 0 0 var(--vt-space-2);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--vt-text);
+}
+
+.buy-box .quantity-field {
+  width: 4rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.card .text-primary {
+  color: var(--vt-text) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.bg-body-tertiary {
+  background-color: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+/* Footer: stessa fascia scura della testata. */
+.footer {
+  background-color: var(--vt-bg);
+  border-top: 0;
+  font-size: 0.875rem;
+}
+
+.footer h5 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* Catalogo e ricerca */
+.product-link {
+  color: var(--vt-text);
+}
+
+.product-link:hover {
+  color: var(--vt-accent-strong);
+}
+
+.product-thumb {
+  background-color: var(--vt-media-bg);
+}
+
+.card-footer {
+  background: transparent;
+  border-top: 1px solid var(--vt-border);
+}
+
+.card-footer .product-link {
+  color: var(--vt-text-muted);
+}
+
+.card-footer .product-link:hover {
+  color: var(--vt-accent-strong);
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+/* Scheda prodotto: galleria, marca, recensioni */
+.image-button,
+.thumb-button {
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: zoom-in;
+}
+
+.thumb-button {
+  cursor: pointer;
+  border: 2px solid var(--vt-border);
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+  background-color: var(--vt-media-bg);
+}
+
+.thumb-button img {
+  object-fit: cover;
+}
+
+.thumb-button.is-selected {
+  border-color: var(--vt-accent);
+}
+
+.brand-chip {
+  display: inline-block;
+  padding: var(--vt-space-2) var(--vt-space-3);
+  background-color: var(--vt-media-bg);
+  border: 1px solid var(--vt-border);
+  border-radius: 8px;
+  line-height: 0;
+}
+
+/* Le stelle indicano un voto, non uno stato: seguono l'accento. */
+.rating-star {
+  color: var(--vt-accent-strong);
+  white-space: nowrap;
+}
+
+.rating-star:hover,
+.rating-star:focus-visible {
+  color: var(--vt-accent-hover);
+}
+
+/* Carrello e ordini */
+.cart-total {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Moduli di accesso, registrazione e riattivazione: una colonna leggibile anche su mobile. */
+.auth-form {
+  width: min(100%, 28rem);
+}
+
+/* Backoffice: pannello a riquadri */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--vt-space-3);
+}
+
+.admin-tile {
+  padding: var(--vt-space-4) !important;
+  color: var(--vt-text);
+  font-weight: 600;
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    box-shadow var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.admin-tile:hover,
+.admin-tile:focus-visible {
+  color: var(--vt-text);
+  border-color: var(--vt-accent);
+  box-shadow: var(--vt-hover-shadow);
+}
+
+/* Sottomenu delle categorie: pannello come il menu che lo apre, chiaro o scuro secondo la fascia. */
+.category-submenu {
+  min-width: 220px;
+  z-index: 1070;
+  background: var(--bs-dropdown-bg);
+  border: 1px solid var(--bs-dropdown-border-color);
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
+}
+
+/* Banner della home: titolo, sottocategorie come link e illustrazione piatta sui token. */
+.banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: var(--vt-space-6);
+  min-height: 360px;
+  padding: var(--vt-space-7) var(--vt-space-8);
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  color: var(--vt-text);
+}
+
+.banner-title {
+  margin: 0 0 var(--vt-space-4);
+  font-size: clamp(2rem, 1.2rem + 3vw, 3.25rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.banner-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  margin-top: var(--vt-space-4);
+  border-radius: 2px;
+  background: var(--vt-accent);
+}
+
+.banner-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vt-space-2);
+  margin: 0 0 var(--vt-space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.banner-links a {
+  display: inline-block;
+  padding: 6px 14px;
+  color: var(--vt-text);
+  text-decoration: none;
+  border: 1px solid var(--vt-border-strong);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  transition: border-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.banner-links a:hover,
+.banner-links a:focus-visible {
+  border-color: var(--vt-accent);
+}
+
+.banner-art {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+}
+
+.banner-art .art-line {
+  fill: none;
+  stroke: var(--vt-accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.banner-art .art-thin {
+  stroke-width: 3;
+}
+
+.banner-art .art-fill {
+  fill: var(--vt-surface-2);
+  stroke: var(--vt-border-strong);
+  stroke-width: 2;
+}
+
+.banner-art .art-soft {
+  fill: var(--vt-surface);
+  stroke: var(--vt-border-strong);
+  stroke-width: 2;
+}
+
+.banner-art .art-dot {
+  fill: var(--vt-accent);
+}
+
+@media (max-width: 767.98px) {
+  .banner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: var(--vt-space-6) var(--vt-space-5) var(--vt-space-7);
+    gap: var(--vt-space-5);
+  }
+
+  .banner-art {
+    max-height: 150px;
+    justify-self: start;
+  }
+}
+
+/* Logo nel footer: la parola per esteso, dove c'è spazio. */
+.footer-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  margin: 0 auto var(--vt-space-3);
+}

@@ -54,10 +54,11 @@ const ManageCategoriesComponent = () => {
             type='text'
             className='form-control'
             placeholder='Nome categoria'
+            aria-label='Nome categoria'
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
-          <button type='submit' className='btn btn-success'>
+          <button type='submit' className='btn btn-primary'>
             {formData.id ? 'Aggiorna' : 'Aggiungi'}
           </button>
           {formData.id && (

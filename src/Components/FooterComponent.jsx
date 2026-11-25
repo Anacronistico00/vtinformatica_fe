@@ -1,10 +1,11 @@
 import { Container, Row, Col } from 'react-bootstrap';
+import { BsFacebook, BsInstagram, BsTwitterX, BsYoutube } from 'react-icons/bs';
 
 const FooterComponent = () => {
   return (
     <footer className='footer mt-5 pt-5'>
       <Container>
-        <Row className='text-white text-start'>
+        <Row className='text-start'>
           <Col md={3} sm={6} className='mb-4'>
             <h5>Informazioni</h5>
             <ul className='list-unstyled'>
@@ -59,24 +60,31 @@ const FooterComponent = () => {
           <Col md={3} sm={6} className='mb-4'>
             <h5>Seguici</h5>
             <div className='d-flex gap-3'>
-              <a href='#'>
-                <i className='bi bi-facebook text-white fs-4'></i>
+              <a href='#' aria-label='Facebook'>
+                <BsFacebook className='fs-4' aria-hidden='true' />
               </a>
-              <a href='#'>
-                <i className='bi bi-instagram text-white fs-4'></i>
+              <a href='#' aria-label='Instagram'>
+                <BsInstagram className='fs-4' aria-hidden='true' />
               </a>
-              <a href='#'>
-                <i className='bi bi-twitter-x text-white fs-4'></i>
+              <a href='#' aria-label='X'>
+                <BsTwitterX className='fs-4' aria-hidden='true' />
               </a>
-              <a href='#'>
-                <i className='bi bi-youtube text-white fs-4'></i>
+              <a href='#' aria-label='YouTube'>
+                <BsYoutube className='fs-4' aria-hidden='true' />
               </a>
             </div>
           </Col>
         </Row>
       </Container>
-      <div className='footer-bottom text-center py-3 text-white mt-4'>
+      <div className='footer-bottom text-center py-3 mt-4'>
         <Container>
+          <img
+            src='/Images/logo-lockup.svg'
+            width='631'
+            height='118'
+            alt='VT Informatica'
+            className='footer-logo'
+          />
           <small>
             © {new Date().getFullYear()} VTInformatica - Tutti i diritti
             riservati.

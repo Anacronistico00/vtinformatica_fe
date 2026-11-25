@@ -84,13 +84,13 @@ const ManageProductsComponent = () => {
       </div>
 
       <div className='d-flex flex-wrap gap-2 mb-4'>
-        <Button variant={categoryId === null ? 'dark' : 'outline-dark'} size='sm' onClick={() => setCategoryId(null)}>
+        <Button variant={categoryId === null ? 'primary' : 'outline-primary'} size='sm' onClick={() => setCategoryId(null)}>
           Tutte
         </Button>
         {categories.map((category) => (
           <Button
             key={category.id}
-            variant={categoryId === category.id ? 'dark' : 'outline-dark'}
+            variant={categoryId === category.id ? 'primary' : 'outline-primary'}
             size='sm'
             onClick={() => setCategoryId(category.id)}
           >
@@ -110,7 +110,7 @@ const ManageProductsComponent = () => {
             {products.map((product) => (
               <Col xs={12} sm={6} md={4} lg={3} className='mb-4' key={product.id}>
                 <Card className='product-card h-100'>
-                  <Card.Img variant='top' src={product.productImages[0]?.imageUrl} className='product-image' />
+                  <Card.Img variant='top' alt='' src={product.productImages[0]?.imageUrl} className='product-image' />
                   <Card.Body className='card-body-custom'>
                     <div>
                       <Card.Title className='fs-6'>{product.name}</Card.Title>

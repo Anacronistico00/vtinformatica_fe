@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormControl, Button } from 'react-bootstrap';
+import { BsSearch } from 'react-icons/bs';
 
 const SearchBar = () => {
   const [search, setSearch] = useState('');
@@ -16,7 +17,7 @@ const SearchBar = () => {
 
   return (
     <Form
-      className='d-flex w-100 order-3 order-lg-2 bg-white'
+      className='search-bar d-flex w-100 order-3 order-lg-2'
       onSubmit={handleSearch}
     >
       <FormControl
@@ -25,13 +26,14 @@ const SearchBar = () => {
         aria-label='Search'
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className='border-0'
+        className='search-input border-0'
       />
       <Button
-        className='searchButton bg-white text-black border-0'
+        className='searchButton border-0'
+        aria-label='Cerca'
         type='submit'
       >
-        <i className='bi bi-search'></i>
+        <BsSearch aria-hidden='true' />
       </Button>
     </Form>
   );

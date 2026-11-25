@@ -1,6 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+// Dopo Bootstrap: i token ridefiniscono le sue variabili; la direzione grafica (theme.css) viene per ultima.
+import './styles/tokens.css';
+import './App.css';
+import './styles/fonts.css';
+import './styles/theme.css';
+import { MotionConfig } from 'framer-motion';
 import HomeComponent from './Components/HomeComponent';
 import LoginComponent from './Components/Auth/LoginComponent';
 import RegisterComponent from './Components/Auth/RegisterComponent';
@@ -20,7 +26,6 @@ import OrdersComponent from './Components/OrdersComponent.jsx';
 import OrderInfoComponent from './Components/OrderInfoComponent.jsx';
 import AdminComponent from './Components/Admin/AdminComponent.jsx';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ScrollToTop from './Utils/ScrollToTop.js';
 import AllManufacturersComponent from './Components/AllManufacturersComponent.jsx';
 import ManageProductsComponent from './Components/Admin/ManageProductsComponent.jsx';
@@ -33,10 +38,13 @@ import WelcomeBackComponent from './Components/Auth/WelcomeBackComponent.jsx';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <MainApp />
-    </BrowserRouter>
+    // reducedMotion="user": con prefers-reduced-motion le animazioni di Framer Motion si fermano.
+    <MotionConfig reducedMotion='user'>
+      <BrowserRouter>
+        <ScrollToTop />
+        <MainApp />
+      </BrowserRouter>
+    </MotionConfig>
   );
 };
 const MainApp = () => {

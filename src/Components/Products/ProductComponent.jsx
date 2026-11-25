@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BsArrowDownShort, BsArrowUpShort, BsDiagram3, BsTag } from 'react-icons/bs';
 
 const ProductGrid = ({ products }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -68,9 +69,9 @@ const ProductGrid = ({ products }) => {
       <div className='mb-3 text-end'>
         <button className='btn' onClick={() => setShowFilters(!showFilters)}>
           {showFilters ? (
-            <i className='bi bi-arrow-up-short'></i>
+            <BsArrowUpShort aria-hidden='true' />
           ) : (
-            <i className='bi bi-arrow-down-short'></i>
+            <BsArrowDownShort aria-hidden='true' />
           )}
           {showFilters ? ' Nascondi filtri' : ' Filtra per...'}
         </button>
@@ -79,8 +80,9 @@ const ProductGrid = ({ products }) => {
       {showFilters && (
         <div className='row mb-4'>
           <div className='col-md-3'>
-            <label className='form-label'>Ordina per</label>
+            <label className='form-label' htmlFor='filter-sort'>Ordina per</label>
             <select
+              id='filter-sort'
               className='form-select'
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
@@ -94,8 +96,9 @@ const ProductGrid = ({ products }) => {
           </div>
 
           <div className='col-md-3'>
-            <label className='form-label'>Prezzo minimo (€)</label>
+            <label className='form-label' htmlFor='filter-min'>Prezzo minimo (€)</label>
             <input
+              id='filter-min'
               type='number'
               className='form-control'
               value={minPrice}
@@ -105,8 +108,9 @@ const ProductGrid = ({ products }) => {
           </div>
 
           <div className='col-md-3'>
-            <label className='form-label'>Prezzo massimo (€)</label>
+            <label className='form-label' htmlFor='filter-max'>Prezzo massimo (€)</label>
             <input
+              id='filter-max'
               type='number'
               className='form-control'
               value={maxPrice}
@@ -127,20 +131,19 @@ const ProductGrid = ({ products }) => {
           <div className='row row-cols-1 row-cols-md-3 g-4'>
             {currentProducts.map((product) => (
               <div key={product.id} className='col'>
-                <div className='card h-100 shadow-sm'>
+                <div className='card h-100'>
                   <Link
                     to={`/product/${product.id}`}
                     state={{ product }}
-                    className='text-decoration-none text-dark'
+                    className='text-decoration-none product-link'
                   >
                     <img
                       src={product.productImages[0]?.imageUrl}
                       alt={product.name}
-                      className='card-img-top img-fluid'
+                      className='card-img-top img-fluid product-thumb'
                       style={{
                         objectFit: 'contain',
                         height: '200px',
-                        backgroundColor: '#f8f9fa',
                       }}
                     />
                     <div className='card-body'>
@@ -155,7 +158,7 @@ const ProductGrid = ({ products }) => {
                       </p>
                     </div>
                   </Link>
-                  <div className='card-footer d-flex justify-content-between align-items-center bg-white'>
+                  <div className='card-footer d-flex justify-content-between align-items-center'>
                     <strong className='text-primary fs-5'>
                       {product.price.toFixed(2)} €
                     </strong>
@@ -163,18 +166,18 @@ const ProductGrid = ({ products }) => {
                       <div>
                         <Link
                           to={`/products/subcategory/${product.subCategory.id}`}
-                          className='text-decoration-none text-dark'
+                          className='text-decoration-none product-link'
                         >
-                          <i className='bi bi-tag'></i>{' '}
+                          <BsTag aria-hidden='true' />{' '}
                           {product.subCategory.name}
                         </Link>
                       </div>
                       <div>
                         <Link
                           to={`/products/category/${product.category.id}`}
-                          className='text-decoration-none text-dark'
+                          className='text-decoration-none product-link'
                         >
-                          <i className='bi bi-diagram-3'></i>{' '}
+                          <BsDiagram3 aria-hidden='true' />{' '}
                           {product.category.name}
                         </Link>
                       </div>

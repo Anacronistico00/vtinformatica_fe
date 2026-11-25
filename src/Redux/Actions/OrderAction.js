@@ -23,7 +23,7 @@ export const CreateOrder = ({ customerComment } = {}) => {
         type: CREATE_ORDER_SUCCESS,
         payload: data,
       });
-      toast.success('Ordine creato con successo!');
+      toast.success('Ordine creato.');
       dispatch(getCart());
     } catch (error) {
       const message = messageFor(error, error.message || "Errore durante la creazione dell'ordine");
@@ -74,7 +74,7 @@ export const deleteOrder = (id) => {
         payload: data,
       });
 
-      toast.success('Ordine annullato con successo!');
+      toast.success('Ordine annullato.');
       dispatch(fetchOrders());
     } catch (error) {
       const message = messageFor(error, "Errore nell'annullamento ordine.");
@@ -103,7 +103,7 @@ export const restoreOrder = (id) => {
         payload: data,
       });
 
-      toast.success('Ordine ripristinato con successo!');
+      toast.success('Ordine ripristinato.');
       dispatch(fetchOrders());
     } catch (error) {
       const message = messageFor(error, 'Errore nel ripristino ordine.');

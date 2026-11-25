@@ -120,7 +120,7 @@ const ProductFormModal = ({ show, product, subcategories, manufacturers, onSubmi
                 onChange={(e) => setImage(index, e.target.value)}
               />
               <Button
-                variant='danger'
+                variant='outline-danger'
                 size='sm'
                 onClick={() =>
                   setForm({ ...form, productImages: form.productImages.filter((_, i) => i !== index) })
@@ -133,7 +133,7 @@ const ProductFormModal = ({ show, product, subcategories, manufacturers, onSubmi
           ))}
           <div className='d-flex align-items-center justify-content-end'>
             <Button
-              variant='info'
+              variant='outline-primary'
               size='sm'
               className='mb-3'
               onClick={() => setForm({ ...form, productImages: [...form.productImages, { imageUrl: '' }] })}
@@ -142,7 +142,7 @@ const ProductFormModal = ({ show, product, subcategories, manufacturers, onSubmi
             </Button>
           </div>
 
-          <Button variant='success' type='submit'>
+          <Button variant='primary' type='submit'>
             {product ? 'Aggiorna' : 'Aggiungi'}
           </Button>
         </Form>

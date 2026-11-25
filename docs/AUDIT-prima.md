@@ -198,6 +198,17 @@ Branch `test/m4g-e2e`. Playwright (`e2e/`, `npm run e2e`, istruzioni in
 1. `/orders` non carica gli ordini da sé (li carica la pagina Account): aperta o
    ricaricata direttamente può mostrare un elenco vecchio o vuoto.
 2. Seller: il BE gli consente prodotti e categorie, il backoffice FE è solo Admin.
+3. Logo ASUS: nel DB `Manufacturers.ManufacturerLogo` (id 4) punta a
+   `https://images.seeklogo.com/logo-png/1/1/asus-logo-png_seeklogo-12597.png`, che non
+   risponde: in home e in `/manufacturers` si vede l'immagine rotta. Va corretto nei dati con
+   lo script del BE `docs/sql/correggi-dati-catalogo.sql`, non nel FE.
+4. Anche il logo di Noctua è un'immagine rotta nei dati, e quelli di ThermalRight e Seagate sono
+   chiari su fondo chiaro, quasi invisibili (nel FE stanno su un pozzetto chiaro, ma restano
+   poco leggibili). Stessa correzione dei dati del punto 3.
+5. ~~La voce "Categorie" della barra non carica le categorie da sola~~ Chiuso nel restyle: le carica
+   il layout, quindi il menu c'è su qualsiasi pagina anche al primo accesso diretto.
+6. ~~Il carrello non mostrava un riscontro all'aggiunta di un prodotto~~ Chiuso nel restyle: toast di
+   successo. Il bottone "Aggiungi al carrello" è disabilitato con quantità non valida o scorta zero.
 
 ## Stato avanzamento – E2E in CI (aggiornato 2026-11-25)
 
