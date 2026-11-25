@@ -141,3 +141,14 @@ for (const scheme of SCHEMES) {
     await checkA11y(page, `backoffice/nuovo prodotto (${scheme})`);
   });
 }
+
+for (const scheme of SCHEMES) {
+  test(`a11y menu Categorie e sottomenu, all'accesso diretto (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto(`/product/${readState().products.reviews}`);
+    await page.locator('.site-nav').getByRole('button', { name: 'Categorie' }).click();
+    await page.locator('.categoryDiv').first().hover();
+    await expect(page.getByRole('link', { name: 'CPU' })).toBeVisible();
+    await checkA11y(page, `menu Categorie con sottomenu (${scheme})`);
+  });
+}

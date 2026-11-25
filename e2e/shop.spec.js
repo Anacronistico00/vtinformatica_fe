@@ -15,6 +15,7 @@ test('login → carrello → checkout → ordine in "i miei ordini"', async ({ p
   await expect(page.getByRole('heading', { name: 'E2E Checkout' })).toBeVisible();
   await page.getByRole('button', { name: '+' }).click();
   await page.getByRole('button', { name: 'Aggiungi al carrello' }).click();
+  await expect(toast(page, 'Prodotto aggiunto al carrello.')).toBeVisible();
 
   await page.goto('/cart');
   await expect(page.getByText('E2E Checkout')).toBeVisible();
@@ -48,4 +49,22 @@ test('checkout con stock diventato insufficiente → 409 con il motivo', async (
 
   await expect(toast(page, 'lo stock del prodotto non è sufficiente')).toBeVisible();
   await expect(page.getByText('E2E Stock basso')).toBeVisible();
+});
+
+test('il menu Categorie funziona anche aprendo direttamente una pagina interna', async ({ page }) => {
+  const { products } = readState();
+  await page.goto(`/product/${products.checkout}`);
+  await page.locator('.site-nav').getByRole('button', { name: 'Categorie' }).click();
+  await expect(page.getByRole('link', { name: /Componenti PC/ })).toBeVisible();
+});
+
+test('"Aggiungi al carrello" resta disabilitato con una quantità non valida', async ({ page }) => {
+  const { products } = readState();
+  await page.goto(`/product/${products.lowStock}`);
+  const add = page.getByRole('button', { name: 'Aggiungi al carrello' });
+  await expect(add).toBeEnabled();
+  await page.getByRole('spinbutton', { name: 'Quantità' }).fill('0');
+  await expect(add).toBeDisabled();
+  await page.getByRole('spinbutton', { name: 'Quantità' }).fill('3');
+  await expect(add).toBeDisabled();
 });
