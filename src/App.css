@@ -307,7 +307,7 @@ body {
 .manufacturerLogoAdmin {
   width: 120px;
   height: 50px;
-  background-color: var(--vt-surface-2);
+  background-color: var(--vt-media-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -340,7 +340,8 @@ body {
 
 .product-image {
   height: 180px;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: var(--vt-media-bg);
   border-bottom: 1px solid var(--vt-border);
 }
 
