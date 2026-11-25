@@ -19,6 +19,7 @@ import ThemeToggle from './ThemeToggle';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCart } from '../../Redux/Actions/CartActions';
+import { fetchCategories } from '../../Redux/Actions/CategoriesActions';
 
 const NavBarComponent = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,11 @@ const NavBarComponent = () => {
 
   useEffect(() => {
     dispatch(getCart());
+  }, [dispatch]);
+
+  // Le categorie servono al menu di ogni pagina: le carica il layout, non la home.
+  useEffect(() => {
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const user = useSelector((state) => state.auth.user);

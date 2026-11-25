@@ -89,18 +89,20 @@ describe('catalog pages', () => {
     expect(screen.getByRole('link', { name: 'ASUS' })).toHaveAttribute('href', '/products/manufacturer/4');
   });
 
-  it('home categories: loads the categories once', async () => {
+  it('home categories: shows the ones the layout already loaded, without asking again', async () => {
     const calls = vi.fn();
     server.use(
       http.get(`${API}/Category`, () => {
         calls();
-        return HttpResponse.json([{ id: 1, name: 'Componenti PC', subCategories: [] }]);
+        return HttpResponse.json([]);
       })
     );
 
-    renderWithProviders(<HomeCategoryComponent />);
+    renderWithProviders(<HomeCategoryComponent />, {
+      preloadedState: { categories: { categories: [{ id: 1, name: 'Componenti PC', subCategories: [] }], category: null, loading: false, error: null } },
+    });
 
     expect(await screen.findByText('Componenti PC')).toBeInTheDocument();
-    expect(calls).toHaveBeenCalledTimes(1);
+    expect(calls).not.toHaveBeenCalled();
   });
 });
