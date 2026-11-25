@@ -17,6 +17,8 @@
   --vt-border-strong: #8a8a90;
   --vt-accent: #2f6bff;
   --vt-accent-rgb: 47, 107, 255;
+  --vt-accent-strong-rgb: 43, 98, 235;
+  --vt-accent-hover-rgb: 36, 87, 214;
   --vt-accent-strong: #2b62eb;
   --vt-accent-hover: #2457d6;
   --vt-on-accent: #ffffff;
@@ -39,6 +41,8 @@
   --vt-border-strong: #727985;
   --vt-accent: #5b8cff;
   --vt-accent-rgb: 91, 140, 255;
+  --vt-accent-strong-rgb: 91, 140, 255;
+  --vt-accent-hover-rgb: 124, 163, 255;
   --vt-accent-strong: #5b8cff;
   --vt-accent-hover: #7ca3ff;
   --vt-on-accent: #0b0d10;
@@ -72,10 +76,11 @@
   --bs-tertiary-bg: var(--vt-surface-2);
   --bs-border-color: var(--vt-border);
   --bs-primary: var(--vt-accent-strong);
-  --bs-primary-rgb: var(--vt-accent-rgb);
+  --bs-primary-rgb: var(--vt-accent-strong-rgb);
   --bs-primary-text-emphasis: var(--vt-accent-strong);
   --bs-link-color: var(--vt-accent-strong);
-  --bs-link-color-rgb: var(--vt-accent-rgb);
+  --bs-link-color-rgb: var(--vt-accent-strong-rgb);
+  --bs-link-hover-color-rgb: var(--vt-accent-hover-rgb);
   --bs-link-hover-color: var(--vt-accent-hover);
   --bs-success: var(--vt-success);
   --bs-danger: var(--vt-danger);
@@ -193,6 +198,77 @@ textarea {
   --bs-pagination-disabled-color: var(--vt-text-muted);
   --bs-pagination-disabled-bg: var(--vt-surface);
   --bs-pagination-disabled-border-color: var(--vt-border);
+}
+
+.list-group {
+  --bs-list-group-bg: var(--vt-surface);
+  --bs-list-group-color: var(--vt-text);
+  --bs-list-group-border-color: var(--vt-border);
+}
+
+.modal {
+  --bs-modal-bg: var(--vt-surface);
+  --bs-modal-color: var(--vt-text);
+  --bs-modal-border-color: var(--vt-border);
+  --bs-modal-header-border-color: var(--vt-border);
+}
+
+/* Frecce dei caroselli: scure su fondo chiaro, chiare su fondo scuro. */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1) grayscale(100%);
+}
+
+[data-bs-theme='dark'] .carousel-control-prev-icon,
+[data-bs-theme='dark'] .carousel-control-next-icon {
+  filter: none;
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--vt-danger);
+  --bs-btn-border-color: var(--vt-danger);
+  --bs-btn-color: var(--vt-on-accent);
+  --bs-btn-hover-bg: var(--vt-danger);
+  --bs-btn-hover-border-color: var(--vt-danger);
+  --bs-btn-hover-color: var(--vt-on-accent);
+  --bs-btn-active-bg: var(--vt-danger);
+  --bs-btn-active-border-color: var(--vt-danger);
+  --bs-btn-active-color: var(--vt-on-accent);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--vt-danger);
+  --bs-btn-border-color: var(--vt-danger);
+  --bs-btn-hover-bg: var(--vt-danger);
+  --bs-btn-hover-border-color: var(--vt-danger);
+  --bs-btn-hover-color: var(--vt-on-accent);
+  --bs-btn-active-bg: var(--vt-danger);
+  --bs-btn-active-border-color: var(--vt-danger);
+  --bs-btn-active-color: var(--vt-on-accent);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--vt-success);
+  --bs-btn-border-color: var(--vt-success);
+  --bs-btn-color: var(--vt-on-accent);
+  --bs-btn-hover-bg: var(--vt-success);
+  --bs-btn-hover-border-color: var(--vt-success);
+  --bs-btn-hover-color: var(--vt-on-accent);
+  --bs-btn-active-bg: var(--vt-success);
+  --bs-btn-active-border-color: var(--vt-success);
+  --bs-btn-active-color: var(--vt-on-accent);
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--vt-surface-2);
+  --bs-btn-border-color: var(--vt-border-strong);
+  --bs-btn-color: var(--vt-text);
+  --bs-btn-hover-bg: var(--vt-border);
+  --bs-btn-hover-border-color: var(--vt-border-strong);
+  --bs-btn-hover-color: var(--vt-text);
+  --bs-btn-active-bg: var(--vt-border);
+  --bs-btn-active-border-color: var(--vt-border-strong);
+  --bs-btn-active-color: var(--vt-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
