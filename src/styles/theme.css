@@ -410,3 +410,29 @@ a:has(> .card) {
 .auth-form {
   width: min(100%, 28rem);
 }
+
+/* Backoffice: pannello a riquadri */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--vt-space-3);
+}
+
+.admin-tile {
+  padding: var(--vt-space-4) !important;
+  color: var(--vt-text);
+  font-weight: 600;
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    box-shadow var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.admin-tile:hover,
+.admin-tile:focus-visible {
+  color: var(--vt-text);
+  border-color: var(--vt-accent);
+  box-shadow: var(--vt-hover-shadow);
+}
