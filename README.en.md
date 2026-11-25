@@ -30,7 +30,7 @@ flowchart LR
 
 ## Running locally
 
-Prerequisites: Node 22 and the API running (see the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md): database, JWT key via User Secrets, first admin).
+Prerequisites: Node 22 and the API running (see the [BE README](https://github.com/Anacronistico00/VTInformatica#readme): database, JWT key via User Secrets, first admin).
 
 1. **Clone both repos** side by side:
 
@@ -129,11 +129,11 @@ FE part, recomputed from the tags `v1-epicode` and `v2-m4` (clean worktree per t
 
 The E2E tests only run locally. Audit items closed: `VITE_API_URL` instead of the hardcoded URL, a single `apiClient`, token in one place, 401 → logout, `/me` routes instead of the email in the URL, tests and CI, lint and `npm audit` at 0, back office with server-side pagination and `expectedQuantity` (details in [`docs/AUDIT-prima.md`](docs/AUDIT-prima.md), in Italian).
 
-The full table, with the BE numbers per tag (`v1-epicode` → `v2-m4-be`), is in the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md#before--after).
+The full table, with the BE numbers per tag (`v1-epicode` → `v2-m4-be`), is in the [BE README](https://github.com/Anacronistico00/VTInformatica#readme).
 
 ## How I worked with AI
 
-Short version for the FE. The full story (plan review with a second model, examples of corrections, migrations, autonomy with a deny list) is in the [BE README](https://github.com/Anacronistico00/VTInformatica/blob/develop/README.en.md#how-i-worked-with-ai).
+Short version for the FE. The full story (plan review with a second model, examples of corrections, migrations, autonomy with a deny list) is in the [BE README](https://github.com/Anacronistico00/VTInformatica#readme).
 
 - **Initial audit as the source of truth** ([`docs/AUDIT-prima.md`](docs/AUDIT-prima.md)): the baseline is never rewritten, each slice appends a status section.
 - **Slices M4a–M4g.** One task, one branch, small commits, PR into `develop` with green CI. The plan is in [`docs/PIANO-M4.md`](docs/PIANO-M4.md) (in Italian).
