@@ -78,6 +78,7 @@ const ManageManufacturersComponent = () => {
             type='text'
             className='form-control'
             placeholder='Nome produttore'
+            aria-label='Nome produttore'
             value={formData.manufacturerName}
             onChange={(e) =>
               setFormData({ ...formData, manufacturerName: e.target.value })
@@ -89,13 +90,14 @@ const ManageManufacturersComponent = () => {
             type='text'
             className='form-control'
             placeholder='Logo produttore (URL)'
+            aria-label='Logo produttore (URL)'
             value={formData.manufacturerLogo}
             onChange={(e) =>
               setFormData({ ...formData, manufacturerLogo: e.target.value })
             }
           />
         </div>
-        <button type='submit' className='btn btn-success'>
+        <button type='submit' className='btn btn-primary'>
           {formData.id ? 'Aggiorna' : 'Aggiungi'}
         </button>
         {formData.id && (

@@ -96,7 +96,7 @@ const ManageUsersComponent = () => {
                 <td>
                   {canAct(user) &&
                     (user.deactivationReason === 'Admin' ? (
-                      <Button size='sm' variant='outline-success' onClick={() => revoke(user)}>
+                      <Button size='sm' variant='outline-primary' onClick={() => revoke(user)}>
                         Revoca sospensione
                       </Button>
                     ) : (
