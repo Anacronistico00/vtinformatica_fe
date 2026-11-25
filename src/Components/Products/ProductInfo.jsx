@@ -49,7 +49,11 @@ const ProductDetail = ({ product }) => {
     }
   };
 
+  // Intero, almeno 1 e non oltre la scorta: con scorta zero nessuna quantità è valida.
+  const validQuantity = Number.isInteger(quantity) && quantity >= 1 && quantity <= product.quantity;
+
   const handleAddToCart = () => {
+    if (!validQuantity) return;
     dispatch(addToCart(product.id, quantity));
   };
 
@@ -167,6 +171,7 @@ const ProductDetail = ({ product }) => {
               <button
                 className='btn btn-primary flex-grow-1 flex-sm-grow-0'
                 onClick={handleAddToCart}
+                disabled={!validQuantity}
               >
                 Aggiungi al carrello
               </button>
