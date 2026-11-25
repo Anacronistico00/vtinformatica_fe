@@ -353,3 +353,49 @@ a:has(> .card) {
 .form-label {
   font-weight: 500;
 }
+
+/* Scheda prodotto: galleria, marca, recensioni */
+.image-button,
+.thumb-button {
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: zoom-in;
+}
+
+.thumb-button {
+  cursor: pointer;
+  border: 2px solid var(--vt-border);
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+  background-color: var(--vt-media-bg);
+}
+
+.thumb-button img {
+  object-fit: cover;
+}
+
+.thumb-button.is-selected {
+  border-color: var(--vt-accent);
+}
+
+.brand-chip {
+  display: inline-block;
+  padding: var(--vt-space-2) var(--vt-space-3);
+  background-color: var(--vt-media-bg);
+  border: 1px solid var(--vt-border);
+  border-radius: 8px;
+  line-height: 0;
+}
+
+/* Le stelle indicano un voto, non uno stato: seguono l'accento. */
+.rating-star {
+  color: var(--vt-accent-strong);
+  white-space: nowrap;
+}
+
+.rating-star:hover,
+.rating-star:focus-visible {
+  color: var(--vt-accent-hover);
+}
