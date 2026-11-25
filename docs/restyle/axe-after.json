@@ -1,0 +1,342 @@
+{
+  "light": {
+    "public-home": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-category": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-subcategory": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-manufacturer": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-search": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-product": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-cart-empty": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-login": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-register": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-reactivate": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-not-authorized": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-not-found": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-info": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-cart": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-orders": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-order-detail": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-product-reviews": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-dashboard": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-products": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-categories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-subcategories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-users": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    }
+  },
+  "dark": {
+    "public-home": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-category": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-subcategory": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-manufacturer": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-search": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-product": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-cart-empty": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-login": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-register": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-reactivate": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-not-authorized": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "public-not-found": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-info": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-cart": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-orders": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-order-detail": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "account-product-reviews": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-dashboard": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-products": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-categories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-subcategories": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-manufacturers": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    },
+    "admin-users": {
+      "minor": 0,
+      "moderate": 0,
+      "serious": 0,
+      "critical": 0,
+      "rules": []
+    }
+  }
+}

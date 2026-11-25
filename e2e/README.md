@@ -65,3 +65,13 @@ prodotto `E2E Recensioni`. Fotografa a pagina intera le pagine pubbliche, accoun
 a 1440 px (`desktop`) e 390 px (`mobile`), con `prefers-color-scheme` = `SHOTS_THEME`.
 I file si chiamano `<gruppo>-<pagina>-<viewport>-<tema>.png`. Data e numero dell'ordine
 cambiano a ogni esecuzione, il resto della pagina no.
+
+## Rapporto axe prima/dopo
+
+```bash
+AXE_LABEL=after SHOTS_THEME=light npx playwright test -c playwright.screenshots.config.js --project desktop -g axe
+```
+
+Conta le violazioni axe (WCAG 2.1 A e AA) per gravità sulle stesse 24 pagine delle foto e scrive
+`docs/restyle/axe-<AXE_LABEL>.json`. Non fallisce mai: serve al confronto (`axe-before.json` è stato
+misurato sul codice precedente al restyle). I controlli che bloccano la CI stanno in `e2e/a11y.spec.js`.

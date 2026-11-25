@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import { USERS } from '../support/env.js';
 import { readState } from '../support/state.js';
 import { loginAndWait } from '../support/ui.js';
+import { accountPages, adminPages, publicPages } from './pageList.js';
 
 // Una foto a pagina intera per ogni pagina, per viewport (project) e tema (SHOTS_THEME).
 // Nome file: <gruppo>-<pagina>-<viewport>-<tema>.png, stabile tra "prima", direzioni e "dopo".
@@ -46,47 +47,15 @@ const shoot = async (page, testInfo, name, path) => {
 };
 
 test('pagine pubbliche', async ({ page }, testInfo) => {
-  const { products } = readState();
-  const pages = [
-    ['public-home', '/'],
-    ['public-category', '/products/category/1'],
-    ['public-subcategory', '/products/subcategory/1'],
-    ['public-manufacturers', '/manufacturers'],
-    ['public-manufacturer', '/products/manufacturer/1'],
-    ['public-search', '/search/E2E'],
-    ['public-product', `/product/${products.reviews}`],
-    ['public-cart-empty', '/cart'],
-    ['public-login', '/account'],
-    ['public-register', '/register'],
-    ['public-reactivate', '/reactivate'],
-    ['public-not-authorized', '/not-authorized'],
-    ['public-not-found', '/pagina-inesistente'],
-  ];
-  for (const [name, path] of pages) await shoot(page, testInfo, name, path);
+  for (const [name, path] of publicPages(readState())) await shoot(page, testInfo, name, path);
 });
 
 test('pagine account', async ({ page }, testInfo) => {
-  const { products, orderId } = readState();
   await loginAndWait(page, USERS.buyer);
-  const pages = [
-    ['account-info', '/accountInfo'],
-    ['account-cart', '/cart'],
-    ['account-orders', '/orders'],
-    ['account-order-detail', `/orderInfo/${orderId}`],
-    ['account-product-reviews', `/product/${products.reviews}`],
-  ];
-  for (const [name, path] of pages) await shoot(page, testInfo, name, path);
+  for (const [name, path] of accountPages(readState())) await shoot(page, testInfo, name, path);
 });
 
 test('pagine admin', async ({ page }, testInfo) => {
   await loginAndWait(page, USERS.admin);
-  const pages = [
-    ['admin-dashboard', '/admin'],
-    ['admin-products', '/admin/products'],
-    ['admin-categories', '/admin/categories'],
-    ['admin-subcategories', '/admin/subcategories'],
-    ['admin-manufacturers', '/admin/manufacturers'],
-    ['admin-users', '/admin/users'],
-  ];
-  for (const [name, path] of pages) await shoot(page, testInfo, name, path);
+  for (const [name, path] of adminPages()) await shoot(page, testInfo, name, path);
 });
