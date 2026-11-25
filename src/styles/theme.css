@@ -166,10 +166,6 @@ h5 {
 }
 
 /* Home */
-.carousel-item img {
-  border-radius: var(--vt-radius-card);
-}
-
 .section-title {
   font-size: 1.375rem !important;
   margin-top: var(--vt-section-gap);
@@ -451,4 +447,108 @@ a:has(> .card) {
   border: 1px solid var(--bs-dropdown-border-color);
   border-radius: var(--vt-radius-card);
   box-shadow: var(--vt-shadow);
+}
+
+/* Banner della home: titolo, sottocategorie come link e illustrazione piatta sui token. */
+.banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: var(--vt-space-6);
+  min-height: 360px;
+  padding: var(--vt-space-7) var(--vt-space-8);
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  color: var(--vt-text);
+}
+
+.banner-title {
+  margin: 0 0 var(--vt-space-4);
+  font-size: clamp(2rem, 1.2rem + 3vw, 3.25rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.banner-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  margin-top: var(--vt-space-4);
+  border-radius: 2px;
+  background: var(--vt-accent);
+}
+
+.banner-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vt-space-2);
+  margin: 0 0 var(--vt-space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.banner-links a {
+  display: inline-block;
+  padding: 6px 14px;
+  color: var(--vt-text);
+  text-decoration: none;
+  border: 1px solid var(--vt-border-strong);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  transition: border-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.banner-links a:hover,
+.banner-links a:focus-visible {
+  border-color: var(--vt-accent);
+}
+
+.banner-art {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+}
+
+.banner-art .art-line {
+  fill: none;
+  stroke: var(--vt-accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.banner-art .art-thin {
+  stroke-width: 3;
+}
+
+.banner-art .art-fill {
+  fill: var(--vt-surface-2);
+  stroke: var(--vt-border-strong);
+  stroke-width: 2;
+}
+
+.banner-art .art-soft {
+  fill: var(--vt-surface);
+  stroke: var(--vt-border-strong);
+  stroke-width: 2;
+}
+
+.banner-art .art-dot {
+  fill: var(--vt-accent);
+}
+
+@media (max-width: 767.98px) {
+  .banner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: var(--vt-space-6) var(--vt-space-5) var(--vt-space-7);
+    gap: var(--vt-space-5);
+  }
+
+  .banner-art {
+    max-height: 150px;
+    justify-self: start;
+  }
 }
