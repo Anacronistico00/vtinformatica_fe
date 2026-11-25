@@ -1,0 +1,206 @@
+/*
+ * Direzione A · Vetrina (DESIGN.md, sezione Direzioni).
+ * Ariosa, card senza bordo con raggio 20 e ombra morbida, barra chiara con ricerca a pillola.
+ */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vt-font);
+  --bs-border-radius: 12px;
+  --vt-radius-card: 20px;
+  --vt-section-gap: var(--vt-space-8);
+}
+
+body {
+  font-family: var(--vt-font);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Barra */
+.site-header {
+  padding-top: var(--vt-space-2);
+}
+
+.site-header .navbar {
+  padding-top: var(--vt-space-3);
+}
+
+.nav-icon-link {
+  font-size: 0.8125rem !important;
+  font-weight: 500;
+}
+
+.nav-icon-link svg {
+  font-size: 1.25rem;
+  margin-bottom: 2px;
+}
+
+.search-bar {
+  border-color: transparent;
+  border-radius: 999px;
+  background-color: var(--vt-surface-2);
+  padding-inline: var(--vt-space-3);
+}
+
+.site-nav {
+  padding-top: var(--vt-space-3);
+}
+
+.site-nav .link,
+.site-nav #categoriesDropdown {
+  color: var(--vt-text-muted) !important;
+  font-size: 0.9375rem;
+  font-weight: 500 !important;
+  transition: color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.site-nav .link:hover,
+.site-nav #categoriesDropdown:hover {
+  color: var(--vt-text) !important;
+}
+
+/* Home */
+.carousel-item img {
+  border-radius: var(--vt-radius-card);
+}
+
+.section-title {
+  font-size: 1.75rem !important;
+  margin-top: var(--vt-section-gap);
+  margin-bottom: var(--vt-space-5);
+}
+
+/* Titolo con un link accanto ("Visualizza tutti"): lo spazio sopra va alla riga, non al solo titolo. */
+.d-flex:has(> .section-title) {
+  align-items: baseline;
+  margin-top: var(--vt-section-gap);
+}
+
+.d-flex > .section-title {
+  margin-top: 0;
+}
+
+.categories {
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
+}
+
+.categories .card-img-top {
+  background-color: var(--vt-media-bg);
+  border-radius: 16px;
+  object-fit: contain;
+}
+
+.categories .card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: var(--vt-space-3);
+  color: var(--vt-text);
+}
+
+.categoryCard {
+  border-radius: 16px;
+  transition:
+    background-color var(--vt-dur-fast) var(--vt-ease-out),
+    transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.categoryCard:hover {
+  transform: translateY(-2px);
+}
+
+.newsletter {
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.newsletter.card {
+  box-shadow: var(--vt-shadow) !important;
+}
+
+/* Scheda prodotto */
+.media-well {
+  border: 0 !important;
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+h2.fw-bold {
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  font-weight: 600 !important;
+  letter-spacing: -0.025em;
+}
+
+h4.text-primary {
+  font-size: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  border-radius: 999px;
+  padding-inline: var(--vt-space-5);
+  font-weight: 500;
+  transition:
+    background-color var(--vt-dur-fast) var(--vt-ease-out),
+    transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.bg-body-tertiary {
+  background-color: var(--vt-surface) !important;
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: var(--vt-shadow) !important;
+}
+
+.card {
+  border: 0;
+  border-radius: var(--vt-radius-card);
+  box-shadow: var(--vt-shadow);
+  overflow: hidden;
+  transition: transform var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+a:hover > .card {
+  transform: translateY(-2px);
+}
+
+a:has(> .card) {
+  text-decoration: none;
+}
+
+/* Le voci dentro un contenitore non sono card a loro volta: niente ombra né fondo. */
+.categories .card {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.card-title a,
+a .card-title {
+  text-decoration: none;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--vt-bg);
+  font-size: 0.875rem;
+}
+
+.footer h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
