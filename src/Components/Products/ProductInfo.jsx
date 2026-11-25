@@ -118,7 +118,7 @@ const ProductDetail = ({ product }) => {
 
         {/* Info prodotto */}
         <div className='col-lg-7'>
-          <h2 className='fw-bold mb-3'>{product.name}</h2>
+          <h2 className='product-title mb-3'>{product.name}</h2>
           <div className='mb-3'>
             <img
               src={product.manufacturer.manufacturerLogo}
@@ -129,11 +129,10 @@ const ProductDetail = ({ product }) => {
 
           <p className='text-muted mb-3'>{product.description}</p>
 
-          <h4 className='text-primary fw-bold mb-3'>
-            {product.price.toFixed(2)} €
-          </h4>
-          <div className='d-flex justify-content-between align-items-center'>
-            <p>
+          {/* Box d'acquisto: prezzo, disponibilità, quantità e carrello restano insieme anche su mobile. */}
+          <div className='buy-box'>
+            <p className='price'>{product.price.toFixed(2)} €</p>
+            <p className='mb-3'>
               <strong>Disponibilità:</strong>{' '}
               {product.quantity > 0 ? (
                 <span className='text-success'>{product.quantity} pezzi</span>
@@ -141,9 +140,8 @@ const ProductDetail = ({ product }) => {
                 <span className='text-danger'>Non disponibile</span>
               )}
             </p>
-            <div>
-              {/* Controllo della quantità */}
-              <div className='d-flex align-items-center mt-3'>
+            <div className='d-flex flex-wrap align-items-center gap-3'>
+              <div className='d-flex align-items-center gap-2'>
                 <button
                   className='btn btn-outline-primary'
                   onClick={handleDecrement}
@@ -153,12 +151,12 @@ const ProductDetail = ({ product }) => {
                 </button>
                 <input
                   type='number'
-                  className='form-control mx-2'
+                  aria-label='Quantità'
+                  className='form-control quantity-field'
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
                   min='1'
                   max={product.quantity}
-                  style={{ width: '60px' }}
                 />
                 <button
                   className='btn btn-outline-primary'
@@ -168,13 +166,12 @@ const ProductDetail = ({ product }) => {
                   +
                 </button>
               </div>
-
-              {/* Bottone per aggiungere al carrello */}
-              <div className='mt-4'>
-                <button className='btn btn-primary' onClick={handleAddToCart}>
-                  Aggiungi al carrello
-                </button>
-              </div>
+              <button
+                className='btn btn-primary flex-grow-1 flex-sm-grow-0'
+                onClick={handleAddToCart}
+              >
+                Aggiungi al carrello
+              </button>
             </div>
           </div>
         </div>
