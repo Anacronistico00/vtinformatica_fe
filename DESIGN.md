@@ -113,12 +113,12 @@ Contrasti verificati (WCAG 2.1, testo normale ≥ 4,5:1):
 
 ## Tipografia
 
-- Font self-hosted con `@fontsource-variable`, solo subset latin. Nessun CDN.
+- Font self-hosted con `@fontsource-variable/geist`, solo subset latin. Nessun CDN.
 - Corpo 16px, interlinea 1,5. Misura del testo lungo 65–75 caratteri.
 - Prezzi e quantità con cifre tabellari (`font-variant-numeric: tabular-nums`).
 - Titoli in minuscolo con iniziale maiuscola. Il maiuscolo, dove serve, lo applica il CSS
   (`text-transform`): il nome accessibile resta leggibile.
-- Scala, famiglia e pesi dipendono dalla direzione scelta (sezione Direzioni).
+- Scala e pesi: vedi "Direzione grafica".
 
 ## Spaziature e layout
 
@@ -158,19 +158,24 @@ Contrasti verificati (WCAG 2.1, testo normale ≥ 4,5:1):
 - Focus sempre visibile (anello `accent`, 2 px, distanza 2 px).
 - Ogni controllo ha un nome; ogni immagine un `alt`; titoli in ordine.
 
-## Direzioni
+## Direzione grafica
 
-Tre direzioni applicate solo a layout, home e scheda prodotto, sui branch `design/dir-a`,
-`design/dir-b`, `design/dir-c`. Colori, tema, movimento e accessibilità sono comuni; cambiano
-tipografia, densità, card e barra. Dopo la scelta, questa sezione tiene solo la direzione
-scelta.
+Struttura compatta con testata e footer scuri in entrambi i temi, tipografia Geist, riquadri con
+bordo sottile.
 
-| Asse       | A · Vetrina                            | B · Catalogo                                 | C · Arena                                           |
-| ---------- | -------------------------------------- | -------------------------------------------- | --------------------------------------------------- |
-| Font       | Geist, titoli 600 con tracking -0,02em | Inter, pesi 400–700, titoli compatti         | Archivo, titoli larghi (wdth 112) in maiuscolo      |
-| Densità    | Ariosa: sezioni a 64–96 px             | Compatta: sezioni a 32–48 px, griglia a 12 px | Media: sezioni a 48–64 px                           |
-| Card       | Senza bordo, raggio 20, ombra morbida  | Bordo sottile, raggio 8, nessuna ombra       | Superficie rialzata, raggio 14, bordo che si accende |
-| Barra      | Chiara su `surface`, ricerca a pillola | Fascia scura in entrambi i temi              | Fascia grafite in entrambi i temi, indicatore blu   |
+- **Font.** Geist variabile (`@fontsource-variable/geist`), solo latin, 29 kB. Titoli in peso 600
+  con tracking -0,02em; corpo in peso 400. Voci di navigazione in sentence case, mai in maiuscolo.
+- **Densità.** Sezioni a 32 px, griglia dei riquadri a 12 px, scheda prodotto a due colonne.
+- **Riquadri.** Bordo di 1 px (`border`), raggio 12, nessuna ombra a riposo. All'hover il bordo
+  diventa `accent` e compare un'ombra lievissima (`0 2px 8px`, 8% in chiaro, 40% in scuro).
+- **Testata e footer.** Fascia scura (`#0B0D10` e superfici `#15181D`) in entrambi i temi. I token
+  della fascia sono ridefiniti localmente, quindi i componenti dentro leggono già i valori scuri.
+- **Ricerca.** Campo chiaro con bottone pieno. Chiaro: bianco su `#2B62EB`. Scuro: testo `#0B0D10`
+  su `#5B8CFF` e bordo `#727985` (3:1 sul fondo della fascia).
+- **Navigazione.** Linea blu di 2 px che cresce dal centro sotto la voce all'hover e al focus da
+  tastiera. Con `prefers-reduced-motion: reduce` compare senza transizione.
+- **Box d'acquisto.** Nella scheda prodotto prezzo, disponibilità, quantità e "Aggiungi al
+  carrello" stanno in un solo riquadro sotto il nome e la marca, anche su mobile.
 
 ## Da fare e da non fare
 
@@ -183,7 +188,6 @@ sopra i titoli, effetti che si muovono durante lo scroll.
 
 ## Lacune note
 
-- `VT.svg` pesa 9 MB e il percorso relativo si rompe fuori dalla home: si sistemano nella
-  fetta layout.
-- Icone `bootstrap-icons` da CDN in `index.html`: vanno self-hosted come i font.
-- Logo ASUS: URL rotto nei dati, non nel FE.
+- Logo ASUS: URL rotto nei dati, non nel FE (vedi `docs/AUDIT-prima.md`).
+- Il carosello della home carica due banner da `media.ldlc.com`, contenuti di un altro negozio
+  ospitati altrove: da sostituire con banner propri.
