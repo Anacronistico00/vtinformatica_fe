@@ -33,27 +33,26 @@ const ReactivateComponent = () => {
     <Container
       fluid
       className='d-flex flex-column justify-content-start align-items-center pb-5 mt-5'
-      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
-      <h4 className='mb-3'>Riattiva il tuo account</h4>
-      <p id='verde' className='text-center'>
+      <h1 className='h4 mb-3'>Riattiva il tuo account</h1>
+      <p className='text-center text-muted'>
         Il tuo account è disattivato. Conferma la password per riattivarlo e ritrovare ordini e carrello.
       </p>
 
       {error && (
-        <Alert variant='danger' className='w-50'>
+        <Alert variant='danger' className='auth-form'>
           {error}
         </Alert>
       )}
 
-      <Form className='w-50 mt-4' onSubmit={handleSubmit}>
+      <Form className='auth-form mt-4' onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='reactivateEmail'>
-          <Form.Label id='verde'>Email</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control type='email' required value={email} onChange={(e) => setEmail(e.target.value)} />
         </Form.Group>
 
         <Form.Group className='mb-3' controlId='reactivatePassword'>
-          <Form.Label id='verde'>Password</Form.Label>
+          <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
             required
@@ -63,7 +62,7 @@ const ReactivateComponent = () => {
         </Form.Group>
 
         <div className='d-flex justify-content-between align-items-end'>
-          <Button type='submit' variant='outline-success' disabled={sending}>
+          <Button type='submit' variant='primary' disabled={sending}>
             Riattiva il mio account
           </Button>
           <Link to='/account'>Torna al login</Link>
