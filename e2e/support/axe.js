@@ -9,6 +9,8 @@ export const checkA11y = async (page, label) => {
   await expect(page.locator('.spinner-border')).toHaveCount(0);
   // Una pagina andata in errore e rimasta vuota non ha violazioni: deve avere contenuto.
   await expect(page.locator('.main-content'), `Pagina vuota: ${label}`).toHaveText(/\S/);
+  // Transizioni finite (modali, dropdown): a metà dissolvenza il contrasto misurato non è quello reale.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {}))));
   const { violations } = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
