@@ -5,10 +5,11 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist', 'playwright-report', 'test-results'] },
+  // .claude: skill locali di Claude Code, non versionate.
+  { ignores: ['dist', 'playwright-report', 'test-results', '.claude'] },
   {
     // E2E e configurazione di Playwright girano in Node.
-    files: ['e2e/**/*.js', 'playwright.config.js'],
+    files: ['e2e/**/*.js', 'playwright*.config.js'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
   {
