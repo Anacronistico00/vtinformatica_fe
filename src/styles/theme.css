@@ -1,0 +1,325 @@
+/*
+ * Direzione grafica di VT Informatica (DESIGN.md): compatta, riquadri con bordo sottile e raggio 12,
+ * testata e footer scuri in entrambi i temi, tipografia Geist.
+ */
+
+:root,
+[data-bs-theme] {
+  --bs-body-font-family: var(--vt-font);
+  --bs-border-radius: 8px;
+  --vt-radius-card: 12px;
+  --vt-section-gap: var(--vt-space-6);
+  --vt-hover-shadow: 0 2px 8px rgba(16, 24, 40, 0.08);
+}
+
+[data-bs-theme='dark'] {
+  --vt-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  font-family: var(--vt-font);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Fascia scura: i token di testata e footer restano scuri anche nel tema chiaro. */
+.site-header,
+.footer {
+  --vt-bg: #0b0d10;
+  --vt-surface: #15181d;
+  --vt-surface-2: #1d2127;
+  --vt-text: #f5f5f7;
+  --vt-text-muted: #a1a1a6;
+  --vt-border: #2a2f37;
+  --vt-border-strong: #727985;
+  --vt-accent: #5b8cff;
+  --vt-accent-strong: #5b8cff;
+  --vt-accent-hover: #7ca3ff;
+  --vt-on-accent: #0b0d10;
+  --bs-dropdown-bg: #15181d;
+  --bs-dropdown-color: #f5f5f7;
+  --bs-dropdown-link-color: #f5f5f7;
+  --bs-dropdown-link-hover-bg: #1d2127;
+  --bs-dropdown-link-hover-color: #f5f5f7;
+  --bs-dropdown-border-color: #2a2f37;
+  color: var(--vt-text);
+}
+
+.site-header {
+  background-color: var(--vt-surface);
+  border-bottom: 0;
+  padding-bottom: var(--vt-space-2) !important;
+}
+
+.site-header .navbar {
+  background-color: var(--vt-bg);
+  padding-block: var(--vt-space-3);
+}
+
+.nav-icon-link {
+  font-size: 0.8125rem !important;
+  font-weight: 500;
+}
+
+.nav-icon-link svg {
+  font-size: 1.25rem;
+}
+
+/*
+ * Ricerca: campo chiaro con bottone blu su fascia scura. Il bottone segue il tema della pagina
+ * (testo bianco su #2B62EB in chiaro, testo scuro su #5B8CFF in scuro: entrambi sopra 4,5:1).
+ */
+.search-bar {
+  background-color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-bar .search-input {
+  color: #1d1d1f;
+}
+
+.search-bar .search-input::placeholder {
+  color: #5f5f64;
+}
+
+.search-bar .searchButton {
+  background-color: #2b62eb;
+  color: #ffffff;
+  border-radius: 0;
+  padding-inline: var(--vt-space-4);
+}
+
+.search-bar .searchButton:hover {
+  background-color: #2457d6;
+  color: #ffffff;
+}
+
+[data-bs-theme='dark'] .search-bar {
+  border-color: #727985;
+}
+
+[data-bs-theme='dark'] .search-bar .searchButton {
+  background-color: #5b8cff;
+  color: #0b0d10;
+}
+
+[data-bs-theme='dark'] .search-bar .searchButton:hover {
+  background-color: #7ca3ff;
+  color: #0b0d10;
+}
+
+/* Navigazione: voci in sentence case, linea blu che cresce dal centro all'hover. */
+.site-nav {
+  justify-content: flex-start !important;
+  gap: var(--vt-space-6);
+  padding-top: var(--vt-space-2);
+}
+
+.site-nav .link,
+.site-nav #categoriesDropdown {
+  position: relative;
+  padding-block: var(--vt-space-2);
+  color: var(--vt-text) !important;
+  font-size: 0.9375rem;
+  font-weight: 500 !important;
+}
+
+.site-nav .link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: var(--vt-accent);
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-nav .link::after {
+    transition: transform var(--vt-dur-base) var(--vt-ease-out);
+  }
+}
+
+.site-nav .link:hover::after,
+.site-nav .link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Home */
+.carousel-item img {
+  border-radius: var(--vt-radius-card);
+}
+
+.section-title {
+  font-size: 1.375rem !important;
+  margin-top: var(--vt-section-gap);
+  margin-bottom: var(--vt-space-3);
+}
+
+.d-flex:has(> .section-title) {
+  align-items: baseline;
+  margin-top: var(--vt-section-gap);
+}
+
+.d-flex > .section-title {
+  margin-top: 0;
+}
+
+/* Le categorie e i brand diventano una griglia di riquadri: il contenitore sparisce. */
+.categories {
+  background: transparent !important;
+  border-radius: 0;
+}
+
+.categories.py-5,
+.categories.py-3 {
+  padding-block: 0 !important;
+}
+
+.categories > .row {
+  --bs-gutter-x: var(--vt-space-3);
+  row-gap: var(--vt-space-3);
+}
+
+.categoryCard.p-0 {
+  padding-inline: calc(var(--vt-space-3) / 2) !important;
+}
+
+.categoryCard:hover {
+  background: transparent;
+}
+
+/* Riquadro: bordo sottile; all'hover bordo blu e un'ombra lievissima. */
+.categories .card,
+.card {
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+  box-shadow: none;
+  overflow: hidden;
+  transition:
+    border-color var(--vt-dur-fast) var(--vt-ease-out),
+    box-shadow var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.categories .card {
+  height: 100%;
+  margin-top: 0 !important;
+  padding: var(--vt-space-3);
+  border-color: var(--vt-border) !important;
+}
+
+.categoryCard:hover .card,
+a:hover > .card {
+  border-color: var(--vt-accent) !important;
+  box-shadow: var(--vt-hover-shadow);
+}
+
+a:has(> .card) {
+  text-decoration: none;
+}
+
+.categories .card-img-top {
+  background-color: var(--vt-media-bg);
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+.categories .card-title,
+.card .card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--vt-text);
+}
+
+.categories .card-title {
+  margin: var(--vt-space-2) 0 0;
+}
+
+.newsletter {
+  border-radius: var(--vt-radius-card) !important;
+}
+
+.newsletter.card {
+  border: 1px solid var(--vt-border) !important;
+  box-shadow: none !important;
+}
+
+/* Scheda prodotto */
+.media-well {
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+.product-title {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* Box d'acquisto: prezzo, disponibilità, quantità e carrello in un solo riquadro. */
+.buy-box {
+  padding: var(--vt-space-5);
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card);
+}
+
+.buy-box .price {
+  margin: 0 0 var(--vt-space-2);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--vt-text);
+}
+
+.buy-box .quantity-field {
+  width: 4rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.card .text-primary {
+  color: var(--vt-text) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color var(--vt-dur-fast) var(--vt-ease-out);
+}
+
+.bg-body-tertiary {
+  background-color: var(--vt-surface) !important;
+  border: 1px solid var(--vt-border);
+  border-radius: var(--vt-radius-card) !important;
+  box-shadow: none !important;
+}
+
+/* Footer: stessa fascia scura della testata. */
+.footer {
+  background-color: var(--vt-bg);
+  border-top: 0;
+  font-size: 0.875rem;
+}
+
+.footer h5 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
